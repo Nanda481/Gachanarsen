@@ -25,7 +25,7 @@
             background-color: var(--bg-color);
             color: var(--text);
             min-height: 100vh;
-            background-image: url('your-background-image.jpg'); /* Ganti dengan gambar custom Anda */
+            background-image: url('images/background.jpg'); /* Ganti dengan gambar custom Anda */
             background-size: cover;
             background-position: center;
             background-attachment: fixed;
@@ -53,12 +53,17 @@
             justify-content: center;
             border: 3px solid var(--primary);
             box-shadow: 0 0 20px rgba(187, 134, 252, 0.5);
+            background-image: url('images/logo.png'); /* Ganti dengan logo custom Anda */
+            background-size: contain;
+            background-position: center;
+            background-repeat: no-repeat;
         }
         
         .logo-placeholder {
             font-size: 24px;
             font-weight: bold;
             color: var(--primary);
+            display: none; /* Sembunyikan placeholder jika logo ada */
         }
         
         .main-content {
@@ -348,32 +353,32 @@
                 
                 <div class="items-grid">
                     <div class="gacha-item">
-                        <div class="item-image">Gambar Mod 1</div>
+                        <div class="item-image"><img src="images/mod1.jpg" alt="Mod 1" onerror="this.style.display='none'; this.parentNode.innerHTML='Gambar Mod 1';"></div>
                         <div class="item-name">Mod Name 1</div>
                         <div class="item-rarity ssr">SSR</div>
                     </div>
                     <div class="gacha-item">
-                        <div class="item-image">Gambar Mod 2</div>
+                        <div class="item-image"><img src="images/mod2.jpg" alt="Mod 2" onerror="this.style.display='none'; this.parentNode.innerHTML='Gambar Mod 2';"></div>
                         <div class="item-name">Mod Name 2</div>
                         <div class="item-rarity sr">SR</div>
                     </div>
                     <div class="gacha-item">
-                        <div class="item-image">Gambar Mod 3</div>
+                        <div class="item-image"><img src="images/mod3.jpg" alt="Mod 3" onerror="this.style.display='none'; this.parentNode.innerHTML='Gambar Mod 3';"></div>
                         <div class="item-name">Mod Name 3</div>
                         <div class="item-rarity r">R</div>
                     </div>
                     <div class="gacha-item">
-                        <div class="item-image">Gambar Mod 4</div>
+                        <div class="item-image"><img src="images/mod4.jpg" alt="Mod 4" onerror="this.style.display='none'; this.parentNode.innerHTML='Gambar Mod 4';"></div>
                         <div class="item-name">Mod Name 4</div>
                         <div class="item-rarity ssr">SSR</div>
                     </div>
                     <div class="gacha-item">
-                        <div class="item-image">Gambar Mod 5</div>
+                        <div class="item-image"><img src="images/mod5.jpg" alt="Mod 5" onerror="this.style.display='none'; this.parentNode.innerHTML='Gambar Mod 5';"></div>
                         <div class="item-name">Mod Name 5</div>
                         <div class="item-rarity sr">SR</div>
                     </div>
                     <div class="gacha-item">
-                        <div class="item-image">Gambar Mod 6</div>
+                        <div class="item-image"><img src="images/mod6.jpg" alt="Mod 6" onerror="this.style.display='none'; this.parentNode.innerHTML='Gambar Mod 6';"></div>
                         <div class="item-name">Mod Name 6</div>
                         <div class="item-rarity r">R</div>
                     </div>
@@ -390,7 +395,7 @@
         <div class="modal-content">
             <h2 class="result-title">SELAMAT!</h2>
             <div class="result-item">
-                <div class="result-image" id="result-image">Gambar Mod</div>
+                <div class="result-image" id="result-image"></div>
                 <div class="item-name" id="result-name">Mod Name</div>
                 <div class="item-rarity" id="result-rarity">Rarity</div>
             </div>
@@ -412,12 +417,42 @@
             
             // Data mod yang tersedia untuk gacha
             const modItems = [
-                { name: "Mod Name 1", rarity: "SSR", image: "Gambar Mod 1", downloadLink: "https://your-download-link-1.com" },
-                { name: "Mod Name 2", rarity: "SR", image: "Gambar Mod 2", downloadLink: "https://your-download-link-2.com" },
-                { name: "Mod Name 3", rarity: "R", image: "Gambar Mod 3", downloadLink: "https://your-download-link-3.com" },
-                { name: "Mod Name 4", rarity: "SSR", image: "Gambar Mod 4", downloadLink: "https://your-download-link-4.com" },
-                { name: "Mod Name 5", rarity: "SR", image: "Gambar Mod 5", downloadLink: "https://your-download-link-5.com" },
-                { name: "Mod Name 6", rarity: "R", image: "Gambar Mod 6", downloadLink: "https://your-download-link-6.com" }
+                { 
+                    name: "Mod Name 1", 
+                    rarity: "SSR", 
+                    image: "images/mod1.jpg", 
+                    downloadLink: "https://your-download-link-1.com" 
+                },
+                { 
+                    name: "Mod Name 2", 
+                    rarity: "SR", 
+                    image: "images/mod2.jpg", 
+                    downloadLink: "https://your-download-link-2.com" 
+                },
+                { 
+                    name: "Mod Name 3", 
+                    rarity: "R", 
+                    image: "images/mod3.jpg", 
+                    downloadLink: "https://your-download-link-3.com" 
+                },
+                { 
+                    name: "Mod Name 4", 
+                    rarity: "SSR", 
+                    image: "images/mod4.jpg", 
+                    downloadLink: "https://your-download-link-4.com" 
+                },
+                { 
+                    name: "Mod Name 5", 
+                    rarity: "SR", 
+                    image: "images/mod5.jpg", 
+                    downloadLink: "https://your-download-link-5.com" 
+                },
+                { 
+                    name: "Mod Name 6", 
+                    rarity: "R", 
+                    image: "images/mod6.jpg", 
+                    downloadLink: "https://your-download-link-6.com" 
+                }
             ];
             
             // Simpan status subscription di localStorage
@@ -484,7 +519,22 @@
             // Fungsi untuk menampilkan hasil gacha
             function showResult(item) {
                 // Set konten hasil
-                resultImage.textContent = item.image;
+                resultImage.innerHTML = '';
+                const img = document.createElement('img');
+                img.src = item.image;
+                img.alt = item.name;
+                img.style.width = '100%';
+                img.style.height = '100%';
+                img.style.objectFit = 'cover';
+                img.style.borderRadius = '10px';
+                img.onerror = function() {
+                    resultImage.innerHTML = item.name;
+                    resultImage.style.display = 'flex';
+                    resultImage.style.alignItems = 'center';
+                    resultImage.style.justifyContent = 'center';
+                };
+                resultImage.appendChild(img);
+                
                 resultName.textContent = item.name;
                 resultRarity.textContent = item.rarity;
                 resultRarity.className = 'item-rarity ' + item.rarity.toLowerCase();
