@@ -3,43 +3,76 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>Gacha Simple - Gacha Mod</title>
+<title>Gacha Gallery — Ungu Neon</title>
 <style>
   :root{
-    --bg:#080612; --card:rgba(14,6,24,0.7); --accent:#a855f7; --neon: #b794f4;
-    --muted: #9aa4b2;
+    --bg:#06050b;
+    --card:rgba(18,8,30,0.62);
+    --accent:#a855f7;
+    --neon:#caa7ff;
+    --muted:#9aa4b2;
+    --glass: rgba(255,255,255,0.03);
   }
   *{box-sizing:border-box}
-  body{margin:0;font-family:Inter,system-ui,Segoe UI,Roboto; background:var(--bg); color:#eef2ff; -webkit-font-smoothing:antialiased;}
-  .wrap{min-height:100vh;display:flex;flex-direction:column;}
-  header{display:flex;justify-content:space-between;align-items:center;padding:18px 28px;background:linear-gradient(180deg,rgba(255,255,255,0.02),transparent)}
+  body{
+    margin:0;
+    font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,"Helvetica Neue",Arial;
+    background:var(--bg);
+    color:#eef2ff;
+    -webkit-font-smoothing:antialiased;
+    -moz-osx-font-smoothing:grayscale;
+    min-height:100vh;
+  }
+
+  /* LAYOUT */
+  .wrap{max-width:1200px;margin:28px auto;padding:18px}
+  header{display:flex;justify-content:space-between;align-items:center;gap:12px}
   .brand{display:flex;gap:12px;align-items:center}
-  #logo{width:56px;height:56px;border-radius:12px;background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));display:flex;align-items:center;justify-content:center;font-weight:700}
-  h1{margin:0;font-size:18px}
+  #logo{width:64px;height:64px;border-radius:14px;background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));display:flex;align-items:center;justify-content:center;font-weight:800}
+  h1{margin:0;font-size:20px}
+  .sub{color:var(--muted);font-size:13px}
+
   .actions{display:flex;gap:10px;align-items:center}
-  a.btn, button.btn{padding:10px 16px;border-radius:10px;border:0;cursor:pointer;font-weight:700}
+  a.btn, button.btn{padding:10px 14px;border-radius:12px;border:0;cursor:pointer;font-weight:700}
   a.btn{background:transparent;border:1px solid rgba(255,255,255,0.06);color:inherit;text-decoration:none}
   button.primary{background:linear-gradient(90deg,var(--accent),#6d28d9);color:white}
-  button.disabled{opacity:.45;pointer-events:none}
-  main{flex:1;padding:28px;display:flex;flex-direction:column;gap:18px}
-  .control-row{display:flex;gap:12px;align-items:center}
-  .arena{background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));padding:20px;border-radius:14px;box-shadow:0 8px 30px rgba(0,0,0,0.5)}
-  .viewport{width:100%;max-width:900px;height:160px;margin:18px auto;overflow:hidden;border-radius:12px;background:linear-gradient(90deg, rgba(10,6,20,0.7), rgba(15,8,30,0.55));position:relative;border:1px solid rgba(168,85,247,0.08)}
-  .track{display:flex;gap:12px;position:absolute;left:0;top:0;height:100%;align-items:center;padding:0 40px;will-change:transform}
-  .card{width:140px;height:120px;border-radius:10px;background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));display:flex;flex-direction:column;align-items:center;justify-content:center;box-shadow:0 6px 20px rgba(0,0,0,0.6);border:1px solid rgba(255,255,255,0.02)}
-  .card img{max-width:86%;max-height:66%;border-radius:8px}
-  .card .name{font-size:13px;margin-top:8px;color:var(--neon);font-weight:700;text-align:center;padding:0 6px}
-  .center-marker{position:absolute;left:50%;top:0;transform:translateX(-50%);height:100%;width:4px;pointer-events:none;background:linear-gradient(180deg, rgba(200,150,255,0.15), rgba(200,150,255,0.25));box-shadow:0 0 24px rgba(168,85,247,0.15)}
-  .controls{display:flex;gap:12px;align-items:center;justify-content:center;margin-top:6px}
+  button.ghost{background:transparent;border:1px solid rgba(255,255,255,0.04);color:var(--muted)}
+
+  /* GALLERY of banners */
+  .gallery{display:grid;grid-template-columns:repeat(10,1fr);gap:10px;margin-top:18px}
+  .banner{background:var(--card);border-radius:12px;padding:10px;display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;transition:transform .12s, box-shadow .12s}
+  .banner:hover{transform:translateY(-6px);box-shadow:0 10px 30px rgba(168,85,247,0.12)}
+  .banner img{width:100%;height:64px;object-fit:cover;border-radius:8px}
+  .banner .bname{margin-top:8px;font-size:12px;text-align:center;color:var(--neon);font-weight:700}
+
+  /* VIEWPORT (slot/track) */
+  .arena{margin-top:26px;background:linear-gradient(180deg, rgba(255,255,255,0.01), rgba(255,255,255,0.00));padding:18px;border-radius:14px;border:1px solid rgba(255,255,255,0.02)}
+  .viewport{width:100%;height:170px;overflow:hidden;border-radius:12px;position:relative;background:linear-gradient(90deg, rgba(5,3,12,0.6), rgba(10,6,20,0.5));margin-top:8px}
+  .track{position:absolute;left:0;top:0;height:100%;display:flex;align-items:center;gap:14px;padding:0 40px;will-change:transform}
+  .card{width:160px;height:140px;border-radius:12px;background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));display:flex;flex-direction:column;align-items:center;justify-content:center;box-shadow:0 8px 30px rgba(0,0,0,0.6);border:1px solid rgba(255,255,255,0.02)}
+  .card img{max-width:86%;max-height:72%;border-radius:8px}
+  .card .name{margin-top:8px;font-size:13px;color:var(--neon);font-weight:800;text-align:center;padding:0 6px}
+  .center-marker{position:absolute;left:50%;transform:translateX(-50%);top:0;height:100%;width:6px;background:linear-gradient(180deg, rgba(200,150,255,0.14), rgba(200,150,255,0.22));box-shadow:0 0 30px rgba(168,85,247,0.12);pointer-events:none;border-radius:6px}
+
+  /* controls & result */
+  .controls{display:flex;gap:12px;align-items:center;justify-content:center;margin-top:14px}
   #spin{padding:12px 22px;border-radius:999px;background:linear-gradient(90deg,var(--accent),#6d28d9);border:none;color:white;font-weight:800;cursor:pointer}
-  #spin.disabled{opacity:.5;pointer-events:none}
+  #spin.disabled{opacity:.55;pointer-events:none}
+  #remaining{font-weight:700;color:var(--muted)}
   #result{margin-top:12px;text-align:center;padding:12px;border-radius:10px;background:rgba(255,255,255,0.02);display:flex;gap:12px;align-items:center;justify-content:center}
-  .glow{padding:8px 14px;border-radius:8px;background:linear-gradient(90deg, rgba(168,85,247,0.12), rgba(168,85,247,0.08));box-shadow:0 10px 40px rgba(168,85,247,0.12);border:1px solid rgba(168,85,247,0.14)}
+  .glow{padding:8px 12px;border-radius:8px;background:linear-gradient(90deg, rgba(168,85,247,0.12), rgba(168,85,247,0.06));box-shadow:0 12px 40px rgba(168,85,247,0.12);border:1px solid rgba(168,85,247,0.12)}
   .muted{color:var(--muted);font-size:13px}
-  input[type=file]{display:none}
-  .small-btn{padding:8px 10px;border-radius:8px;background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.03);cursor:pointer}
-  footer{padding:14px;text-align:center;color:var(--muted);font-size:13px}
-  @media(max-width:720px){ .card{width:110px;height:100px} .viewport{height:140px} }
+
+  /* overlay preview */
+  .overlay{position:fixed;left:0;top:0;width:100%;height:100%;display:flex;align-items:center;justify-content:center;background:rgba(3,2,6,0.7);z-index:9999;opacity:0;pointer-events:none;transition:opacity .22s}
+  .overlay.show{opacity:1;pointer-events:auto}
+  .preview-card{max-width:760px;padding:18px;border-radius:14px;background:linear-gradient(180deg, rgba(10,6,20,0.85), rgba(5,3,12,0.9));border:1px solid rgba(168,85,247,0.08);display:flex;flex-direction:column;align-items:center;gap:12px}
+  .preview-card img{max-width:420px;max-height:420px}
+  .close{padding:8px 12px;border-radius:10px;background:transparent;border:1px solid rgba(255,255,255,0.06);cursor:pointer;color:var(--muted)}
+
+  /* responsive */
+  @media(max-width:1100){ .gallery{grid-template-columns:repeat(5,1fr)} .card{width:130px;height:110px} }
+  @media(max-width:720){ .gallery{grid-template-columns:repeat(2,1fr)} .card{width:120px;height:96px} .viewport{height:140px} }
 </style>
 </head>
 <body>
@@ -48,198 +81,297 @@
     <div class="brand">
       <div id="logo">LOGO</div>
       <div>
-        <h1>Gacha Mod</h1>
-        <div class="muted">Subscribe → Gacha → Dapatkan mod rare</div>
+        <h1>Gacha Gallery</h1>
+        <div class="sub">Tema: Ungu Neon — 10 mod • Klik banner untuk preview • Subscribe dapat 5x gacha</div>
       </div>
     </div>
+
     <div class="actions">
       <a id="subscribeBtn" class="btn" target="_blank">Subscribe</a>
-      <button id="enterGacha" class="btn primary disabled" disabled>GACHA</button>
+      <div id="remaining" class="muted">Spins left: <span id="spinsCount">0</span></div>
+      <button id="enterBtn" class="btn primary disabled" disabled>GACHA</button>
     </div>
   </header>
 
-  <main>
-    <div class="arena">
-      <div style="display:flex;justify-content:space-between;align-items:center">
-        <div class="control-row">
-          <label class="small-btn">Logo <input id="logoInput" type="file" accept="image/*"></label>
-          <label class="small-btn">Background <input id="bgInput" type="file" accept="image/*"></label>
-          <div class="muted" style="margin-left:10px">Tema: Ungu Neon</div>
-        </div>
-        <div class="muted">Music autoplay enabled</div>
-      </div>
+  <!-- Gallery banners (10 items) -->
+  <div class="gallery" id="gallery"></div>
 
-      <div class="viewport" id="viewport">
-        <div class="track" id="track">
-          <!-- cards will be injected -->
-        </div>
-        <div class="center-marker"></div>
-      </div>
-
-      <div class="controls">
-        <button id="spin" class="disabled">SPIN</button>
-      </div>
-
-      <div id="result" class="hidden"></div>
+  <!-- Arena: track/slot machine -->
+  <div class="arena">
+    <div style="display:flex;justify-content:space-between;align-items:center">
+      <div class="muted">Klik enter lalu SPIN untuk mula-ikan gacha. Musik & background diubah lewat repo.</div>
+      <div class="muted">Logo & BG: edit di CONFIG pada script</div>
     </div>
-  </main>
 
-  <footer>Logo & background bisa diupload sendiri • Ganti link download & gambar mod di kode</footer>
+    <div class="viewport" id="viewport">
+      <div class="track" id="track"></div>
+      <div class="center-marker"></div>
+    </div>
+
+    <div class="controls">
+      <button id="spin" class="disabled">SPIN</button>
+    </div>
+
+    <div id="result" class="hidden"></div>
+  </div>
+</div>
+
+<!-- overlay preview for PNG transparent character -->
+<div id="overlay" class="overlay" role="dialog" aria-hidden="true">
+  <div class="preview-card">
+    <img id="previewImg" src="" alt="Preview">
+    <div style="display:flex;gap:8px">
+      <button id="downloadPreview" class="close">Download (from preview)</button>
+      <button id="closePreview" class="close">Close</button>
+    </div>
+  </div>
 </div>
 
 <audio id="bgm" autoplay loop></audio>
 
 <script>
-/* CONFIG - ganti link gambar & download di sini jika mau nanti */
+/* ==========================
+   CONFIG - edit in your repo
+   ==========================
+   - Change logoImage, backgroundImage, music URL
+   - Change MODS array (image, preview png, file link, name)
+*/
 const CONFIG = {
-  CHANNEL_URL: 'https://www.youtube.com/', // ganti channel kamu
-  MUSIC_URL: 'https://music.youtube.com/watch?v=iisOyaFF58g&list=RDAMVMevTxdgbAF1Q', // sesuai inputmu
+  LOGO_TEXT: 'YOUR LOGO',
+  LOGO_IMAGE: '', // if you want to use logo image, put URL here (leave empty to use text)
+  BACKGROUND_IMAGE: '', // if you want a default background image (leave blank for solid bg)
+  MUSIC_URL: 'https://music.youtube.com/watch?v=iisOyaFF58g&list=RDAMVMevTxdgbAF1Q', // replace with direct mp3 for reliable autoplay
+  START_SPINS: 5, // spins given after clicking subscribe
   MODS: [
-    {id:'m1', name:'Mod Alpha (SSR)', img:'https://via.placeholder.com/200x120?text=Alpha', file:'https://example.com/mod1.zip'},
-    {id:'m2', name:'Mod Beta (SR)', img:'https://via.placeholder.com/200x120?text=Beta', file:'https://example.com/mod2.zip'},
-    {id:'m3', name:'Mod Gamma (R)', img:'https://via.placeholder.com/200x120?text=Gamma', file:'https://example.com/mod3.zip'},
-    {id:'m4', name:'Mod Delta (R)', img:'https://via.placeholder.com/200x120?text=Delta', file:'https://example.com/mod4.zip'},
-    {id:'m5', name:'Mod Epsilon (SR)', img:'https://via.placeholder.com/200x120?text=Epsilon', file:'https://example.com/mod5.zip'},
-    {id:'m6', name:'Mod Zeta (SSR)', img:'https://via.placeholder.com/200x120?text=Zeta', file:'https://example.com/mod6.zip'}
+    // 10 mod entries (change image, preview PNG transparant, file link, name)
+    {id:'m01', name:'Mod Alpha (SSR)', img:'https://via.placeholder.com/320x180?text=Alpha', preview:'https://via.placeholder.com/420x420.png?text=Alpha+PNG', file:'https://example.com/mod1.zip'},
+    {id:'m02', name:'Mod Beta (SR)', img:'https://via.placeholder.com/320x180?text=Beta', preview:'https://via.placeholder.com/420x420.png?text=Beta+PNG', file:'https://example.com/mod2.zip'},
+    {id:'m03', name:'Mod Gamma (R)', img:'https://via.placeholder.com/320x180?text=Gamma', preview:'https://via.placeholder.com/420x420.png?text=Gamma+PNG', file:'https://example.com/mod3.zip'},
+    {id:'m04', name:'Mod Delta (R)', img:'https://via.placeholder.com/320x180?text=Delta', preview:'https://via.placeholder.com/420x420.png?text=Delta+PNG', file:'https://example.com/mod4.zip'},
+    {id:'m05', name:'Mod Epsilon (SR)', img:'https://via.placeholder.com/320x180?text=Epsilon', preview:'https://via.placeholder.com/420x420.png?text=Epsilon+PNG', file:'https://example.com/mod5.zip'},
+    {id:'m06', name:'Mod Zeta (SSR)', img:'https://via.placeholder.com/320x180?text=Zeta', preview:'https://via.placeholder.com/420x420.png?text=Zeta+PNG', file:'https://example.com/mod6.zip'},
+    {id:'m07', name:'Mod Eta (R)', img:'https://via.placeholder.com/320x180?text=Eta', preview:'https://via.placeholder.com/420x420.png?text=Eta+PNG', file:'https://example.com/mod7.zip'},
+    {id:'m08', name:'Mod Theta (SR)', img:'https://via.placeholder.com/320x180?text=Theta', preview:'https://via.placeholder.com/420x420.png?text=Theta+PNG', file:'https://example.com/mod8.zip'},
+    {id:'m09', name:'Mod Iota (R)', img:'https://via.placeholder.com/320x180?text=Iota', preview:'https://via.placeholder.com/420x420.png?text=Iota+PNG', file:'https://example.com/mod9.zip'},
+    {id:'m10', name:'Mod Kappa (SSR)', img:'https://via.placeholder.com/320x180?text=Kappa', preview:'https://via.placeholder.com/420x420.png?text=Kappa+PNG', file:'https://example.com/mod10.zip'}
   ]
 };
 
-/* UI refs */
-const subscribeBtn = document.getElementById('subscribeBtn');
-const enterGacha = document.getElementById('enterGacha');
-const spinBtn = document.getElementById('spin');
+/* ==========================
+   End CONFIG
+   ==========================*/
+
+const galleryEl = document.getElementById('gallery');
 const track = document.getElementById('track');
 const viewport = document.getElementById('viewport');
+const subscribeBtn = document.getElementById('subscribeBtn');
+const enterBtn = document.getElementById('enterBtn');
+const spinBtn = document.getElementById('spin');
 const result = document.getElementById('result');
+const spinsCountEl = document.getElementById('spinsCount');
+const overlay = document.getElementById('overlay');
+const previewImg = document.getElementById('previewImg');
+const downloadPreview = document.getElementById('downloadPreview');
+const closePreview = document.getElementById('closePreview');
 const bgm = document.getElementById('bgm');
-const logoInput = document.getElementById('logoInput');
-const bgInput = document.getElementById('bgInput');
 const logoEl = document.getElementById('logo');
 
-/* init */
-subscribeBtn.href = CONFIG.CHANNEL_URL;
-bgm.src = CONFIG.MUSIC_URL; // NOTE: many YouTube links won't play via <audio>; keep a direct mp3 for reliable autoplay
+let spinsLeft = 0;
+const STORAGE_KEY = 'gacha_spins_v1';
+const SUB_CLICK_KEY = 'gacha_sub_clicked_v1';
 
-// build duplicated sequence for smooth motion (duplicate once)
+// init UI from CONFIG
+function initUI(){
+  // set logo
+  if(CONFIG.LOGO_IMAGE){
+    logoEl.style.backgroundImage = `url(${CONFIG.LOGO_IMAGE})`;
+    logoEl.textContent = '';
+    logoEl.style.backgroundSize = 'cover';
+    logoEl.style.backgroundPosition = 'center';
+  } else {
+    logoEl.textContent = CONFIG.LOGO_TEXT || 'LOGO';
+  }
+  // background
+  if(CONFIG.BACKGROUND_IMAGE){
+    document.body.style.backgroundImage = `url(${CONFIG.BACKGROUND_IMAGE})`;
+    document.body.style.backgroundSize = 'cover';
+    document.body.style.backgroundPosition = 'center';
+  }
+
+  // music
+  if(CONFIG.MUSIC_URL){
+    bgm.src = CONFIG.MUSIC_URL; // NOTE: direct MP3 preferred
+    bgm.volume = 0.7;
+    bgm.play().catch(()=>{ /* autoplay may be blocked until user interaction */ });
+  }
+
+  // build gallery banners
+  galleryEl.innerHTML = '';
+  CONFIG.MODS.forEach((m, idx)=>{
+    const d = document.createElement('div');
+    d.className = 'banner';
+    d.dataset.idx = idx;
+    d.innerHTML = `<img src="${m.img}" alt="${m.name}"><div class="bname">${m.name}</div>`;
+    d.addEventListener('click', ()=>{ openPreview(idx); });
+    galleryEl.appendChild(d);
+  });
+
+  // build track (duplicate array for smooth looping)
+  buildTrack();
+  // load spins left from storage
+  const s = parseInt(localStorage.getItem(STORAGE_KEY) || '0', 10);
+  spinsLeft = isNaN(s) ? 0 : s;
+  updateSpinsUI();
+  if(localStorage.getItem(SUB_CLICK_KEY)) enableEnter();
+}
+initUI();
+
+/* Build duplicated track with two copies (so left-right movement can loop visually) */
 function buildTrack(){
   track.innerHTML = '';
-  const arr = CONFIG.MODS.concat(CONFIG.MODS); // duplicate array
-  arr.forEach(mod=>{
-    const c = document.createElement('div'); c.className='card';
-    c.dataset.id = mod.id;
-    c.dataset.file = mod.file;
-    c.innerHTML = `<img src="${mod.img}" alt="${mod.name}"><div class="name">${mod.name}</div>`;
+  const arr = CONFIG.MODS.concat(CONFIG.MODS); // duplicate once
+  arr.forEach(m=>{
+    const c = document.createElement('div');
+    c.className = 'card';
+    c.dataset.id = m.id;
+    c.dataset.file = m.file;
+    c.innerHTML = `<img src="${m.img}" alt="${m.name}"><div class="name">${m.name}</div>`;
     track.appendChild(c);
   });
 }
-buildTrack();
 
-/* enable Gacha when user clicked subscribe button (no real verification) */
+/* Preview overlay when banner clicked */
+function openPreview(idx){
+  const mod = CONFIG.MODS[idx];
+  if(!mod) return;
+  previewImg.src = mod.preview || mod.img || '';
+  previewImg.alt = mod.name;
+  // show overlay
+  overlay.classList.add('show');
+  overlay.setAttribute('aria-hidden', 'false');
+  // set download preview click
+  downloadPreview.onclick = ()=>{ window.open(mod.file, '_blank'); };
+}
+closePreview.onclick = ()=>{ overlay.classList.remove('show'); overlay.setAttribute('aria-hidden','true'); };
+overlay.addEventListener('click', e=>{ if(e.target === overlay) { overlay.classList.remove('show'); overlay.setAttribute('aria-hidden','true'); } });
+
+/* Subscribe click: set spins to START_SPINS and enable gacha */
 subscribeBtn.addEventListener('click', ()=>{
-  localStorage.setItem('gacha_sub_clicked', Date.now());
-  setTimeout(()=>enableEnter(), 700);
-});
-function enableEnter(){ enterGacha.disabled=false; enterGacha.classList.remove('disabled'); spinBtn.classList.remove('disabled'); spinBtn.disabled = false; }
-
-/* persist */
-if(localStorage.getItem('gacha_sub_clicked')) enableEnter();
-
-enterGacha.addEventListener('click', ()=> {
-  // scroll to viewport (visual)
-  viewport.scrollIntoView({behavior:'smooth', block:'center'});
-  // attempt play bgm
-  bgm.play().catch(()=>{ /* browsers may block autoplay with sound */ });
+  localStorage.setItem(SUB_CLICK_KEY, Date.now());
+  spinsLeft = CONFIG.START_SPINS;
+  localStorage.setItem(STORAGE_KEY, spinsLeft);
+  updateSpinsUI();
+  enableEnter();
+  // open channel in separate tab (subscribe link)
+  // NOTE: user should replace subscribe URL in anchor if desired
+  setTimeout(()=>{ try{ window.open(subscribeBtn.href || '#', '_blank'); }catch(e){} }, 50);
 });
 
-/* file inputs for logo and background */
-logoInput.addEventListener('change', e=>{
-  const f = e.target.files[0];
-  if(!f) return;
-  const url = URL.createObjectURL(f);
-  logoEl.style.backgroundImage = `url(${url})`;
-  logoEl.textContent = '';
-});
-bgInput.addEventListener('change', e=>{
-  const f = e.target.files[0];
-  if(!f) return;
-  const url = URL.createObjectURL(f);
-  document.body.style.backgroundImage = `url(${url})`;
-  document.body.style.backgroundSize = 'cover';
-});
+function enableEnter(){
+  enterBtn.disabled = false;
+  enterBtn.classList.remove('disabled');
+  spinBtn.disabled = false;
+  spinBtn.classList.remove('disabled');
+}
+enterBtn.addEventListener('click', ()=>{ viewport.scrollIntoView({behavior:'smooth', block:'center'}); bgm.play().catch(()=>{}); });
 
-/* Spin logic: animate translateX with velocity decay until stop at chosen index */
-let isSpinning=false;
-spinBtn.addEventListener('click', ()=>{ if(isSpinning) return; startSpin(); });
+/* SPIN: left-right slot movement, slows and stops on chosen index */
+let isSpinning = false;
+spinBtn.addEventListener('click', ()=>{ if(isSpinning) return; if(spinsLeft <= 0){ alert('Tidak ada spin tersisa. Klik Subscribe untuk mendapatkan 5 spin.'); return; } startSpin(); });
 
+function updateSpinsUI(){
+  spinsCountEl.textContent = spinsLeft;
+}
+
+/* Spin mechanics */
 function startSpin(){
   isSpinning = true;
   result.classList.add('hidden');
-  // pick final index among first 6 (original set)
-  const finalIndex = Math.floor(Math.random()*CONFIG.MODS.length);
-  const chosen = CONFIG.MODS[finalIndex];
-  // compute target translate so that the chosen card (the one in first half) aligns center
-  // note: track contains duplicate array so we'll target the first occurrence (index = finalIndex)
-  const cards = track.children;
-  const card = cards[finalIndex]; // choose the first block
-  // measure
+
+  // choose final index among first 10 mods
+  const finalIdx = Math.floor(Math.random() * CONFIG.MODS.length);
+  const chosenMod = CONFIG.MODS[finalIdx];
+
+  // find the DOM card corresponding to the first copy (index = finalIdx)
+  const cards = Array.from(track.children);
+  const chosenCard = cards[finalIdx]; // since first copy is 0..9
+  // calculate measurements
   const viewportRect = viewport.getBoundingClientRect();
-  const cardRect = card.getBoundingClientRect();
-  const cardWidth = cardRect.width + 12; // include gap
-  // starting translateX position (we'll animate transform)
-  let currentX = 0; // starting from left
-  let velocity = (Math.random()*40 + 80); // pixels per frame approx high speed
-  const friction = 0.985 - (Math.random()*0.003); // slow down factor
-  // target center position (we want chosen card to be centered)
-  // compute chosen card's offsetLeft relative to track
-  const chosenOffset = card.offsetLeft;
+  const cardRect = chosenCard.getBoundingClientRect();
+  const cardWidthWithGap = cardRect.width + 14; // approximate gap
+  // target translate so chosenCard centers under center-marker
+  const chosenOffset = chosenCard.offsetLeft;
   const viewportCenter = viewport.clientWidth / 2;
-  const targetX = -(chosenOffset - (viewportCenter - (cardRect.width/2)));
-  // but since track is duplicated, choose target that is >= currentX
-  // We'll animate until we pass the target while slowing down; to make it stop exactly, we'll use easing at the end.
+  const targetTranslate = -(chosenOffset - (viewportCenter - (cardRect.width/2)));
+
+  // animate movement: start fast to left (negative), then slow down and ease to target
+  let currentX = 0;
+  let velocity = 260 + Math.random()*120; // pixel/sec approx
+  const frictionBase = 0.993; // per frame multiplier approximation
+  let friction = frictionBase - Math.random()*0.003;
   let rafId;
-  let frames = 0;
-  function step(){
-    frames++;
-    // move
-    currentX -= velocity * (1/60); // normalized by fps
-    // wrap-around: keep currentX within a big range to avoid too large numbers (not necessary but safe)
+
+  function frame(){
+    // update position (normalize to 60fps)
+    currentX -= velocity * (1/60);
+    // loop-around visual: keep currentX bounded to avoid huge numbers
     // apply transform
     track.style.transform = `translateX(${currentX}px)`;
-    // slow down
+    // slow velocity
     velocity *= friction;
-    // after some time start checking closeness to target and gently approach
-    if(velocity < 6){
-      // when slow enough, ease to targetX
-      const dx = targetX - currentX;
-      // ease step
+
+    // when slow enough begin precise easing to target
+    if(velocity < 30){
+      // ease to targetTranslate
+      const dx = targetTranslate - currentX;
       currentX += dx * 0.12;
       track.style.transform = `translateX(${currentX}px)`;
       if(Math.abs(dx) < 1){
         cancelAnimationFrame(rafId);
-        finishSpin(chosen);
+        finishSpin(chosenMod);
         return;
       }
     } else {
-      rafId = requestAnimationFrame(step);
+      rafId = requestAnimationFrame(frame);
     }
   }
-  rafId = requestAnimationFrame(step);
+  rafId = requestAnimationFrame(frame);
 }
 
+/* After spin finishes */
 function finishSpin(mod){
   isSpinning = false;
-  // show result
-  result.innerHTML = `<div style="display:flex;flex-direction:column;align-items:center">
-      <div class="glow"><strong>Selamat! </strong>Anda mendapatkan <em>${mod.name}</em></div>
-      <div style="margin-top:10px"><a class="small-btn" id="downloadBtn" href="${mod.file}" target="_blank">Download Mod</a></div>
+  // decrement spins and store
+  spinsLeft = Math.max(0, spinsLeft - 1);
+  localStorage.setItem(STORAGE_KEY, spinsLeft);
+  updateSpinsUI();
+
+  // show result + download button
+  result.innerHTML = `
+    <div style="display:flex;flex-direction:column;align-items:center;gap:10px">
+      <div class="glow">Selamat — Anda mendapatkan <strong>${mod.name}</strong></div>
+      <div><a id="dlBtn" class="btn" href="${mod.file}" target="_blank">Download Mod</a></div>
+      <div class="muted">Spins tersisa: ${spinsLeft}</div>
     </div>`;
   result.classList.remove('hidden');
+
+  // optional: show the preview overlay automatically for flair
+  previewImg.src = mod.preview || mod.img || '';
+  overlay.classList.add('show');
+  overlay.setAttribute('aria-hidden','false');
 }
 
-/* mobile-friendly: touch support for faster spin trigger */
-let touchStartTime=0;
-viewport.addEventListener('touchstart', ()=>{ touchStartTime=Date.now(); });
-viewport.addEventListener('touchend', ()=>{ if(Date.now()-touchStartTime<500) { if(!isSpinning) startSpin(); } });
+/* allow pressing center of viewport to quick spin on mobile */
+viewport.addEventListener('click', ()=>{ if(!isSpinning && spinsLeft > 0) startSpin(); });
+
+/* initial subscribe link href (change in repo if needed) */
+subscribeBtn.href = 'https://www.youtube.com/'; // change to your channel in repo
+
+/* keyboard support: space to spin if enabled */
+window.addEventListener('keydown', (e)=>{ if(e.code === 'Space'){ e.preventDefault(); if(!isSpinning && spinsLeft>0) startSpin(); } });
+
+/* Prevent overlay image dragging */
+previewImg.ondragstart = ()=>false;
 
 </script>
 </body>
