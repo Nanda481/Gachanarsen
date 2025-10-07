@@ -3,36 +3,32 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Error - Gacha System</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-    <link rel="stylesheet" href="{{ url_for('static', filename='anim.css') }}">
+    <title>Error - Akses Ditolak</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="static/style.css">
 </head>
-<body>
+<body class="error-page">
     <div class="container">
-        <div class="error-animation">
-            <svg xmlns="http://www.w3.org/2000/svg" width="80" height="80" viewBox="0 0 24 24" fill="none" stroke="#ff4444" stroke-width="2">
-                <circle cx="12" cy="12" r="10"></circle>
-                <line x1="15" y1="9" x2="9" y2="15"></line>
-                <line x1="9" y1="9" x2="15" y2="15"></line>
-            </svg>
-        </div>
-        
-        <h1>⚠️ TERJADI KESALAHAN</h1>
-        
-        <div class="error-box">
-            <p>{{ message }}</p>
-        </div>
-        
-        <div class="action-buttons">
-            <a href="/" class="cta-button">Kembali ke Home</a>
-            {% if 'verifikasi' in message|lower %}
-            <a href="/" class="secondary-button">Verifikasi Ulang</a>
-            {% endif %}
-        </div>
-        
-        <div class="support-info">
-            <p>Jika masalah terus berlanjut, hubungi admin:</p>
-            <p>📧 Email: admin@channel.com</p>
+        <div class="error-container">
+            <h1>Oops! Akses Ditolak</h1>
+            
+            <div class="error-icon">⚠️</div>
+            
+            <p>Anda harus subscribe channel YouTube terlebih dahulu untuk mengakses halaman ini.</p>
+            
+            <div class="error-action">
+                <a href="index.html" class="btn btn-subscribe">Kembali ke Halaman Subscribe</a>
+            </div>
+            
+            <div class="error-instruction">
+                <p><strong>Instruksi:</strong></p>
+                <ol>
+                    <li>Klik tombol di atas untuk kembali ke halaman subscribe</li>
+                    <li>Klik tombol "Subscribe Channel"</li>
+                    <li>Subscribe channel YouTube kami</li>
+                    <li>Kembali ke halaman subscribe dan klik "Akses Gacha"</li>
+                </ol>
+            </div>
         </div>
     </div>
 </body>
