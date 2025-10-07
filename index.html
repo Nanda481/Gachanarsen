@@ -1,261 +1,305 @@
 <!doctype html>
-<html lang="en">
+<html lang="id">
 <head>
-  <meta charset="utf-8"/>
-  <meta name="viewport" content="width=device-width,initial-scale=1"/>
-  <title>Cyber Neon Gacha</title>
-  <style>
-    :root {
-      --bg: #020611;
-      --accent: linear-gradient(90deg,#00f5ff,#0066ff);
-      --text: #e6eef8;
-      --muted: #8ba2b8;
-      --card: rgba(10,20,40,0.8);
-      --glow: 0 0 20px #00eaff, 0 0 40px #007fff, inset 0 0 10px #00eaff;
-    }
-
-    * { box-sizing: border-box; }
-    html,body {
-      margin:0; padding:0;
-      font-family: 'Orbitron', sans-serif;
-      background: var(--bg);
-      color: var(--text);
-      height:100%;
-      overflow-x:hidden;
-    }
-
-    body::before {
-      content:"";
-      position:fixed; inset:0;
-      background:url('assets/bg.jpg') center/cover no-repeat;
-      filter:brightness(0.3) blur(4px);
-      z-index:-2;
-    }
-
-    body::after {
-      content:"";
-      position:fixed; inset:0;
-      background:radial-gradient(circle at 20% 30%, rgba(0,255,255,0.08), transparent 70%);
-      z-index:-1;
-    }
-
-    .app {
-      max-width:1200px;
-      margin:50px auto;
-      padding:30px;
-      background:rgba(0,10,25,0.6);
-      border-radius:20px;
-      box-shadow:var(--glow);
-      border:1px solid rgba(0,255,255,0.2);
-      backdrop-filter:blur(8px);
-      animation:fadeIn 1.2s ease-out;
-    }
-
-    header {display:flex;align-items:center;gap:16px;margin-bottom:18px;}
-    .logo {
-      width:60px;height:60px;border-radius:12px;
-      background:var(--accent);
-      color:#000;
-      font-weight:900;
-      display:flex;align-items:center;justify-content:center;
-      text-shadow:0 0 10px #00f5ff;
-      box-shadow:var(--glow);
-    }
-
-    h1 {margin:0;font-size:24px;}
-    p.lead {margin:4px 0 0;color:var(--muted);font-size:14px;}
-
-    .controls {margin-left:auto;display:flex;gap:12px;}
-    .btn {
-      border:none;
-      padding:10px 16px;
-      border-radius:10px;
-      font-weight:700;
-      cursor:pointer;
-      transition:all .3s;
-      color:#fff;
-      background:var(--accent);
-      box-shadow:0 0 10px #00eaff;
-    }
-    .btn.ghost {
-      background:transparent;
-      border:1px solid #00bfff;
-      color:#00eaff;
-    }
-    .btn:hover {
-      transform:scale(1.05);
-      box-shadow:0 0 20px #00eaff;
-    }
-
-    .grid {display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:16px;}
-    .card {
-      background:var(--card);
-      border-radius:10px;
-      overflow:hidden;
-      border:1px solid rgba(0,255,255,0.15);
-      transition:all .3s;
-      box-shadow:0 0 12px rgba(0,255,255,0.1);
-    }
-    .card img {width:100%;height:110px;object-fit:cover;}
-    .card .label {text-align:center;font-weight:700;padding:8px;}
-    .card:hover {
-      transform:translateY(-4px);
-      box-shadow:var(--glow);
-    }
-
-    .highlight {box-shadow:0 0 25px #00ffff, inset 0 0 15px #00eaff;}
-
-    .spin-btn {
-      width:100%;
-      padding:16px;
-      font-size:18px;
-      border:none;
-      border-radius:12px;
-      margin-top:20px;
-      font-weight:800;
-      background:var(--accent);
-      color:#001;
-      cursor:pointer;
-      box-shadow:var(--glow);
-    }
-
-    .muted {color:var(--muted);}
-    .modal {
-      position:fixed;inset:0;display:none;align-items:center;justify-content:center;
-      background:rgba(0,0,0,0.6);z-index:999;
-    }
-    .modal.open {display:flex;}
-    .modal .box {
-      background:#04121a;
-      padding:24px;
-      border-radius:14px;
-      border:1px solid #00eaff;
-      box-shadow:var(--glow);
-      text-align:center;
-      animation:pop .4s ease-out;
-    }
-    @keyframes fadeIn {from{opacity:0;transform:translateY(20px);}to{opacity:1;transform:none;}}
-    @keyframes pop {from{transform:scale(0.8);opacity:0;}to{transform:scale(1);opacity:1;}}
-
-    /* Volume button */
-    #volumeToggle {
-      position:fixed;bottom:16px;right:20px;
-      background:rgba(0,255,255,0.1);
-      border:1px solid rgba(0,255,255,0.3);
-      border-radius:50%;
-      width:44px;height:44px;
-      display:flex;align-items:center;justify-content:center;
-      font-size:20px;
-      cursor:pointer;
-      color:#00eaff;
-      box-shadow:0 0 10px #00eaff;
-    }
-    #volumeToggle:hover {background:rgba(0,255,255,0.25);}
-  </style>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Gacha Advanced - Pseudo Single-use</title>
+<style>
+  :root{
+    --bg:#06060b; --card:rgba(16,8,28,0.7); --accent:#a855f7; --neon:#c4a7ff; --muted:#9aa4b2;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;font-family:Inter,system-ui,Segoe UI,Roboto;background:var(--bg);color:#eef2ff}
+  .wrap{min-height:100vh;display:flex;flex-direction:column}
+  header{display:flex;justify-content:space-between;align-items:center;padding:18px 28px}
+  #logo{width:56px;height:56px;border-radius:12px;background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));display:flex;align-items:center;justify-content:center}
+  .actions{display:flex;gap:10px}
+  a.btn, button.btn{padding:10px 16px;border-radius:10px;border:0;cursor:pointer;font-weight:700}
+  a.btn{background:transparent;border:1px solid rgba(255,255,255,0.06);color:inherit;text-decoration:none}
+  button.primary{background:linear-gradient(90deg,var(--accent),#6d28d9);color:white}
+  main{flex:1;padding:28px}
+  .viewport{width:100%;max-width:920px;height:160px;margin:18px auto;overflow:hidden;border-radius:12px;background:linear-gradient(90deg, rgba(10,6,20,0.7), rgba(15,8,30,0.55));position:relative;border:1px solid rgba(168,85,247,0.08)}
+  .track{display:flex;gap:12px;position:absolute;left:0;top:0;height:100%;align-items:center;padding:0 40px;will-change:transform}
+  .card{width:140px;height:120px;border-radius:10px;background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));display:flex;flex-direction:column;align-items:center;justify-content:center;box-shadow:0 6px 20px rgba(0,0,0,0.6);border:1px solid rgba(255,255,255,0.02)}
+  .card img{max-width:86%;max-height:66%;border-radius:8px}
+  .card .name{font-size:13px;margin-top:8px;color:var(--neon);font-weight:700;text-align:center;padding:0 6px}
+  .center-marker{position:absolute;left:50%;top:0;transform:translateX(-50%);height:100%;width:4px;pointer-events:none;background:linear-gradient(180deg, rgba(200,150,255,0.15), rgba(200,150,255,0.25));box-shadow:0 0 24px rgba(168,85,247,0.15)}
+  .controls{display:flex;gap:12px;align-items:center;justify-content:center;margin-top:6px}
+  #spin{padding:12px 22px;border-radius:999px;background:linear-gradient(90deg,var(--accent),#6d28d9);border:none;color:white;font-weight:800;cursor:pointer}
+  #spin.disabled{opacity:.5;pointer-events:none}
+  #result{margin-top:12px;text-align:center;padding:12px;border-radius:10px;background:rgba(255,255,255,0.02);display:flex;gap:12px;align-items:center;justify-content:center}
+  .muted{color:var(--muted)}
+  .small-btn{padding:8px 10px;border-radius:8px;background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.03);cursor:pointer}
+</style>
 </head>
 <body>
-  <div class="app">
-    <header>
-      <div class="logo">G</div>
+<div class="wrap">
+  <header>
+    <div style="display:flex;gap:12px;align-items:center">
+      <div id="logo">LOGO</div>
       <div>
-        <h1>Cyber Neon Gacha</h1>
-        <p class="lead">Spin for epic mod drops — subscribe to unlock!</p>
+        <h1 style="margin:0">Gacha Mod — Advanced</h1>
+        <div class="muted">Pseudo single-use token (client-side)</div>
       </div>
-      <div class="controls">
-        <button class="btn ghost" id="btnSubscribe">Subscribe</button>
-        <button class="btn" id="btnGacha">Gacha</button>
-      </div>
-    </header>
+    </div>
+    <div class="actions">
+      <a id="subscribeBtn" class="btn" target="_blank">Subscribe</a>
+      <button id="enterGacha" class="btn primary disabled" disabled>GACHA</button>
+    </div>
+  </header>
 
-    <div class="grid" id="cards">
-      <div class="card" data-index="0"><img src="assets/img1.png"><div class="label">Mod A (SSR)</div></div>
-      <div class="card" data-index="1"><img src="assets/img2.png"><div class="label">Mod B (SR)</div></div>
-      <div class="card" data-index="2"><img src="assets/img3.png"><div class="label">Mod C (R)</div></div>
-      <div class="card" data-index="3"><img src="assets/img4.png"><div class="label">Mod D (SR)</div></div>
-      <div class="card" data-index="4"><img src="assets/img5.png"><div class="label">Mod E (R)</div></div>
-      <div class="card" data-index="5"><img src="assets/img6.png"><div class="label">Mod F (SSR)</div></div>
+  <main>
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+      <div>
+        <label class="small-btn">Logo <input id="logoInput" type="file" accept="image/*"></label>
+        <label class="small-btn">Background <input id="bgInput" type="file" accept="image/*"></label>
+      </div>
+      <div class="muted">Tema: Ungu Neon • Musik autoplay</div>
     </div>
 
-    <button id="spinBtn" class="spin-btn">🎰 SPIN</button>
-  </div>
-
-  <div class="modal" id="modalResult">
-    <div class="box">
-      <h2 id="resultTitle">You Won!</h2>
-      <button id="downloadBtn" class="btn">Download</button>
+    <div class="viewport" id="viewport">
+      <div class="track" id="track"></div>
+      <div class="center-marker"></div>
     </div>
-  </div>
 
-  <button id="volumeToggle">🔈</button>
-  <audio id="bgm" src="assets/bg.mp3" loop></audio>
+    <div class="controls">
+      <button id="spin" class="disabled">SPIN</button>
+    </div>
 
-  <script>
-    const spinBtn = document.getElementById('spinBtn');
-    const cards = Array.from(document.querySelectorAll('.card'));
-    const modal = document.getElementById('modalResult');
-    const resultTitle = document.getElementById('resultTitle');
-    const downloadBtn = document.getElementById('downloadBtn');
-    const bgm = document.getElementById('bgm');
-    const volumeToggle = document.getElementById('volumeToggle');
+    <div id="result" class="hidden"></div>
+  </main>
+</div>
 
-    let playing = false;
+<audio id="bgm" autoplay loop></audio>
 
-    function playBGM() {
-      if (!playing) {
-        bgm.volume = 0.5;
-        bgm.play().catch(()=>{});
-        playing = true;
+<script>
+/* CONFIG */
+const CONFIG = {
+  CHANNEL_URL: 'https://www.youtube.com/',
+  MUSIC_URL: 'https://music.youtube.com/watch?v=iisOyaFF58g&list=RDAMVMevTxdgbAF1Q',
+  // secret used for HMAC - NOTE: embedding secret in client is not secure; this is a pseudo-token for UX only
+  CLIENT_SECRET: 'embedded_client_secret_change_me',
+  TOKEN_TTL_MS: 1000 * 60 * 10, // 10 minutes
+  MODS: [
+    {id:'m1', name:'Mod Alpha (SSR)', img:'https://via.placeholder.com/200x120?text=Alpha', file:'https://example.com/mod1.zip'},
+    {id:'m2', name:'Mod Beta (SR)', img:'https://via.placeholder.com/200x120?text=Beta', file:'https://example.com/mod2.zip'},
+    {id:'m3', name:'Mod Gamma (R)', img:'https://via.placeholder.com/200x120?text=Gamma', file:'https://example.com/mod3.zip'},
+    {id:'m4', name:'Mod Delta (R)', img:'https://via.placeholder.com/200x120?text=Delta', file:'https://example.com/mod4.zip'},
+    {id:'m5', name:'Mod Epsilon (SR)', img:'https://via.placeholder.com/200x120?text=Epsilon', file:'https://example.com/mod5.zip'},
+    {id:'m6', name:'Mod Zeta (SSR)', img:'https://via.placeholder.com/200x120?text=Zeta', file:'https://example.com/mod6.zip'}
+  ]
+};
+
+/* UI refs */
+const subscribeBtn = document.getElementById('subscribeBtn');
+const enterGacha = document.getElementById('enterGacha');
+const spinBtn = document.getElementById('spin');
+const track = document.getElementById('track');
+const viewport = document.getElementById('viewport');
+const result = document.getElementById('result');
+const bgm = document.getElementById('bgm');
+const logoInput = document.getElementById('logoInput');
+const bgInput = document.getElementById('bgInput');
+const logoEl = document.getElementById('logo');
+
+/* init */
+subscribeBtn.href = CONFIG.CHANNEL_URL;
+bgm.src = CONFIG.MUSIC_URL; // may not play for YouTube urls; better to use direct mp3 if possible
+
+/* build duplicated track */
+function buildTrack(){
+  track.innerHTML = '';
+  const arr = CONFIG.MODS.concat(CONFIG.MODS);
+  arr.forEach(mod=>{
+    const div = document.createElement('div'); div.className='card';
+    div.dataset.id = mod.id; div.dataset.file = mod.file;
+    div.innerHTML = `<img src="${mod.img}" alt="${mod.name}"><div class="name">${mod.name}</div>`;
+    track.appendChild(div);
+  });
+}
+buildTrack();
+
+/* enable gacha on subscribe click (client-side only) */
+subscribeBtn.addEventListener('click', ()=>{
+  localStorage.setItem('gacha_sub_clicked', Date.now());
+  setTimeout(()=>{ enableEnter(); }, 700);
+});
+if(localStorage.getItem('gacha_sub_clicked')) enableEnter();
+function enableEnter(){ enterGacha.disabled=false; enterGacha.classList.remove('disabled'); spinBtn.classList.remove('disabled'); spinBtn.disabled = false; }
+
+enterGacha.addEventListener('click', ()=>{ viewport.scrollIntoView({behavior:'smooth'}); bgm.play().catch(()=>{}); });
+
+logoInput.addEventListener('change', e=>{
+  const f = e.target.files[0]; if(!f) return;
+  const u = URL.createObjectURL(f); logoEl.style.backgroundImage = `url(${u})`; logoEl.textContent = '';
+});
+bgInput.addEventListener('change', e=>{
+  const f = e.target.files[0]; if(!f) return;
+  const u = URL.createObjectURL(f); document.body.style.backgroundImage = `url(${u})`; document.body.style.backgroundSize = 'cover';
+});
+
+/* --- Advanced token helpers (Web Crypto for HMAC-SHA256) --- */
+async function importKey(secret){
+  const enc = new TextEncoder().encode(secret);
+  return await crypto.subtle.importKey('raw', enc, {name:'HMAC', hash:'SHA-256'}, false, ['sign','verify']);
+}
+async function hmacHex(key, message){
+  const enc = new TextEncoder().encode(message);
+  const sig = await crypto.subtle.sign('HMAC', key, enc);
+  // convert to hex
+  const view = new Uint8Array(sig);
+  return Array.from(view).map(b=>b.toString(16).padStart(2,'0')).join('');
+}
+function base64UrlEncode(obj){
+  const s = JSON.stringify(obj);
+  return btoa(unescape(encodeURIComponent(s))).replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,'');
+}
+function base64UrlDecode(str){
+  str = str.replace(/-/g,'+').replace(/_/g,'/');
+  while(str.length % 4) str += '=';
+  const s = decodeURIComponent(escape(atob(str)));
+  return JSON.parse(s);
+}
+
+/* create token (client-side) */
+async function createToken(mod){
+  const nonce = Math.random().toString(36).slice(2,12);
+  const now = Date.now();
+  const payload = {modId:mod.id, fileUrl:mod.file, nonce:nonce, iat:now, exp: now + CONFIG.TOKEN_TTL_MS};
+  const payloadB64 = base64UrlEncode(payload);
+  const key = await importKey(CONFIG.CLIENT_SECRET);
+  const sig = await hmacHex(key, payloadB64);
+  const token = payloadB64 + '.' + sig;
+  return token;
+}
+
+/* verify token (client-side) */
+async function verifyToken(token){
+  try{
+    const [b64,sig] = token.split('.');
+    if(!b64 || !sig) return {ok:false, err:'invalid'};
+    const key = await importKey(CONFIG.CLIENT_SECRET);
+    const expected = await hmacHex(key, b64);
+    if(!timingSafeEqual(expected, sig)) return {ok:false, err:'bad_sig'};
+    const payload = base64UrlDecode(b64);
+    if(payload.exp < Date.now()) return {ok:false, err:'expired'};
+    // check used in localStorage
+    const usedKey = 'used_nonces_v1';
+    const used = JSON.parse(localStorage.getItem(usedKey) || '[]');
+    if(used.includes(payload.nonce)) return {ok:false, err:'used'};
+    return {ok:true, payload};
+  }catch(e){ return {ok:false, err:'exception'} }
+}
+
+/* simple constant-time compare (strings) */
+function timingSafeEqual(a,b){
+  if(a.length !== b.length) return false;
+  let res = 0;
+  for(let i=0;i<a.length;i++){ res |= a.charCodeAt(i) ^ b.charCodeAt(i); }
+  return res === 0;
+}
+
+/* mark nonce used */
+function markNonceUsed(nonce){
+  const usedKey = 'used_nonces_v1';
+  const used = JSON.parse(localStorage.getItem(usedKey) || '[]');
+  used.push(nonce);
+  localStorage.setItem(usedKey, JSON.stringify(used));
+}
+
+/* Spin and then generate token + change URL hash to download */
+let isSpinning=false;
+spinBtn.addEventListener('click', ()=>{ if(isSpinning) return; startSpin(); });
+
+function startSpin(){
+  isSpinning = true;
+  result.classList.add('hidden');
+  const finalIndex = Math.floor(Math.random()*CONFIG.MODS.length);
+  const chosen = CONFIG.MODS[finalIndex];
+  // animation similar to simple version
+  const cards = track.children;
+  const card = cards[finalIndex];
+  const viewportCenter = viewport.clientWidth / 2;
+  const cardRect = card.getBoundingClientRect();
+  const chosenOffset = card.offsetLeft;
+  const cardWidth = cardRect.width + 12;
+  let currentX = 0;
+  let velocity = (Math.random()*40 + 90);
+  const friction = 0.986 - (Math.random()*0.003);
+  let rafId;
+  function step(){
+    currentX -= velocity*(1/60);
+    track.style.transform = `translateX(${currentX}px)`;
+    velocity *= friction;
+    if(velocity < 6){
+      const targetX = -(chosenOffset - (viewportCenter - (cardRect.width/2)));
+      const dx = targetX - currentX;
+      currentX += dx * 0.12;
+      track.style.transform = `translateX(${currentX}px)`;
+      if(Math.abs(dx) < 1){
+        cancelAnimationFrame(rafId);
+        finish(chosen);
+        return;
       }
+    } else {
+      rafId = requestAnimationFrame(step);
     }
+  }
+  rafId = requestAnimationFrame(step);
+}
 
-    volumeToggle.onclick = () => {
-      if (bgm.muted) {
-        bgm.muted = false;
-        volumeToggle.textContent = '🔈';
-      } else {
-        bgm.muted = true;
-        volumeToggle.textContent = '🔇';
-      }
-    };
+async function finish(mod){
+  isSpinning = false;
+  // generate token and change hash to simulate download endpoint
+  const token = await createToken(mod);
+  // store token and also keep mapping in sessionStorage for local verification
+  sessionStorage.setItem('last_token', token);
+  sessionStorage.setItem('last_payload', JSON.stringify({fileUrl:mod.file, modName:mod.name}));
+  // show result with DOWNLOAD button that points to #download?token=...
+  const safeToken = encodeURIComponent(token);
+  const href = '#download?token=' + safeToken;
+  result.innerHTML = `<div style="display:flex;flex-direction:column;align-items:center">
+      <div style="padding:8px 12px;border-radius:8px;background:linear-gradient(90deg, rgba(168,85,247,0.12), rgba(168,85,247,0.06));font-weight:700">Selamat — ${mod.name}</div>
+      <div style="margin-top:10px"><a class="small-btn" id="dlLink" href="${href}">Prepare Download</a></div>
+      <div style="margin-top:8px" class="muted">Link hanya berlaku sebentar & hanya 1x per browser (pseudo)</div>
+    </div>`;
+  result.classList.remove('hidden');
+}
 
-    async function spin() {
-      playBGM();
-      let duration = 2500;
-      let start = Date.now();
-      let last = -1;
-      const final = Math.floor(Math.random()*cards.length);
+/* handle #download?token=... navigation */
+async function handleHash(){
+  const hash = location.hash || '';
+  if(!hash.startsWith('#download')) return;
+  // parse token
+  const qs = hash.slice(1);
+  const params = new URLSearchParams(qs.split('?')[1] || '');
+  const token = params.get('token');
+  if(!token) { alert('Token tidak ditemukan'); return; }
+  // verify
+  const v = await verifyToken(token);
+  if(!v.ok){
+    if(v.err === 'used') alert('Token sudah dipakai di browser ini.');
+    else if(v.err === 'expired') alert('Token kedaluwarsa.');
+    else alert('Token tidak valid.');
+    return;
+  }
+  // OK: mark nonce used and redirect to file
+  markNonceUsed(v.payload.nonce);
+  // clear hash to avoid reuse
+  location.hash = '';
+  // redirect to file url
+  window.open(v.payload.fileUrl, '_blank');
+}
 
-      function animate() {
-        let now = Date.now();
-        if (now - start < duration) {
-          let i = Math.floor((now/100)%cards.length);
-          if (i !== last) {
-            cards.forEach(c=>c.classList.remove('highlight'));
-            cards[i].classList.add('highlight');
-            last = i;
-          }
-          requestAnimationFrame(animate);
-        } else {
-          cards.forEach(c=>c.classList.remove('highlight'));
-          cards[final].classList.add('highlight');
-          showResult(final);
-        }
-      }
-      animate();
-    }
+/* run on load */
+window.addEventListener('load', ()=>{
+  // if page was loaded with a #download token (maybe user clicked), handle it
+  handleHash();
+});
 
-    async function showResult(idx) {
-      const name = cards[idx].querySelector('.label').textContent;
-      resultTitle.textContent = `You won ${name}!`;
-      modal.classList.add('open');
-      // Fetch one-time link from API
-      const res = await fetch(`/api/download?id=${idx}`);
-      const data = await res.json();
-      downloadBtn.onclick = ()=>window.open(data.url,'_blank');
-    }
+/* small helpers: allow direct click on the "Prepare Download" link to trigger handler */
+window.addEventListener('hashchange', handleHash);
 
-    modal.addEventListener('click',e=>{if(e.target===modal)modal.classList.remove('open');});
-    spinBtn.addEventListener('click',spin);
-  </script>
+</script>
 </body>
 </html>
