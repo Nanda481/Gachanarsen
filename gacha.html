@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gacha Mod - Putar Sekarang!</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='gacha_style.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="background-animation">
+        <div class="stars"></div>
+        <div class="twinkling"></div>
+    </div>
+    
+    <div class="container">
+        <header class="header">
+            <div class="logo">
+                <i class="fas fa-dragon"></i>
+                <span>MOD GACHA</span>
+            </div>
+            <div class="user-info">
+                <i class="fas fa-user"></i>
+                <span>{{ session.username }}</span>
+            </div>
+        </header>
+
+        <main class="main-content">
+            <div class="gacha-container">
+                <h1 class="title"><i class="fas fa-star"></i> GACHA MOD EXCLUSIVE</h1>
+                <p class="subtitle">Putar sekarang untuk mendapatkan mod premium secara gratis!</p>
+                
+                <div class="gacha-machine">
+                    <div class="machine-header">
+                        <div class="machine-lights">
+                            <div class="light red"></div>
+                            <div class="light blue"></div>
+                            <div class="light green"></div>
+                        </div>
+                        <div class="machine-title">PREMIUM GACHA</div>
+                    </div>
+                    
+                    <div class="items-display">
+                        {% for item in items %}
+                        <div class="item-box {{ item.rarity|lower }}" data-id="{{ item.id }}">
+                            <div class="item-image">
+                                <img src="{{ url_for('static', filename='images/' + item.image) }}" 
+                                     alt="{{ item.name }}" 
+                                     onerror="this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjEwMCIgaGVpZ2h0PSIxMDAiIGZpbGw9IiMzMzMzMzMiLz4KPHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHg9IjIwIiB5PSIyMCIgZmlsbD0id2hpdGUiPgogIDxwYXRoIGQ9Ik01MCAyMEM0Mi4zOSAyMCAzNiAyNi4zOSAzNiAzNEMzNiA0MS42MSA0Mi4zOSA0OCA1MCA0OEM1Ny42MSA0OCA2NCA0MS42MSA2NCAzNEM2NCAyNi4zOSA1Ny42MSAyMCA1MCAyMFpNNTAgNTZDMzkuODYgNTYgMzIgNDguMTQgMzIgMzhDMzIgMjcuODYgMzkuODYgMjAgNTAgMjBDNjAuMTQgMjAgNjggMjcuODYgNjggMzhDNjggNDguMTQgNjAuMTQgNTYgNTAgNTZaTTUwIDI4QzQ2LjY5IDI4IDQ0IDMwLjY5IDQ0IDM0QzQ0IDM3LjMxIDQ2LjY5IDQwIDUwIDQwQzUzLjMxIDQwIDU2IDM3LjMxIDU2IDM0QzU2IDMwLjY5IDUzLjMxIDI4IDUwIDI4Wk01MCA0NEM0NC40OCA0NCA0MCAzOS41MiA0MCAzNEM0MCAyOC40OCA0NC40OCAyNCA1MCAyNEM1NS41MiAyNCA2MCAyOC40OCA2MCAzNEM2MCAzOS41MiA1NS41MiA0NCA1MCA0NFoiLz4KPC9zdmc+Cg=='">
+                            </div>
+                            <div class="item-rarity {{ item.rarity|lower }}">{{ item.rarity }}</div>
+                            <div class="item-name">{{ item.name }}</div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                    
+                    <div class="spin-section">
+                        <button id="spinButton" class="spin-btn">
+                            <i class="fas fa-sync-alt spin-icon"></i>
+                            <span class="spin-text">PUTAR GACHA!</span>
+                            <div class="spin-effect"></div>
+                        </button>
+                        
+                        <div class="spin-info">
+                            <div class="chance-info">
+                                <i class="fas fa-info-circle"></i>
+                                <span>Kesempatan: SSR (10%) • SR (30%) • R (60%)</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Result Modal -->
+    <div id="resultModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2><i class="fas fa-trophy"></i> SELAMAT!</h2>
+                <span class="close">&times;</span>
+            </div>
+            <div class="modal-body">
+                <div id="resultItem" class="result-item">
+                    <div class="result-image">
+                        <img id="resultImg" src="" alt="Mod Result">
+                    </div>
+                    <div class="result-details">
+                        <h3 id="resultName"></h3>
+                        <div id="resultRarity" class="rarity-badge"></div>
+                        <p id="resultDesc">Anda mendapatkan mod premium!</p>
+                    </div>
+                </div>
+                <div class="result-actions">
+                    <a id="downloadBtn" href="#" target="_blank" class="download-btn">
+                        <i class="fas fa-download"></i>
+                        DOWNLOAD MOD
+                    </a>
+                    <button id="closeBtn" class="close-btn">
+                        <i class="fas fa-times"></i>
+                        TUTUP
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Loading Overlay -->
+    <div id="loadingOverlay" class="loading-overlay">
+        <div class="spinner">
+            <div class="spinner-core"></div>
+            <div class="spinner-orbits">
+                <div class="spinner-orbit"></div>
+                <div class="spinner-orbit"></div>
+                <div class="spinner-orbit"></div>
+            </div>
+        </div>
+        <p>Memutar Gacha...</p>
+    </div>
+
+    <script src="{{ url_for('static', filename='gacha_script.js') }}"></script>
+</body>
+</html>

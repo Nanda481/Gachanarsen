@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Client Logs - Gacha System</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='gacha_style.css') }}">
+    <style>
+        .logs-container {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(20px);
+            border-radius: 20px;
+            padding: 30px;
+            margin: 20px 0;
+            max-height: 70vh;
+            overflow-y: auto;
+        }
+        
+        .log-entry {
+            padding: 15px;
+            margin: 10px 0;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            border-left: 4px solid #4ecdc4;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9em;
+        }
+        
+        .log-timestamp {
+            color: #4ecdc4;
+            font-weight: 600;
+        }
+        
+        .log-action {
+            color: #ff6b6b;
+            font-weight: 600;
+        }
+        
+        .log-username {
+            color: #45aaf2;
+        }
+        
+        .log-ip {
+            color: #a55a00;
+        }
+        
+        .log-location {
+            color: #00b894;
+        }
+        
+        .admin-controls {
+            margin: 20px 0;
+            display: flex;
+            gap: 15px;
+        }
+        
+        .log-btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+        
+        .btn-refresh {
+            background: #4ecdc4;
+            color: white;
+        }
+        
+        .btn-clear {
+            background: #ff6b6b;
+            color: white;
+        }
+        
+        .btn-download {
+            background: #45aaf2;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <div class="background-animation">
+        <div class="stars"></div>
+        <div class="twinkling"></div>
+    </div>
+    
+    <div class="container">
+        <header class="header">
+            <div class="logo">
+                <i class="fas fa-file-alt"></i>
+                <span>CLIENT LOGS</span>
+            </div>
+            <div class="user-info">
+                <i class="fas fa-database"></i>
+                <span>Monitoring System</span>
+            </div>
+        </header>
+
+        <main class="main-content">
+            <h2 class="title"><i class="fas fa-server"></i> SERVER LOGS</h2>
+            <p class="subtitle">Log data client dan aktivitas gacha</p>
+            
+            <div class="admin-controls">
+                <button class="log-btn btn-refresh" onclick="location.reload()">
+                    <i class="fas fa-sync"></i> Refresh
+                </button>
+                <button class="log-btn btn-clear" onclick="clearLogs()">
+                    <i class="fas fa-trash"></i> Clear Logs
+                </button>
+                <button class="log-btn btn-download" onclick="downloadLogs()">
+                    <i class="fas fa-download"></i> Download
+                </button>
+            </div>
+            
+            <div class="logs-container">
+                {% for log in logs %}
+                <div class="log-entry">
+                    {% set log_data = log|tojson|loads %}
+                    <div>
+                        <span class="log-timestamp">{{ log_data.timestamp }}</span> - 
+                        <span class="log-action">{{ log_data.action|upper }}</span> - 
+                        <span class="log-username">{{ log_data.username }}</span> - 
+                        <span class="log-ip">{{ log_data.ip_address }}</span>
+                    </div>
+                    {% if log_data.location %}
+                    <div style="margin-top: 8px;">
+                        <span class="log-location">
+                            📍 Lokasi: 
+                            {% if log_data.location.latitude %}
+                                {{ "%.6f"|format(log_data.location.latitude) }}, {{ "%.6f"|format(log_data.location.longitude) }}
+                            {% endif %}
+                            {% if log_data.location.address %}
+                                - {{ log_data.location.address.road }}, {{ log_data.location.address.city }}, {{ log_data.location.address.state }}
+                            {% endif %}
+                        </span>
+                    </div>
+                    {% endif %}
+                </div>
+                {% else %}
+                <div class="no-data">
+                    <i class="fas fa-info-circle"></i>
+                    <p>Tidak ada log data</p>
+                </div>
+                {% endfor %}
+            </div>
+        </main>
+    </div>
+
+    <script>
+        function clearLogs() {
+            if (confirm('Yakin ingin menghapus semua logs?')) {
+                fetch('/clear-logs', {
+                    method: 'POST'
+                }).then(() => {
+                    location.reload();
+                });
+            }
+        }
+        
+        function downloadLogs() {
+            alert('Fitur download logs akan segera tersedia');
+        }
+        
+        // Auto-scroll to bottom
+        window.addEventListener('load', () => {
+            const container = document.querySelector('.logs-container');
+            if (container) {
+                container.scrollTop = container.scrollHeight;
+            }
+        });
+    </script>
+</body>
+</html>
