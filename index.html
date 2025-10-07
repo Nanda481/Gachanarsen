@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Gacha Mod Exclusive</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
         :root {
             --bg-color: #121212;
@@ -12,6 +13,9 @@
             --secondary: #03dac6;
             --text: #e6e6e6;
             --accent: #ff7597;
+            --ssr-glow: #ffcc00;
+            --sr-glow: #c0c0c0;
+            --r-glow: #4ecdc4;
         }
         
         * {
@@ -25,10 +29,11 @@
             background-color: var(--bg-color);
             color: var(--text);
             min-height: 100vh;
-            background-image: url('images/background.jpg'); /* Ganti dengan gambar custom Anda */
+            background-image: url('images/background.jpg');
             background-size: cover;
             background-position: center;
             background-attachment: fixed;
+            overflow-x: hidden;
         }
         
         .container {
@@ -53,17 +58,39 @@
             justify-content: center;
             border: 3px solid var(--primary);
             box-shadow: 0 0 20px rgba(187, 134, 252, 0.5);
-            background-image: url('images/logo.png'); /* Ganti dengan logo custom Anda */
+            background-image: url('images/logo.png');
             background-size: contain;
             background-position: center;
             background-repeat: no-repeat;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .logo::after {
+            content: '';
+            position: absolute;
+            top: -2px;
+            left: -2px;
+            right: -2px;
+            bottom: -2px;
+            border-radius: 50%;
+            background: linear-gradient(45deg, var(--primary), transparent, var(--secondary), transparent, var(--accent));
+            background-size: 400% 400%;
+            animation: gradientShift 3s ease infinite;
+            z-index: -1;
+        }
+        
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
         }
         
         .logo-placeholder {
             font-size: 24px;
             font-weight: bold;
             color: var(--primary);
-            display: none; /* Sembunyikan placeholder jika logo ada */
+            display: none;
         }
         
         .main-content {
@@ -72,6 +99,7 @@
             align-items: center;
             gap: 30px;
             margin-top: 40px;
+            text-align: center;
         }
         
         .button-group {
@@ -99,26 +127,22 @@
             box-shadow: 0 5px 15px rgba(255, 0, 0, 0.3);
         }
         
-        .btn-gacha {
-            background: linear-gradient(45deg, var(--primary), var(--secondary));
-            color: white;
-            box-shadow: 0 5px 15px rgba(187, 134, 252, 0.3);
-            opacity: 0.5;
-            cursor: not-allowed;
-        }
-        
-        .btn-gacha.active {
-            opacity: 1;
-            cursor: pointer;
-        }
-        
-        .btn:hover {
+        .btn-subscribe:hover {
             transform: translateY(-3px);
-            box-shadow: 0 8px 20px rgba(187, 134, 252, 0.4);
+            box-shadow: 0 8px 20px rgba(255, 0, 0, 0.5);
         }
         
-        .btn:active {
+        .btn-subscribe:active {
             transform: translateY(1px);
+        }
+        
+        .subscription-message {
+            background: rgba(30, 30, 30, 0.8);
+            padding: 20px;
+            border-radius: 15px;
+            margin-top: 20px;
+            max-width: 600px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
         }
         
         /* Gacha Page Styles */
@@ -157,14 +181,48 @@
             padding: 15px;
             text-align: center;
             transition: all 0.3s ease;
-            border: 2px solid transparent;
             position: relative;
             overflow: hidden;
         }
         
+        .gacha-item.ssr-item {
+            border: 2px solid var(--ssr-glow);
+            box-shadow: 0 0 15px rgba(255, 204, 0, 0.3);
+            animation: pulseGold 2s infinite;
+        }
+        
+        .gacha-item.sr-item {
+            border: 2px solid var(--sr-glow);
+            box-shadow: 0 0 15px rgba(192, 192, 192, 0.3);
+            animation: pulseSilver 2s infinite;
+        }
+        
+        .gacha-item.r-item {
+            border: 2px solid var(--r-glow);
+            box-shadow: 0 0 15px rgba(78, 205, 196, 0.3);
+            animation: pulseBlue 2s infinite;
+        }
+        
+        @keyframes pulseGold {
+            0% { box-shadow: 0 0 5px rgba(255, 204, 0, 0.3); }
+            50% { box-shadow: 0 0 20px rgba(255, 204, 0, 0.7); }
+            100% { box-shadow: 0 0 5px rgba(255, 204, 0, 0.3); }
+        }
+        
+        @keyframes pulseSilver {
+            0% { box-shadow: 0 0 5px rgba(192, 192, 192, 0.3); }
+            50% { box-shadow: 0 0 20px rgba(192, 192, 192, 0.7); }
+            100% { box-shadow: 0 0 5px rgba(192, 192, 192, 0.3); }
+        }
+        
+        @keyframes pulseBlue {
+            0% { box-shadow: 0 0 5px rgba(78, 205, 196, 0.3); }
+            50% { box-shadow: 0 0 20px rgba(78, 205, 196, 0.7); }
+            100% { box-shadow: 0 0 5px rgba(78, 205, 196, 0.3); }
+        }
+        
         .gacha-item:hover {
             transform: translateY(-5px);
-            border-color: var(--primary);
         }
         
         .item-image {
@@ -191,9 +249,9 @@
             opacity: 0.8;
         }
         
-        .ssr { color: #ffcc00; }
-        .sr { color: #ff6b6b; }
-        .r { color: #4ecdc4; }
+        .ssr { color: var(--ssr-glow); text-shadow: 0 0 5px rgba(255, 204, 0, 0.5); }
+        .sr { color: var(--sr-glow); text-shadow: 0 0 5px rgba(192, 192, 192, 0.5); }
+        .r { color: var(--r-glow); text-shadow: 0 0 5px rgba(78, 205, 196, 0.5); }
         
         .spin-container {
             text-align: center;
@@ -210,11 +268,32 @@
             cursor: pointer;
             transition: all 0.3s ease;
             box-shadow: 0 5px 15px rgba(255, 117, 151, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .spin-btn::before {
+            content: '';
+            position: absolute;
+            top: -2px;
+            left: -2px;
+            right: -2px;
+            bottom: -2px;
+            background: linear-gradient(45deg, var(--accent), transparent, #ffaa80, transparent, var(--accent));
+            background-size: 400% 400%;
+            animation: gradientShift 3s ease infinite;
+            z-index: -1;
+            border-radius: 50px;
         }
         
         .spin-btn:hover {
             transform: scale(1.05);
             box-shadow: 0 8px 20px rgba(255, 117, 151, 0.5);
+        }
+        
+        .spin-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
         }
         
         .result-modal {
@@ -224,7 +303,7 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background-color: rgba(0, 0, 0, 0.8);
+            background-color: rgba(0, 0, 0, 0.9);
             z-index: 1000;
             align-items: center;
             justify-content: center;
@@ -239,6 +318,7 @@
             width: 90%;
             position: relative;
             animation: modalAppear 0.5s ease;
+            box-shadow: 0 0 30px rgba(187, 134, 252, 0.5);
         }
         
         @keyframes modalAppear {
@@ -247,9 +327,10 @@
         }
         
         .result-title {
-            font-size: 24px;
+            font-size: 28px;
             margin-bottom: 20px;
             color: var(--primary);
+            text-shadow: 0 0 10px rgba(187, 134, 252, 0.5);
         }
         
         .result-item {
@@ -269,6 +350,24 @@
             color: var(--text);
         }
         
+        .result-ssr .result-image {
+            border: 3px solid var(--ssr-glow);
+            box-shadow: 0 0 20px rgba(255, 204, 0, 0.7);
+            animation: pulseGold 1.5s infinite;
+        }
+        
+        .result-sr .result-image {
+            border: 3px solid var(--sr-glow);
+            box-shadow: 0 0 20px rgba(192, 192, 192, 0.7);
+            animation: pulseSilver 1.5s infinite;
+        }
+        
+        .result-r .result-image {
+            border: 3px solid var(--r-glow);
+            box-shadow: 0 0 20px rgba(78, 205, 196, 0.7);
+            animation: pulseBlue 1.5s infinite;
+        }
+        
         .download-btn {
             padding: 12px 30px;
             background: linear-gradient(45deg, var(--secondary), #00c897);
@@ -279,6 +378,22 @@
             cursor: pointer;
             margin-top: 20px;
             transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .download-btn::before {
+            content: '';
+            position: absolute;
+            top: -2px;
+            left: -2px;
+            right: -2px;
+            bottom: -2px;
+            background: linear-gradient(45deg, var(--secondary), transparent, #00c897, transparent, var(--secondary));
+            background-size: 400% 400%;
+            animation: gradientShift 3s ease infinite;
+            z-index: -1;
+            border-radius: 50px;
         }
         
         .download-btn:hover {
@@ -290,14 +405,24 @@
             position: absolute;
             width: 10px;
             height: 10px;
-            background-color: var(--primary);
             opacity: 0.8;
             animation: confettiFall 5s linear infinite;
         }
         
         @keyframes confettiFall {
             0% { transform: translateY(-100px) rotate(0deg); opacity: 1; }
-            100% { transform: translateY(100vh) rotate(360deg); opacity: 0; }
+            100% { transform: translateY(100vh) rotate(720deg); opacity: 0; }
+        }
+        
+        /* Spin Animation */
+        .spinning .gacha-item {
+            animation: spinItem 0.2s infinite;
+        }
+        
+        @keyframes spinItem {
+            0% { transform: translateY(0); opacity: 0.7; }
+            50% { transform: translateY(-10px); opacity: 1; }
+            100% { transform: translateY(0); opacity: 0.7; }
         }
         
         /* Responsive design */
@@ -343,7 +468,11 @@
             
             <div class="button-group">
                 <a href="https://www.youtube.com/channel/your-channel-id" target="_blank" class="btn btn-subscribe" id="subscribe-btn">Subscribe Channel</a>
-                <button class="btn btn-gacha" id="gacha-btn" disabled>Main Gacha</button>
+            </div>
+            
+            <div class="subscription-message" id="subscription-message">
+                <p>Anda harus subscribe channel YouTube terlebih dahulu untuk mengakses sistem gacha.</p>
+                <p>Setelah subscribe, refresh halaman ini untuk membuka kunci gacha.</p>
             </div>
         </div>
         
@@ -352,32 +481,32 @@
                 <h2 class="gacha-title">GACHA MOD EXCLUSIVE</h2>
                 
                 <div class="items-grid">
-                    <div class="gacha-item">
+                    <div class="gacha-item ssr-item">
                         <div class="item-image"><img src="images/mod1.jpg" alt="Mod 1" onerror="this.style.display='none'; this.parentNode.innerHTML='Gambar Mod 1';"></div>
                         <div class="item-name">Mod Name 1</div>
                         <div class="item-rarity ssr">SSR</div>
                     </div>
-                    <div class="gacha-item">
+                    <div class="gacha-item sr-item">
                         <div class="item-image"><img src="images/mod2.jpg" alt="Mod 2" onerror="this.style.display='none'; this.parentNode.innerHTML='Gambar Mod 2';"></div>
                         <div class="item-name">Mod Name 2</div>
                         <div class="item-rarity sr">SR</div>
                     </div>
-                    <div class="gacha-item">
+                    <div class="gacha-item r-item">
                         <div class="item-image"><img src="images/mod3.jpg" alt="Mod 3" onerror="this.style.display='none'; this.parentNode.innerHTML='Gambar Mod 3';"></div>
                         <div class="item-name">Mod Name 3</div>
                         <div class="item-rarity r">R</div>
                     </div>
-                    <div class="gacha-item">
+                    <div class="gacha-item ssr-item">
                         <div class="item-image"><img src="images/mod4.jpg" alt="Mod 4" onerror="this.style.display='none'; this.parentNode.innerHTML='Gambar Mod 4';"></div>
                         <div class="item-name">Mod Name 4</div>
                         <div class="item-rarity ssr">SSR</div>
                     </div>
-                    <div class="gacha-item">
+                    <div class="gacha-item sr-item">
                         <div class="item-image"><img src="images/mod5.jpg" alt="Mod 5" onerror="this.style.display='none'; this.parentNode.innerHTML='Gambar Mod 5';"></div>
                         <div class="item-name">Mod Name 5</div>
                         <div class="item-rarity sr">SR</div>
                     </div>
-                    <div class="gacha-item">
+                    <div class="gacha-item r-item">
                         <div class="item-image"><img src="images/mod6.jpg" alt="Mod 6" onerror="this.style.display='none'; this.parentNode.innerHTML='Gambar Mod 6';"></div>
                         <div class="item-name">Mod Name 6</div>
                         <div class="item-rarity r">R</div>
@@ -394,7 +523,7 @@
     <div class="result-modal" id="result-modal">
         <div class="modal-content">
             <h2 class="result-title">SELAMAT!</h2>
-            <div class="result-item">
+            <div class="result-item" id="result-item">
                 <div class="result-image" id="result-image"></div>
                 <div class="item-name" id="result-name">Mod Name</div>
                 <div class="item-rarity" id="result-rarity">Rarity</div>
@@ -406,7 +535,7 @@
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             const subscribeBtn = document.getElementById('subscribe-btn');
-            const gachaBtn = document.getElementById('gacha-btn');
+            const subscriptionMessage = document.getElementById('subscription-message');
             const gachaPage = document.getElementById('gacha-page');
             const spinBtn = document.getElementById('spin-btn');
             const resultModal = document.getElementById('result-modal');
@@ -414,6 +543,8 @@
             const resultImage = document.getElementById('result-image');
             const resultName = document.getElementById('result-name');
             const resultRarity = document.getElementById('result-rarity');
+            const resultItem = document.getElementById('result-item');
+            const itemsGrid = document.querySelector('.items-grid');
             
             // Data mod yang tersedia untuk gacha
             const modItems = [
@@ -421,37 +552,43 @@
                     name: "Mod Name 1", 
                     rarity: "SSR", 
                     image: "images/mod1.jpg", 
-                    downloadLink: "https://your-download-link-1.com" 
+                    downloadLink: "https://your-download-link-1.com",
+                    type: "ssr"
                 },
                 { 
                     name: "Mod Name 2", 
                     rarity: "SR", 
                     image: "images/mod2.jpg", 
-                    downloadLink: "https://your-download-link-2.com" 
+                    downloadLink: "https://your-download-link-2.com",
+                    type: "sr"
                 },
                 { 
                     name: "Mod Name 3", 
                     rarity: "R", 
                     image: "images/mod3.jpg", 
-                    downloadLink: "https://your-download-link-3.com" 
+                    downloadLink: "https://your-download-link-3.com",
+                    type: "r"
                 },
                 { 
                     name: "Mod Name 4", 
                     rarity: "SSR", 
                     image: "images/mod4.jpg", 
-                    downloadLink: "https://your-download-link-4.com" 
+                    downloadLink: "https://your-download-link-4.com",
+                    type: "ssr"
                 },
                 { 
                     name: "Mod Name 5", 
                     rarity: "SR", 
                     image: "images/mod5.jpg", 
-                    downloadLink: "https://your-download-link-5.com" 
+                    downloadLink: "https://your-download-link-5.com",
+                    type: "sr"
                 },
                 { 
                     name: "Mod Name 6", 
                     rarity: "R", 
                     image: "images/mod6.jpg", 
-                    downloadLink: "https://your-download-link-6.com" 
+                    downloadLink: "https://your-download-link-6.com",
+                    type: "r"
                 }
             ];
             
@@ -461,6 +598,9 @@
             // Cek status subscription saat halaman dimuat
             if (hasSubscribed) {
                 enableGacha();
+            } else {
+                // Tombol gacha disembunyikan sampai user subscribe
+                subscriptionMessage.style.display = 'block';
             }
             
             // Handler untuk tombol subscribe
@@ -468,17 +608,9 @@
                 // Set flag bahwa user telah mengklik tombol subscribe
                 localStorage.setItem('hasSubscribed', 'true');
                 hasSubscribed = true;
-                enableGacha();
                 
                 // Beri pesan kepada user
-                alert('Terima kasih telah subscribe! Sekarang Anda dapat memainkan gacha.');
-            });
-            
-            // Handler untuk tombol gacha
-            gachaBtn.addEventListener('click', function() {
-                // Tampilkan halaman gacha
-                document.querySelector('.main-content').style.display = 'none';
-                gachaPage.style.display = 'block';
+                alert('Terima kasih telah subscribe! Silakan refresh halaman untuk mengakses gacha.');
             });
             
             // Handler untuk tombol spin
@@ -486,19 +618,39 @@
                 // Animasi spin
                 spinBtn.disabled = true;
                 spinBtn.textContent = 'Spinning...';
+                itemsGrid.classList.add('spinning');
                 
-                // Pilih item secara acak setelah delay
-                setTimeout(function() {
+                // Hitung durasi spin (antara 3-5 detik)
+                const spinDuration = 3000 + Math.random() * 2000;
+                const spinInterval = 100; // Interval perubahan item
+                const totalIntervals = spinDuration / spinInterval;
+                let currentInterval = 0;
+                
+                // Animasi spin
+                const spinAnimation = setInterval(function() {
+                    // Highlight item secara acak selama spin
                     const randomIndex = Math.floor(Math.random() * modItems.length);
-                    const selectedItem = modItems[randomIndex];
+                    highlightItem(randomIndex);
                     
-                    // Tampilkan hasil
-                    showResult(selectedItem);
+                    currentInterval++;
                     
-                    // Reset tombol spin
-                    spinBtn.disabled = false;
-                    spinBtn.textContent = 'SPIN!';
-                }, 2000);
+                    // Hentikan animasi setelah durasi yang ditentukan
+                    if (currentInterval >= totalIntervals) {
+                        clearInterval(spinAnimation);
+                        itemsGrid.classList.remove('spinning');
+                        
+                        // Pilih item secara acak
+                        const selectedIndex = Math.floor(Math.random() * modItems.length);
+                        const selectedItem = modItems[selectedIndex];
+                        
+                        // Tampilkan hasil
+                        showResult(selectedItem);
+                        
+                        // Reset tombol spin
+                        spinBtn.disabled = false;
+                        spinBtn.textContent = 'SPIN!';
+                    }
+                }, spinInterval);
             });
             
             // Handler untuk tombol download
@@ -512,12 +664,32 @@
             
             // Fungsi untuk mengaktifkan tombol gacha
             function enableGacha() {
-                gachaBtn.disabled = false;
-                gachaBtn.classList.add('active');
+                subscriptionMessage.style.display = 'none';
+                gachaPage.style.display = 'block';
+            }
+            
+            // Fungsi untuk highlight item selama spin
+            function highlightItem(index) {
+                // Reset semua item
+                const allItems = document.querySelectorAll('.gacha-item');
+                allItems.forEach(item => {
+                    item.style.transform = 'scale(1)';
+                    item.style.opacity = '0.7';
+                });
+                
+                // Highlight item yang dipilih
+                const selectedItem = allItems[index];
+                if (selectedItem) {
+                    selectedItem.style.transform = 'scale(1.1)';
+                    selectedItem.style.opacity = '1';
+                }
             }
             
             // Fungsi untuk menampilkan hasil gacha
             function showResult(item) {
+                // Set class berdasarkan rarity
+                resultItem.className = 'result-item result-' + item.type;
+                
                 // Set konten hasil
                 resultImage.innerHTML = '';
                 const img = document.createElement('img');
@@ -551,15 +723,23 @@
             
             // Fungsi untuk membuat efek confetti
             function createConfetti() {
-                const confettiCount = 100;
+                const confettiCount = 150;
+                const colors = ['#bb86fc', '#03dac6', '#ff7597', '#ffcc00', '#4ecdc4', '#c0c0c0'];
                 
                 for (let i = 0; i < confettiCount; i++) {
                     const confetti = document.createElement('div');
                     confetti.className = 'confetti';
                     
                     // Warna acak
-                    const colors = ['#bb86fc', '#03dac6', '#ff7597', '#ffcc00', '#4ecdc4'];
                     confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+                    
+                    // Ukuran acak
+                    const size = 5 + Math.random() * 10;
+                    confetti.style.width = size + 'px';
+                    confetti.style.height = size + 'px';
+                    
+                    // Bentuk acak
+                    confetti.style.borderRadius = Math.random() > 0.5 ? '50%' : '0';
                     
                     // Posisi acak
                     confetti.style.left = Math.random() * 100 + 'vw';
