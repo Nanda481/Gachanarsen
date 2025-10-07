@@ -1,0 +1,72 @@
+/* Animation Keyframes */
+@keyframes gradientShift {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+
+@keyframes pulseGold {
+    0% { box-shadow: 0 0 5px rgba(255, 204, 0, 0.3); }
+    50% { box-shadow: 0 0 20px rgba(255, 204, 0, 0.7); }
+    100% { box-shadow: 0 0 5px rgba(255, 204, 0, 0.3); }
+}
+
+@keyframes pulseSilver {
+    0% { box-shadow: 0 0 5px rgba(192, 192, 192, 0.3); }
+    50% { box-shadow: 0 0 20px rgba(192, 192, 192, 0.7); }
+    100% { box-shadow: 0 0 5px rgba(192, 192, 192, 0.3); }
+}
+
+@keyframes pulseBlue {
+    0% { box-shadow: 0 0 5px rgba(78, 205, 196, 0.3); }
+    50% { box-shadow: 0 0 20px rgba(78, 205, 196, 0.7); }
+    100% { box-shadow: 0 0 5px rgba(78, 205, 196, 0.3); }
+}
+
+@keyframes confettiFall {
+    0% { transform: translateY(-100px) rotate(0deg); opacity: 1; }
+    100% { transform: translateY(100vh) rotate(720deg); opacity: 0; }
+}
+
+@keyframes modalAppear {
+    from { transform: scale(0.8); opacity: 0; }
+    to { transform: scale(1); opacity: 1; }
+}
+
+/* Animation Classes */
+.gacha-item.ssr-item {
+    animation: pulseGold 2s infinite;
+}
+
+.gacha-item.sr-item {
+    animation: pulseSilver 2s infinite;
+}
+
+.gacha-item.r-item {
+    animation: pulseBlue 2s infinite;
+}
+
+.result-ssr .result-image {
+    animation: pulseGold 1.5s infinite;
+}
+
+.result-sr .result-image {
+    animation: pulseSilver 1.5s infinite;
+}
+
+.result-r .result-image {
+    animation: pulseBlue 1.5s infinite;
+}
+
+.modal-content {
+    animation: modalAppear 0.5s ease;
+}
+
+/* Confetti Styles */
+.confetti {
+    position: absolute;
+    width: 10px;
+    height: 10px;
+    opacity: 0.8;
+    animation: confettiFall 5s linear infinite;
+}
