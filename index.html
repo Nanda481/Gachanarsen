@@ -1,266 +1,398 @@
-<!DOCTYPE html>
-<html lang="id">
+<!--
+READY-TO-USE SINGLE-FILE GACHA WEBSITE
+HOW TO USE:
+1) Save this file as `index.html` inside an empty folder.
+2) Create a subfolder `assets/` and place your 6 mod images there named: img1.png .. img6.png
+   OR change image paths in the card elements below.
+3) Replace the DOWNLOAD_LINKS array inside the <script> with your real file links.
+4) Replace CHANNEL_URL with your YouTube channel URL.
+5) Replace the logo by changing the .logo element or adding an <img> inside it.
+6) Deploy: push to GitHub and import to Vercel (static site). No build required.
+
+SECURITY NOTE (IMPORTANT):
+This app *does not* truly verify YouTube subscriptions because you asked to avoid YouTube API / Google Cloud.
+It uses a UX flow: user clicks "Subscribe" (opens your channel) then clicks "I have subscribed" to enable the gacha.
+This prevents casual users from directly spinning but *cannot guarantee* the user actually subscribed.
+To verify real subscription reliably you'd need server-side verification using YouTube Data API or OAuth.
+-->
+
+<!doctype html>
+<html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Subscribe untuk Akses Gacha</title>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <style>
-        :root {
-            --bg-color: #121212;
-            --card-bg: #1e1e1e;
-            --primary: #bb86fc;
-            --secondary: #03dac6;
-            --text: #e6e6e6;
-            --accent: #ff7597;
-        }
-        
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Poppins', sans-serif;
-        }
-        
-        body {
-            background-color: var(--bg-color);
-            color: var(--text);
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background-image: url('static/images/background.jpg');
-            background-size: cover;
-            background-position: center;
-            background-attachment: fixed;
-        }
-        
-        .container {
-            max-width: 800px;
-            margin: 0 auto;
-            padding: 20px;
-            text-align: center;
-        }
-        
-        .logo {
-            width: 200px;
-            height: 200px;
-            margin: 0 auto 30px;
-            background-color: var(--card-bg);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border: 3px solid var(--primary);
-            box-shadow: 0 0 20px rgba(187, 134, 252, 0.5);
-            background-image: url('static/images/logo.png');
-            background-size: contain;
-            background-position: center;
-            background-repeat: no-repeat;
-            position: relative;
-            overflow: hidden;
-        }
-        
-        .logo::after {
-            content: '';
-            position: absolute;
-            top: -2px;
-            left: -2px;
-            right: -2px;
-            bottom: -2px;
-            border-radius: 50%;
-            background: linear-gradient(45deg, var(--primary), transparent, var(--secondary), transparent, var(--accent));
-            background-size: 400% 400%;
-            animation: gradientShift 3s ease infinite;
-            z-index: -1;
-        }
-        
-        @keyframes gradientShift {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
-        }
-        
-        .logo-placeholder {
-            font-size: 24px;
-            font-weight: bold;
-            color: var(--primary);
-            display: none;
-        }
-        
-        .content {
-            background-color: rgba(30, 30, 30, 0.9);
-            border-radius: 20px;
-            padding: 40px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
-        }
-        
-        h1 {
-            font-size: 32px;
-            margin-bottom: 20px;
-            color: var(--primary);
-            text-shadow: 0 0 10px rgba(187, 134, 252, 0.5);
-        }
-        
-        p {
-            font-size: 18px;
-            margin-bottom: 30px;
-            line-height: 1.6;
-        }
-        
-        .btn {
-            padding: 15px 40px;
-            border: none;
-            border-radius: 50px;
-            font-size: 20px;
-            font-weight: bold;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            position: relative;
-            overflow: hidden;
-            display: inline-block;
-            margin: 10px;
-            text-decoration: none;
-        }
-        
-        .btn-subscribe {
-            background: linear-gradient(45deg, #FF0000, #CC0000);
-            color: white;
-            box-shadow: 0 5px 15px rgba(255, 0, 0, 0.3);
-        }
-        
-        .btn-subscribe:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 8px 20px rgba(255, 0, 0, 0.5);
-        }
-        
-        .btn-subscribe:active {
-            transform: translateY(1px);
-        }
-        
-        .btn-gacha {
-            background: linear-gradient(45deg, var(--primary), var(--secondary));
-            color: white;
-            box-shadow: 0 5px 15px rgba(187, 134, 252, 0.3);
-            opacity: 0.3;
-            cursor: not-allowed;
-            pointer-events: none;
-        }
-        
-        .btn-gacha.active {
-            opacity: 1;
-            cursor: pointer;
-            pointer-events: auto;
-        }
-        
-        .btn-gacha:hover.active {
-            transform: translateY(-3px);
-            box-shadow: 0 8px 20px rgba(187, 134, 252, 0.4);
-        }
-        
-        .btn-gacha:active.active {
-            transform: translateY(1px);
-        }
-        
-        .instruction {
-            margin-top: 30px;
-            padding: 20px;
-            background-color: rgba(0, 0, 0, 0.3);
-            border-radius: 15px;
-            font-size: 16px;
-        }
-        
-        .instruction ol {
-            text-align: left;
-            padding-left: 20px;
-            margin-top: 10px;
-        }
-        
-        .instruction li {
-            margin-bottom: 10px;
-        }
-        
-        /* Responsive design */
-        @media (max-width: 768px) {
-            .content {
-                padding: 30px 20px;
-            }
-            
-            h1 {
-                font-size: 28px;
-            }
-            
-            p {
-                font-size: 16px;
-            }
-            
-            .btn {
-                padding: 12px 30px;
-                font-size: 18px;
-                margin: 8px;
-            }
-            
-            .logo {
-                width: 150px;
-                height: 150px;
-            }
-        }
-    </style>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Gacha Mod Drop</title>
+  <style>
+    :root{
+      --bg: #0b0f13;
+      --card:#0f1720;
+      --accent: linear-gradient(90deg,#ff5f6d,#ffc371);
+      --glass: rgba(255,255,255,0.04);
+      --text:#e6eef8;
+      --muted:#99a3b2;
+      --shadow: 0 6px 18px rgba(2,6,23,0.6);
+      --success:#39d5a2;
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0;padding:0;
+      font-family:Inter, ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial;
+      background:var(--bg);
+      color:var(--text);
+      -webkit-font-smoothing:antialiased;
+      -moz-osx-font-smoothing:grayscale;
+      background-image: url('assets/bg.jpg'); /* optional background - replace */
+      background-size:cover; background-position:center; background-attachment:fixed;
+      display:flex;align-items:center;justify-content:center;padding:40px;
+    }
+
+    .app{
+      width:100%;max-width:1200px;background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+      border-radius:14px;padding:22px;box-shadow:var(--shadow);backdrop-filter: blur(6px);
+      border:1px solid rgba(255,255,255,0.03);
+    }
+
+    header{display:flex;align-items:center;gap:16px;margin-bottom:18px}
+    .logo{width:56px;height:56px;border-radius:12px;background:var(--glass);display:flex;align-items:center;justify-content:center;font-weight:700;color:var(--text);font-size:20px}
+    .title{flex:1}
+    h1{margin:0;font-size:20px}
+    p.lead{margin:4px 0 0;color:var(--muted);font-size:13px}
+
+    .controls{display:flex;gap:12px;align-items:center}
+    .btn{background:transparent;border:0;padding:10px 14px;border-radius:10px;color:var(--text);cursor:pointer;font-weight:600}
+    .btn.primary{background:var(--accent);color:#06101a;padding:10px 18px}
+    .btn.ghost{background:transparent;border:1px solid rgba(255,255,255,0.06)}
+
+    .main{display:flex;gap:24px;align-items:flex-start}
+
+    .left{flex:1}
+    .right{width:420px}
+
+    .gacha-area{background:linear-gradient(180deg, rgba(255,255,255,0.018), rgba(255,255,255,0.01));border-radius:12px;padding:18px;border:1px solid rgba(255,255,255,0.03)}
+
+    .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+    .card{background:var(--card);border-radius:10px;padding:10px;display:flex;flex-direction:column;align-items:center;gap:8px;border:1px solid rgba(255,255,255,0.03)}
+    .card img{width:100%;height:110px;object-fit:cover;border-radius:8px}
+    .rarity{font-size:12px;color:var(--muted)}
+    .label{font-weight:700}
+
+    .footer{display:flex;align-items:center;justify-content:space-between;margin-top:14px}
+
+    .spin-wrap{display:flex;flex-direction:column;gap:12px;align-items:stretch}
+    .spin-btn{padding:14px;border-radius:12px;border:0;font-weight:700;font-size:16px;cursor:pointer}
+    .spin-btn.disabled{opacity:0.45;cursor:not-allowed}
+
+    /* highlight animation */
+    .card.highlight{box-shadow:0 8px 30px rgba(255,95,109,0.12);transform:translateY(-6px);border:1px solid rgba(255,255,255,0.12)}
+
+    /* result modal */
+    .modal{position:fixed;inset:0;display:none;align-items:center;justify-content:center;z-index:60}
+    .modal.open{display:flex}
+    .modal .box{background:linear-gradient(180deg,#06101a, #07131a);padding:18px;border-radius:12px;border:1px solid rgba(255,255,255,0.04);min-width:320px;text-align:center}
+    .modal .box h2{margin:0 0 8px}
+    .modal .box p{margin:0 0 12px;color:var(--muted)}
+
+    /* small helpers */
+    .muted{color:var(--muted);font-size:13px}
+
+    /* responsive */
+    @media (max-width:900px){
+      .main{flex-direction:column}
+      .right{width:100%}
+      .grid{grid-template-columns:repeat(2,1fr)}
+    }
+
+    /* fancy spin bar */
+    .spin-bar{height:8px;background:linear-gradient(90deg,#102027,#0b2532);border-radius:999px;overflow:hidden}
+    .spin-bar .progress{height:100%;width:0%;background:var(--accent);transition:width 700ms cubic-bezier(.2,.9,.3,1)}
+
+    footer small{color:var(--muted)}
+  </style>
 </head>
 <body>
-    <div class="container">
-        <div class="logo">
-            <div class="logo-placeholder">LOGO</div>
-        </div>
-        
-        <div class="content">
-            <h1>Dapatkan Mod Exclusive dengan Berlangganan!</h1>
-            <p>Subscribe channel YouTube kami untuk membuka kunci sistem gacha dan dapatkan mod exclusive!</p>
-            
-            <a href="https://www.youtube.com/channel/UCvS2k5N3c8nQNCTb-bqBBwg" target="_blank" class="btn btn-subscribe" id="subscribe-btn">Subscribe Channel</a>
-            <button class="btn btn-gacha" id="gacha-btn">Akses Gacha</button>
-            
-            <div class="instruction">
-                <p><strong>Cara untuk mengakses gacha:</strong></p>
-                <ol>
-                    <li>Klik tombol "Subscribe Channel" di atas</li>
-                    <li>Subscribe channel YouTube kami</li>
-                    <li>Kembali ke halaman ini dan klik tombol "Akses Gacha"</li>
-                </ol>
+  <div class="app" role="application">
+    <header>
+      <div class="logo" id="logo">G</div>
+      <div class="title">
+        <h1>Gacha Mod Drop</h1>
+        <p class="lead">Exclusive game mods — spin to win. Subscribe to get a free spin.</p>
+      </div>
+
+      <div class="controls">
+        <button class="btn ghost" id="btnSubscribe">Subscribe</button>
+        <button class="btn primary" id="btnGachaTop">Gacha</button>
+      </div>
+    </header>
+
+    <div class="main">
+      <div class="left">
+        <div class="gacha-area">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+            <div>
+              <div class="muted">Available Mods</div>
+              <div class="label">6 Items | Rarities: SSR / SR / R</div>
             </div>
+            <div class="muted">Your spin: <span id="spins">0</span></div>
+          </div>
+
+          <div class="grid" id="cards">
+            <!-- Cards: replace images in assets/ -->
+            <div class="card" data-index="0"><img src="assets/img1.png" alt="mod1"><div class="label">Mod A</div><div class="rarity">SSR</div></div>
+            <div class="card" data-index="1"><img src="assets/img2.png" alt="mod2"><div class="label">Mod B</div><div class="rarity">SR</div></div>
+            <div class="card" data-index="2"><img src="assets/img3.png" alt="mod3"><div class="label">Mod C</div><div class="rarity">R</div></div>
+            <div class="card" data-index="3"><img src="assets/img4.png" alt="mod4"><div class="label">Mod D</div><div class="rarity">SR</div></div>
+            <div class="card" data-index="4"><img src="assets/img5.png" alt="mod5"><div class="label">Mod E</div><div class="rarity">R</div></div>
+            <div class="card" data-index="5"><img src="assets/img6.png" alt="mod6"><div class="label">Mod F</div><div class="rarity">SSR</div></div>
+          </div>
+
+          <div class="footer">
+            <div style="flex:1;margin-right:12px">
+              <div class="spin-wrap">
+                <div class="spin-bar"><div class="progress" id="progress"></div></div>
+                <button id="spinBtn" class="spin-btn primary" style="background:var(--accent);color:#06101a" disabled>SPIN</button>
+              </div>
+            </div>
+            <div style="width:180px;text-align:right">
+              <div class="muted">Theme:</div>
+              <div style="margin-top:8px"><button class="btn ghost" id="themeToggle">Toggle BG</button></div>
+            </div>
+          </div>
         </div>
+
+        <div style="margin-top:14px;padding:12px;background:var(--glass);border-radius:10px;border:1px solid rgba(255,255,255,0.02);color:var(--muted)">
+          <strong>How it works</strong>
+          <ul>
+            <li>Click <em>Subscribe</em> to open my YouTube channel.</li>
+            <li>After subscribing (or clicking "I've subscribed"), SPIN will enable.</li>
+            <li>When you win, click Download to get the mod file.</li>
+          </ul>
+          <small>Remember: to truly verify subscriptions you need server-side verification with the YouTube API.</small>
+        </div>
+
+      </div>
+
+      <aside class="right">
+        <div class="gacha-area">
+          <h3 style="margin-top:0">Result Preview</h3>
+          <div style="display:flex;gap:12px;align-items:center">
+            <div style="width:86px;height:86px;border-radius:10px;background:rgba(255,255,255,0.02);display:flex;align-items:center;justify-content:center" id="resultThumb">?</div>
+            <div style="flex:1">
+              <div class="label" id="resultTitle">Waiting...</div>
+              <div class="rarity" id="resultRarity">—</div>
+            </div>
+          </div>
+          <div style="margin-top:12px;">
+            <button id="downloadBtn" class="btn primary" style="width:100%;background:var(--success);color:#02110a;display:none">Download</button>
+          </div>
+        </div>
+
+        <div style="margin-top:14px;padding:12px;background:var(--glass);border-radius:10px;border:1px solid rgba(255,255,255,0.02)">
+          <div class="muted">Customize</div>
+          <small class="muted">Replace images in assets/ and edit channel + links in the script.</small>
+          <div style="margin-top:8px;display:flex;gap:8px">
+            <button class="btn ghost" id="editAssets">Open assets folder</button>
+          </div>
+        </div>
+      </aside>
     </div>
 
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const subscribeBtn = document.getElementById('subscribe-btn');
-            const gachaBtn = document.getElementById('gacha-btn');
-            
-            // Cek status subscription saat halaman dimuat
-            if (localStorage.getItem('hasSubscribed') === 'true') {
-                gachaBtn.classList.add('active');
-            } else {
-                // Tambahkan event listener untuk tombol subscribe
-                subscribeBtn.addEventListener('click', function() {
-                    // Set flag bahwa user telah mengklik tombol subscribe
-                    localStorage.setItem('hasSubscribed', 'true');
-                    gachaBtn.classList.add('active');
-                    
-                    // Beri pesan kepada user
-                    alert('Terima kasih telah subscribe! Sekarang Anda dapat mengakses halaman gacha.');
-                });
-            }
-            
-            // Handler untuk tombol gacha
-            gachaBtn.addEventListener('click', function() {
-                if (localStorage.getItem('hasSubscribed') === 'true') {
-                    // Redirect ke halaman gacha
-                    window.location.href = 'gacha.html';
-                } else {
-                    alert('Anda harus subscribe terlebih dahulu!');
-                }
-            });
-        });
-    </script>
+    <footer style="margin-top:16px;display:flex;align-items:center;justify-content:space-between">
+      <small>Made with ❤️ — Replace the logo & images to match your brand</small>
+      <small>Version 1.0</small>
+    </footer>
+
+  </div>
+
+  <!-- Modal for result -->
+  <div class="modal" id="modalResult" aria-hidden="true">
+    <div class="box">
+      <h2 id="modalTitle">You won!</h2>
+      <p id="modalText">Download your mod below.</p>
+      <div style="margin-top:12px"><button id="modalDownload" class="btn primary">Download</button></div>
+    </div>
+  </div>
+
+  <!-- Modal for subscribe confirmation -->
+  <div class="modal" id="modalSubscribe" aria-hidden="true">
+    <div class="box">
+      <h2>Subscribe to the channel</h2>
+      <p class="muted">A new tab was opened to the channel. Click Subscribe there, then press the button below to confirm.</p>
+      <div style="display:flex;gap:8px;justify-content:center;margin-top:12px">
+        <button class="btn ghost" id="modalCancel">Cancel</button>
+        <button class="btn primary" id="modalConfirm">I've subscribed</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    /* ====== CONFIG ====== */
+    const CHANNEL_URL = 'https://www.youtube.com/channel/UC_REPLACE_WITH_YOUR_CHANNEL'; // <-- change
+
+    // Put your real download links here (order corresponds to cards 0..5)
+    const DOWNLOAD_LINKS = [
+      'https://example.com/file_mod_a.zip',
+      'https://example.com/file_mod_b.zip',
+      'https://example.com/file_mod_c.zip',
+      'https://example.com/file_mod_d.zip',
+      'https://example.com/file_mod_e.zip',
+      'https://example.com/file_mod_f.zip'
+    ];
+
+    /* ====== END CONFIG ====== */
+
+    const subscribeBtn = document.getElementById('btnSubscribe');
+    const gachaTop = document.getElementById('btnGachaTop');
+    const spinBtn = document.getElementById('spinBtn');
+    const progress = document.getElementById('progress');
+    const cards = Array.from(document.querySelectorAll('.card'));
+    const spinsDisplay = document.getElementById('spins');
+    const resultThumb = document.getElementById('resultThumb');
+    const resultTitle = document.getElementById('resultTitle');
+    const resultRarity = document.getElementById('resultRarity');
+    const downloadBtn = document.getElementById('downloadBtn');
+    const modalResult = document.getElementById('modalResult');
+    const modalDownload = document.getElementById('modalDownload');
+    const modalSubscribe = document.getElementById('modalSubscribe');
+    const modalConfirm = document.getElementById('modalConfirm');
+    const modalCancel = document.getElementById('modalCancel');
+    const spinsKey = 'gacha_spins';
+    let userSpins = parseInt(localStorage.getItem(spinsKey) || '0',10);
+
+    // Setup
+    spinsDisplay.textContent = userSpins;
+    let enabled = localStorage.getItem('gacha_subscribed') === 'true';
+    updateButtons();
+
+    subscribeBtn.addEventListener('click', ()=>{
+      // open channel in new tab
+      window.open(CHANNEL_URL, '_blank');
+      // show confirm modal
+      openModal('modalSubscribe');
+    });
+
+    modalConfirm.addEventListener('click', ()=>{
+      // User clicks I've subscribed. Mark as subscribed.
+      localStorage.setItem('gacha_subscribed','true');
+      enabled = true;
+      closeModal('modalSubscribe');
+      updateButtons();
+      alert('Thanks! Gacha unlocked. You received 1 spin.');
+      grantSpin(1);
+    });
+    modalCancel.addEventListener('click', ()=>{ closeModal('modalSubscribe'); });
+
+    gachaTop.addEventListener('click', ()=>{ scrollToSpin(); });
+
+    function updateButtons(){
+      if(enabled){
+        subscribeBtn.textContent = 'Subscribed'; subscribeBtn.disabled = true; subscribeBtn.classList.add('disabled');
+        spinBtn.disabled = false; spinBtn.classList.remove('disabled');
+      } else {
+        subscribeBtn.textContent = 'Subscribe'; subscribeBtn.disabled = false; subscribeBtn.classList.remove('disabled');
+        spinBtn.disabled = true; spinBtn.classList.add('disabled');
+      }
+    }
+
+    function openModal(id){ document.getElementById(id).classList.add('open'); document.getElementById(id).setAttribute('aria-hidden','false'); }
+    function closeModal(id){ document.getElementById(id).classList.remove('open'); document.getElementById(id).setAttribute('aria-hidden','true'); }
+
+    function scrollToSpin(){ window.scrollTo({top:document.body.scrollHeight,behavior:'smooth'}); }
+
+    function grantSpin(n){ userSpins += n; localStorage.setItem(spinsKey,String(userSpins)); spinsDisplay.textContent = userSpins; }
+
+    spinBtn.addEventListener('click', async ()=>{
+      if(!enabled){ alert('Please subscribe first.'); return; }
+      if(userSpins <= 0){ alert('You have no spins. Subscribe to get spins.'); return; }
+      userSpins--; localStorage.setItem(spinsKey,String(userSpins)); spinsDisplay.textContent = userSpins;
+      await doSpinAnimation();
+    });
+
+    function pickWeightedIndex(){
+      // Example weighted rarities: SSR (5%), SR (25%), R (70%)
+      // We'll map this to indices manually (you can tweak per card if needed)
+      const rand = Math.random()*100;
+      if(rand < 5) return randomIndexOfRarity('SSR');
+      if(rand < 30) return randomIndexOfRarity('SR');
+      return randomIndexOfRarity('R');
+    }
+
+    function randomIndexOfRarity(r){
+      // map rarities from DOM
+      const candidates = cards.filter(c=>c.querySelector('.rarity').textContent.trim() === r);
+      if(candidates.length===0) return Math.floor(Math.random()*cards.length);
+      return parseInt(candidates[Math.floor(Math.random()*candidates.length)].dataset.index,10);
+    }
+
+    async function doSpinAnimation(){
+      // simple progressive highlight shuffle
+      let duration = 2600; // ms
+      const start = Date.now();
+      let highlighted = -1;
+      const finalIndex = pickWeightedIndex();
+
+      function step(){
+        const elapsed = Date.now()-start;
+        const t = elapsed/duration;
+        // speed easing: faster then slower
+        const speed = 40 + Math.pow(1 - Math.max(0,1-t), 3)*300; // not used directly but for style
+
+        // remove previous
+        if(highlighted >=0) cards[highlighted].classList.remove('highlight');
+        // pick next highlight index
+        highlighted = Math.floor((elapsed/120) % cards.length);
+        cards[highlighted].classList.add('highlight');
+
+        // progress bar
+        const pct = Math.min(100, (elapsed/duration)*100);
+        progress.style.width = pct+'%';
+
+        if(elapsed < duration){ requestAnimationFrame(step); }
+        else {
+          // land on finalIndex: un-highlight loop and highlight final
+          cards.forEach(c=>c.classList.remove('highlight'));
+          cards[finalIndex].classList.add('highlight');
+          progress.style.width = '100%';
+          // show result
+          const card = cards[finalIndex];
+          const title = card.querySelector('.label').textContent;
+          const rarity = card.querySelector('.rarity').textContent;
+          const imgSrc = card.querySelector('img').src;
+          showResult(title,rarity,imgSrc,finalIndex);
+        }
+      }
+      requestAnimationFrame(step);
+    }
+
+    function showResult(title,rarity,img,idx){
+      resultThumb.innerHTML = '<img src="'+img+'" style="width:80px;height:80px;border-radius:8px;object-fit:cover">';
+      resultTitle.textContent = title;
+      resultRarity.textContent = rarity;
+      downloadBtn.style.display='block';
+      downloadBtn.onclick = ()=>{ window.open(DOWNLOAD_LINKS[idx],'_blank'); };
+      modalDownload.onclick = ()=>{ window.open(DOWNLOAD_LINKS[idx],'_blank'); };
+      openModal('modalResult');
+    }
+
+    // close result modal on click outside
+    modalResult.addEventListener('click', (e)=>{ if(e.target===modalResult) closeModal('modalResult'); });
+
+    // theme toggle (just toggle the background image for demo)
+    const themeToggle = document.getElementById('themeToggle');
+    themeToggle.addEventListener('click', ()=>{
+      const body = document.body;
+      if(body.style.backgroundImage){ body.style.backgroundImage=''; } else { body.style.backgroundImage = "url('assets/bg.jpg')"; }
+    });
+
+    // editAssets just opens assets path (can't open file explorer from browser reliably) -> show alert
+    document.getElementById('editAssets').addEventListener('click', ()=>{ alert('Put your images in the assets/ folder next to index.html (img1.png .. img6.png).'); });
+
+    // top Gacha button scroll
+    document.getElementById('btnGachaTop').addEventListener('click', ()=>{ document.querySelector('.spin-wrap').scrollIntoView({behavior:'smooth',block:'center'}); });
+
+    // init download button link, hide
+    downloadBtn.style.display='none';
+
+  </script>
 </body>
 </html>
