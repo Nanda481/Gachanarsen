@@ -5,205 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Subscribe untuk Akses Gacha</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <style>
-        :root {
-            --bg-color: #121212;
-            --card-bg: #1e1e1e;
-            --primary: #bb86fc;
-            --secondary: #03dac6;
-            --text: #e6e6e6;
-            --accent: #ff7597;
-        }
-        
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Poppins', sans-serif;
-        }
-        
-        body {
-            background-color: var(--bg-color);
-            color: var(--text);
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background-image: url('images/background.jpg');
-            background-size: cover;
-            background-position: center;
-            background-attachment: fixed;
-        }
-        
-        .container {
-            max-width: 800px;
-            margin: 0 auto;
-            padding: 20px;
-            text-align: center;
-        }
-        
-        .logo {
-            width: 200px;
-            height: 200px;
-            margin: 0 auto 30px;
-            background-color: var(--card-bg);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border: 3px solid var(--primary);
-            box-shadow: 0 0 20px rgba(187, 134, 252, 0.5);
-            background-image: url('images/logo.png');
-            background-size: contain;
-            background-position: center;
-            background-repeat: no-repeat;
-            position: relative;
-            overflow: hidden;
-        }
-        
-        .logo::after {
-            content: '';
-            position: absolute;
-            top: -2px;
-            left: -2px;
-            right: -2px;
-            bottom: -2px;
-            border-radius: 50%;
-            background: linear-gradient(45deg, var(--primary), transparent, var(--secondary), transparent, var(--accent));
-            background-size: 400% 400%;
-            animation: gradientShift 3s ease infinite;
-            z-index: -1;
-        }
-        
-        @keyframes gradientShift {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
-        }
-        
-        .logo-placeholder {
-            font-size: 24px;
-            font-weight: bold;
-            color: var(--primary);
-            display: none;
-        }
-        
-        .content {
-            background-color: rgba(30, 30, 30, 0.9);
-            border-radius: 20px;
-            padding: 40px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
-        }
-        
-        h1 {
-            font-size: 32px;
-            margin-bottom: 20px;
-            color: var(--primary);
-            text-shadow: 0 0 10px rgba(187, 134, 252, 0.5);
-        }
-        
-        p {
-            font-size: 18px;
-            margin-bottom: 30px;
-            line-height: 1.6;
-        }
-        
-        .btn {
-            padding: 15px 40px;
-            border: none;
-            border-radius: 50px;
-            font-size: 20px;
-            font-weight: bold;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            position: relative;
-            overflow: hidden;
-            display: inline-block;
-            margin: 10px;
-        }
-        
-        .btn-subscribe {
-            background: linear-gradient(45deg, #FF0000, #CC0000);
-            color: white;
-            box-shadow: 0 5px 15px rgba(255, 0, 0, 0.3);
-        }
-        
-        .btn-subscribe:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 8px 20px rgba(255, 0, 0, 0.5);
-        }
-        
-        .btn-subscribe:active {
-            transform: translateY(1px);
-        }
-        
-        .btn-gacha {
-            background: linear-gradient(45deg, var(--primary), var(--secondary));
-            color: white;
-            box-shadow: 0 5px 15px rgba(187, 134, 252, 0.3);
-            opacity: 0.5;
-            cursor: not-allowed;
-        }
-        
-        .btn-gacha.active {
-            opacity: 1;
-            cursor: pointer;
-        }
-        
-        .btn-gacha:hover.active {
-            transform: translateY(-3px);
-            box-shadow: 0 8px 20px rgba(187, 134, 252, 0.4);
-        }
-        
-        .btn-gacha:active.active {
-            transform: translateY(1px);
-        }
-        
-        .instruction {
-            margin-top: 30px;
-            padding: 20px;
-            background-color: rgba(0, 0, 0, 0.3);
-            border-radius: 15px;
-            font-size: 16px;
-        }
-        
-        .instruction ol {
-            text-align: left;
-            padding-left: 20px;
-            margin-top: 10px;
-        }
-        
-        .instruction li {
-            margin-bottom: 10px;
-        }
-        
-        /* Responsive design */
-        @media (max-width: 768px) {
-            .content {
-                padding: 30px 20px;
-            }
-            
-            h1 {
-                font-size: 28px;
-            }
-            
-            p {
-                font-size: 16px;
-            }
-            
-            .btn {
-                padding: 12px 30px;
-                font-size: 18px;
-            }
-            
-            .logo {
-                width: 150px;
-                height: 150px;
-            }
-        }
-    </style>
+    <link rel="stylesheet" href="static/style.css">
+    <link rel="stylesheet" href="static/anim.css">
 </head>
-<body>
+<body class="subscribe-page">
     <div class="container">
         <div class="logo">
             <div class="logo-placeholder">LOGO</div>
@@ -227,24 +32,21 @@
         </div>
     </div>
 
+    <script src="static/script.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             const subscribeBtn = document.getElementById('subscribe-btn');
             const gachaBtn = document.getElementById('gacha-btn');
             
-            // Simpan status subscription di localStorage
-            let hasSubscribed = localStorage.getItem('hasSubscribed') === 'true';
-            
             // Cek status subscription saat halaman dimuat
-            if (hasSubscribed) {
+            if (isSubscribed()) {
                 enableGacha();
             }
             
             // Handler untuk tombol subscribe
             subscribeBtn.addEventListener('click', function() {
                 // Set flag bahwa user telah mengklik tombol subscribe
-                localStorage.setItem('hasSubscribed', 'true');
-                hasSubscribed = true;
+                setSubscribed(true);
                 enableGacha();
                 
                 // Beri pesan kepada user
@@ -253,9 +55,11 @@
             
             // Handler untuk tombol gacha
             gachaBtn.addEventListener('click', function() {
-                if (hasSubscribed) {
+                if (isSubscribed()) {
                     // Redirect ke halaman gacha
                     window.location.href = 'gacha.html';
+                } else {
+                    showError('Anda harus subscribe terlebih dahulu!');
                 }
             });
             
