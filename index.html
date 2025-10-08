@@ -271,7 +271,7 @@
     .spin-btn::before{content:'';position:absolute;top:0;left:-100%;width:100%;height:100%;background:linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);transition:left 0.6s ease}
     .spin-btn:hover::before{left:100%}
 
-    /* result popup dengan efek glow */
+    /* result popup dengan efek glow - DIUBAH UNTUK FIREWORKS */
     .result-overlay{position:fixed;inset:0;z-index:60;display:flex;align-items:center;justify-content:center;background:rgba(0,6,12,0.9);pointer-events:none;opacity:0;transition:opacity 0.4s ease;backdrop-filter:blur(8px)}
     .result-overlay.open{pointer-events:auto;opacity:1}
     .result-card{width:520px;background:linear-gradient(180deg, rgba(255,255,255,0.08), rgba(255,255,255,0.03));padding:32px;border-radius:18px;border:1px solid rgba(255,255,255,0.08);text-align:center;box-shadow:0 40px 140px rgba(2,6,20,0.9);position:relative;overflow:hidden;transform:scale(0.9) translateY(20px);transition:all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);opacity:0}
@@ -280,6 +280,24 @@
     .result-card h2{color:var(--gold);margin-bottom:12px;position:relative;z-index:1;font-size:26px;text-shadow:0 2px 20px rgba(243,212,143,0.3)}
     .result-card p{color:var(--muted);position:relative;z-index:1;font-size:15px;line-height:1.5}
     .result-actions{display:flex;gap:14px;justify-content:center;margin-top:24px;position:relative;z-index:1}
+
+    /* Character Image di Result */
+    .result-character-image {
+      width: 200px;
+      height: 300px;
+      margin: 0 auto 20px;
+      border-radius: 12px;
+      overflow: hidden;
+      position: relative;
+      border: 2px solid rgba(255,255,255,0.1);
+      box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+    }
+
+    .result-character-image img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
 
     /* loading spinner */
     .spinner{width:20px;height:20px;border:2px solid transparent;border-top:2px solid currentColor;border-radius:50%;animation:spin 1s linear infinite;display:inline-block}
@@ -599,6 +617,97 @@
       transform: translateX(-50%) translateY(0);
     }
 
+    /* Music Player Styles */
+    .music-player {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      z-index: 50;
+      background: rgba(255,255,255,0.05);
+      backdrop-filter: blur(10px);
+      border-radius: 12px;
+      padding: 15px;
+      border: 1px solid rgba(255,255,255,0.1);
+      box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+    }
+
+    .music-controls {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .music-btn {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      border: none;
+      background: linear-gradient(45deg, var(--accent-a), var(--accent-b));
+      color: #021226;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+      transition: all 0.3s ease;
+    }
+
+    .music-btn:hover {
+      transform: scale(1.1);
+      box-shadow: 0 5px 15px rgba(57,210,255,0.4);
+    }
+
+    .music-select {
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 8px;
+      padding: 8px 12px;
+      color: var(--muted);
+      font-size: 12px;
+      min-width: 120px;
+    }
+
+    .music-info {
+      font-size: 11px;
+      color: var(--muted);
+      margin-top: 8px;
+      text-align: center;
+    }
+
+    /* Fireworks Animation */
+    .firework {
+      position: absolute;
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: 55;
+    }
+
+    /* Starfield Animation */
+    .starfield {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .star {
+      position: absolute;
+      background: white;
+      border-radius: 50%;
+      animation: twinkle var(--duration) infinite ease-in-out;
+      opacity: var(--opacity);
+    }
+
+    @keyframes twinkle {
+      0%, 100% { opacity: var(--opacity); }
+      50% { opacity: calc(var(--opacity) * 0.3); }
+    }
+
     /* small screens */
     @media (max-width:1100px){
       .hero-spot{display:none}
@@ -610,6 +719,10 @@
       }
       .portal-grid {
         height: 250px;
+      }
+      .music-player {
+        bottom: 80px;
+        right: 10px;
       }
     }
     @media (max-width:900px){
@@ -639,6 +752,13 @@
       .portal-grid {
         height: 160px;
         gap: 8px;
+      }
+      .music-player {
+        position: relative;
+        bottom: auto;
+        right: auto;
+        margin: 10px auto;
+        width: 90%;
       }
     }
 
@@ -709,6 +829,7 @@
       <section class="center" aria-label="Area showcase dan gacha">
         <div class="bg-container" id="bgContainer"></div>
         <div class="bg-overlay"></div>
+        <div class="starfield" id="starfield"></div>
 
         <!-- SHOWCASE MODE -->
         <div class="showcase-wrap" id="showcaseWrap">
@@ -727,7 +848,7 @@
           <div class="showcase-view" id="showcaseView">
             <div id="carousel" class="carousel">
               <!-- 6 panels dengan ukuran medium dan aura FIXED -->
-              <div class="panel" data-name="Sasuke Uchiha" data-rarity="Mythic" data-file="SasukeRinnegan" data-description="Uchiha" data-aura-color="#ffd700">
+              <div class="panel" data-name="Sasuke Uchiha" data-rarity="Mythic" data-file="SasukeRinnegan" data-description="Uchiha" data-aura-color="#ffd700" data-voice="sasuke_voice.mp3">
                 <div class="aura-container">
                   <div class="aura" style="--aura-color: #ffd700"></div>
                   <div class="aura aura-2" style="--aura-color: #ffd700"></div>
@@ -741,7 +862,7 @@
                 </div>
               </div>
 
-              <div class="panel" data-name="Obito Uchiha" data-rarity="Legendary" data-file="ObitoUnmasked" data-description="Uchiha" data-aura-color="#9b7bff">
+              <div class="panel" data-name="Obito Uchiha" data-rarity="Legendary" data-file="ObitoUnmasked" data-description="Uchiha" data-aura-color="#9b7bff" data-voice="obito_voice.mp3">
                 <div class="aura-container">
                   <div class="aura" style="--aura-color: #9b7bff"></div>
                   <div class="aura aura-2" style="--aura-color: #9b7bff"></div>
@@ -755,7 +876,7 @@
                 </div>
               </div>
 
-              <div class="panel" data-name="Madara Uchiha" data-rarity="Supreme" data-file="Madara" data-description="Uchiha" data-aura-color="#39d2ff">
+              <div class="panel" data-name="Madara Uchiha" data-rarity="Supreme" data-file="Madara" data-description="Uchiha" data-aura-color="#39d2ff" data-voice="madara_voice.mp3">
                 <div class="aura-container">
                   <div class="aura" style="--aura-color: #39d2ff"></div>
                   <div class="aura aura-2" style="--aura-color: #39d2ff"></div>
@@ -769,7 +890,7 @@
                 </div>
               </div>
 
-              <div class="panel" data-name="Naruto" data-rarity="Common" data-file="Naruto" data-description="Uzumaki" data-aura-color="#94a6bf">
+              <div class="panel" data-name="Naruto" data-rarity="Common" data-file="Naruto" data-description="Uzumaki" data-aura-color="#94a6bf" data-voice="naruto_voice.mp3">
                 <div class="aura-container">
                   <div class="aura" style="--aura-color: #94a6bf"></div>
                   <div class="aura aura-2" style="--aura-color: #94a6bf"></div>
@@ -783,7 +904,7 @@
                 </div>
               </div>
 
-              <div class="panel" data-name="SasukeHebi" data-rarity="Elite" data-file="SasukeHebi" data-description="Uchiha" data-aura-color="#39d2ff">
+              <div class="panel" data-name="SasukeHebi" data-rarity="Elite" data-file="SasukeHebi" data-description="Uchiha" data-aura-color="#39d2ff" data-voice="sasukehebi_voice.mp3">
                 <div class="aura-container">
                   <div class="aura" style="--aura-color: #39d2ff"></div>
                   <div class="aura aura-2" style="--aura-color: #39d2ff"></div>
@@ -797,7 +918,7 @@
                 </div>
               </div>
 
-              <div class="panel" data-name="BorutoUzumaki" data-rarity="Legendary" data-file="BorutoUzumaki" data-description="Uzumaki" data-aura-color="#9b7bff">
+              <div class="panel" data-name="BorutoUzumaki" data-rarity="Legendary" data-file="BorutoUzumaki" data-description="Uzumaki" data-aura-color="#9b7bff" data-voice="boruto_voice.mp3">
                 <div class="aura-container">
                   <div class="aura" style="--aura-color: #9b7bff"></div>
                   <div class="aura aura-2" style="--aura-color: #9b7bff"></div>
@@ -853,6 +974,23 @@
     </main>
   </div>
 
+  <!-- Music Player -->
+  <div class="music-player" id="musicPlayer">
+    <div class="music-controls">
+      <button class="music-btn" id="prevMusic">⏮</button>
+      <button class="music-btn" id="playPause">▶️</button>
+      <button class="music-btn" id="nextMusic">⏭</button>
+      <select class="music-select" id="musicSelect">
+        <option value="music.mp3">Background Music 1</option>
+        <option value="music1.mp3">Background Music 2</option>
+        <option value="music2.mp3">Background Music 3</option>
+        <option value="music3.mp3">Background Music 4</option>
+        <option value="music4.mp3">Background Music 5</option>
+      </select>
+    </div>
+    <div class="music-info" id="musicInfo">Now Playing: Background Music 1</div>
+  </div>
+
   <!-- Refresh Notification -->
   <div class="refresh-notification" id="refreshNotification">
     <span>🔄</span>
@@ -905,6 +1043,9 @@
   <!-- Result Overlay -->
   <div class="result-overlay" id="resultOverlay" aria-hidden="true">
     <div class="result-card">
+      <div class="result-character-image" id="resultCharacterImage">
+        <img src="" alt="Summoned Character" id="resultCharImg">
+      </div>
       <h2 id="resultTitle">Mythic • You Obtained Sasuke</h2>
       <p id="resultText">Beautiful reveal animation — Download secured with single-use token.</p>
       <div class="result-actions">
@@ -917,19 +1058,16 @@
   <!-- Notification -->
   <div class="notification" id="notification"></div>
 
-  <!-- Background Music -->
-  <audio id="bgMusic" src="music.mp3" loop></audio>
-
   <script>
 /************************************************************************
- * COMPLETE FIXED GACHA SYSTEM WITH SUMMON PORTAL BESAR DI TENGAH
- * - Summon portal 3x2 grid di tengah layar
- * - Character preview dengan zoom effect
- * - Fixed summon result matching
- * - Enhanced visual effects
+ * ENHANCED GACHA SYSTEM WITH ALL REQUESTED FEATURES:
+ * 1. Voice system untuk character showcase
+ * 2. Multiple background music dengan player
+ * 3. Enhanced result dengan gambar character & fireworks
+ * 4. Animated starfield background
  ************************************************************************/
 
-/* ---------------------- CHARACTER DATA ---------------------- */
+/* ---------------------- CHARACTER DATA DENGAN VOICE ---------------------- */
 const CHARACTERS = [
   {
     id: 'Sasuke',
@@ -938,7 +1076,8 @@ const CHARACTERS = [
     image: 'assets/panels/panel1.png',
     description: 'Abyss Walker',
     file: 'Sasuke',
-    auraColor: '#ffd700'
+    auraColor: '#ffd700',
+    voice: 'assets/voices/sasuke_voice.mp3'
   },
   {
     id: 'Obito',
@@ -947,7 +1086,8 @@ const CHARACTERS = [
     image: 'assets/panels/panel2.png',
     description: 'Dragon Knight',
     file: 'Obito',
-    auraColor: '#9b7bff'
+    auraColor: '#9b7bff',
+    voice: 'assets/voices/obito_voice.mp3'
   },
   {
     id: 'Madara',
@@ -956,7 +1096,8 @@ const CHARACTERS = [
     image: 'assets/panels/panel3.png',
     description: 'Oracle Seer',
     file: 'Madara',
-    auraColor: '#39d2ff'
+    auraColor: '#39d2ff',
+    voice: 'assets/voices/madara_voice.mp3'
   },
   {
     id: 'Naruto',
@@ -965,7 +1106,8 @@ const CHARACTERS = [
     image: 'assets/panels/panel4.png',
     description: 'Forest Guardian',
     file: 'Naruto',
-    auraColor: '#94a6bf'
+    auraColor: '#94a6bf',
+    voice: 'assets/voices/naruto_voice.mp3'
   },
   {
     id: 'SasukeHebi',
@@ -974,7 +1116,8 @@ const CHARACTERS = [
     image: 'assets/panels/panel5.png',
     description: 'Cyber Ninja',
     file: 'SasukeHebi',
-    auraColor: '#39d2ff'
+    auraColor: '#39d2ff',
+    voice: 'assets/voices/sasukehebi_voice.mp3'
   },
   {
     id: 'BorutoUzumaki',
@@ -983,9 +1126,239 @@ const CHARACTERS = [
     image: 'assets/panels/panel6.png',
     description: 'Phoenix Mage',
     file: 'BorutoUzumaki',
-    auraColor: '#9b7bff'
+    auraColor: '#9b7bff',
+    voice: 'assets/voices/boruto_voice.mp3'
   }
 ];
+
+/* ---------------------- MUSIC PLAYER SYSTEM ---------------------- */
+class MusicPlayerSystem {
+  constructor() {
+    this.audio = new Audio();
+    this.currentTrack = 0;
+    this.isPlaying = false;
+    this.tracks = [
+      'assets/music/music.mp3',
+      'assets/music/music1.mp3',
+      'assets/music/music2.mp3',
+      'assets/music/music3.mp3',
+      'assets/music/music4.mp3'
+    ];
+    this.trackNames = [
+      'Background Music 1',
+      'Background Music 2',
+      'Background Music 3',
+      'Background Music 4',
+      'Background Music 5'
+    ];
+    
+    this.init();
+  }
+
+  init() {
+    this.setupEventListeners();
+    this.loadTrack(0);
+  }
+
+  setupEventListeners() {
+    const playPauseBtn = document.getElementById('playPause');
+    const prevMusicBtn = document.getElementById('prevMusic');
+    const nextMusicBtn = document.getElementById('nextMusic');
+    const musicSelect = document.getElementById('musicSelect');
+
+    playPauseBtn.addEventListener('click', () => this.togglePlayPause());
+    prevMusicBtn.addEventListener('click', () => this.previousTrack());
+    nextMusicBtn.addEventListener('click', () => this.nextTrack());
+    musicSelect.addEventListener('change', (e) => this.selectTrack(parseInt(e.target.value)));
+
+    this.audio.addEventListener('ended', () => this.nextTrack());
+    this.audio.addEventListener('loadeddata', () => this.updateUI());
+  }
+
+  loadTrack(index) {
+    this.currentTrack = index;
+    this.audio.src = this.tracks[index];
+    this.audio.load();
+    this.updateUI();
+  }
+
+  togglePlayPause() {
+    if (this.isPlaying) {
+      this.pause();
+    } else {
+      this.play();
+    }
+  }
+
+  async play() {
+    try {
+      await this.audio.play();
+      this.isPlaying = true;
+      document.getElementById('playPause').textContent = '⏸️';
+    } catch (error) {
+      console.log('Audio play failed:', error);
+    }
+  }
+
+  pause() {
+    this.audio.pause();
+    this.isPlaying = false;
+    document.getElementById('playPause').textContent = '▶️';
+  }
+
+  nextTrack() {
+    this.currentTrack = (this.currentTrack + 1) % this.tracks.length;
+    this.loadTrack(this.currentTrack);
+    if (this.isPlaying) this.play();
+  }
+
+  previousTrack() {
+    this.currentTrack = (this.currentTrack - 1 + this.tracks.length) % this.tracks.length;
+    this.loadTrack(this.currentTrack);
+    if (this.isPlaying) this.play();
+  }
+
+  selectTrack(index) {
+    this.loadTrack(index);
+    if (this.isPlaying) this.play();
+  }
+
+  updateUI() {
+    const musicSelect = document.getElementById('musicSelect');
+    const musicInfo = document.getElementById('musicInfo');
+    
+    musicSelect.value = this.currentTrack;
+    musicInfo.textContent = `Now Playing: ${this.trackNames[this.currentTrack]}`;
+  }
+}
+
+/* ---------------------- VOICE SYSTEM ---------------------- */
+class VoiceSystem {
+  constructor() {
+    this.currentVoice = null;
+  }
+
+  playVoice(voicePath) {
+    // Stop current voice jika sedang bermain
+    if (this.currentVoice) {
+      this.currentVoice.pause();
+      this.currentVoice.currentTime = 0;
+    }
+
+    // Play voice baru
+    this.currentVoice = new Audio(voicePath);
+    this.currentVoice.volume = 0.7;
+    
+    this.currentVoice.play().catch(error => {
+      console.log('Voice play failed:', error);
+    });
+  }
+
+  stopVoice() {
+    if (this.currentVoice) {
+      this.currentVoice.pause();
+      this.currentVoice.currentTime = 0;
+    }
+  }
+}
+
+/* ---------------------- FIREWORKS SYSTEM ---------------------- */
+class FireworksSystem {
+  constructor() {
+    this.container = document.body;
+  }
+
+  createFirework(x, y, color = '#ffd700') {
+    const particles = 50;
+    
+    for (let i = 0; i < particles; i++) {
+      const firework = document.createElement('div');
+      firework.className = 'firework';
+      firework.style.left = x + 'px';
+      firework.style.top = y + 'px';
+      firework.style.backgroundColor = color;
+      
+      const angle = Math.random() * Math.PI * 2;
+      const velocity = 2 + Math.random() * 3;
+      const vx = Math.cos(angle) * velocity;
+      const vy = Math.sin(angle) * velocity;
+      
+      this.container.appendChild(firework);
+      
+      let opacity = 1;
+      const animate = () => {
+        opacity -= 0.02;
+        firework.style.opacity = opacity;
+        firework.style.transform = `translate(${vx * (1 - opacity) * 50}px, ${vy * (1 - opacity) * 50}px)`;
+        
+        if (opacity > 0) {
+          requestAnimationFrame(animate);
+        } else {
+          firework.remove();
+        }
+      };
+      
+      animate();
+    }
+  }
+
+  createFireworksShow(count = 10, duration = 3000) {
+    const startTime = Date.now();
+    
+    const createFireworkBatch = () => {
+      if (Date.now() - startTime < duration) {
+        for (let i = 0; i < 3; i++) {
+          setTimeout(() => {
+            const x = Math.random() * window.innerWidth;
+            const y = Math.random() * window.innerHeight * 0.8;
+            const colors = ['#ffd700', '#9b7bff', '#39d2ff', '#ff4444', '#00C851'];
+            const color = colors[Math.floor(Math.random() * colors.length)];
+            this.createFirework(x, y, color);
+          }, i * 200);
+        }
+        setTimeout(createFireworkBatch, 500);
+      }
+    };
+    
+    createFireworkBatch();
+  }
+}
+
+/* ---------------------- STARFIELD SYSTEM ---------------------- */
+class StarfieldSystem {
+  constructor() {
+    this.container = document.getElementById('starfield');
+    this.stars = [];
+    this.init();
+  }
+
+  init() {
+    this.createStars();
+  }
+
+  createStars() {
+    const starCount = 150;
+    
+    for (let i = 0; i < starCount; i++) {
+      const star = document.createElement('div');
+      star.className = 'star';
+      
+      const size = Math.random() * 2 + 1;
+      const duration = Math.random() * 3 + 2;
+      const opacity = Math.random() * 0.7 + 0.3;
+      
+      star.style.width = size + 'px';
+      star.style.height = size + 'px';
+      star.style.left = Math.random() * 100 + '%';
+      star.style.top = Math.random() * 100 + '%';
+      star.style.setProperty('--duration', duration + 's');
+      star.style.setProperty('--opacity', opacity);
+      
+      this.container.appendChild(star);
+      this.stars.push(star);
+    }
+  }
+}
 
 /* ---------------------- SUMMON PORTAL SYSTEM ---------------------- */
 class SummonPortalSystem {
@@ -1030,6 +1403,9 @@ class SummonPortalSystem {
     // Add active class ke character yang diklik
     element.classList.add('active');
     this.currentActive = character;
+    
+    // Play character voice
+    window.voiceSystem.playVoice(character.voice);
     
     // Show preview notification
     showNotification(`👁️ Preview: ${character.name} - ${character.rarity}`, 2000);
@@ -1269,7 +1645,7 @@ class SummonLimitSystem {
   }
 }
 
-/* ---------------------- GACHA SYSTEM DENGAN SUMMON PORTAL BESAR ---------------------- */
+/* ---------------------- GACHA SYSTEM DENGAN SEMUA FITUR BARU ---------------------- */
 class GachaSystem {
   constructor() {
     this.panels = Array.from(document.querySelectorAll('.panel'));
@@ -1277,6 +1653,9 @@ class GachaSystem {
     this.totalSlides = this.panels.length;
     this.summonLimitSystem = new SummonLimitSystem();
     this.summonPortal = new SummonPortalSystem();
+    this.voiceSystem = new VoiceSystem();
+    this.fireworksSystem = new FireworksSystem();
+    this.starfieldSystem = new StarfieldSystem();
     this.init();
   }
 
@@ -1396,7 +1775,7 @@ class GachaSystem {
         return;
       }
       
-      // Reveal result
+      // Reveal result dengan fireworks
       await this.revealCharacter(winnerCharacter);
       
     } catch (error) {
@@ -1450,6 +1829,11 @@ class GachaSystem {
     this.panels.forEach((panel, index) => {
       panel.addEventListener('click', () => {
         this.goToSlide(index);
+        // Play character voice ketika panel diklik
+        const character = CHARACTERS.find(char => char.name === panel.dataset.name);
+        if (character && character.voice) {
+          this.voiceSystem.playVoice(character.voice);
+        }
       });
     });
   }
@@ -1592,9 +1976,15 @@ class GachaSystem {
     // Highlight character di portal
     this.summonPortal.highlightCharacter(character.id);
     
+    // Update result card dengan gambar character
     document.getElementById('resultTitle').textContent = `${character.rarity} • You Obtained ${character.name}`;
     document.getElementById('resultText').textContent = `${character.description} - Secure download ready!`;
     document.getElementById('claimBtn').dataset.filename = character.file;
+    
+    // Set character image di result
+    const resultCharImg = document.getElementById('resultCharImg');
+    resultCharImg.src = character.image;
+    resultCharImg.alt = `${character.name} - ${character.rarity}`;
     
     const rarityGlow = {
       Mythic: 'rgba(243, 212, 143, 0.4)',
@@ -1606,6 +1996,13 @@ class GachaSystem {
     const resultCard = document.querySelector('.result-card');
     resultCard.style.setProperty('--result-glow', rarityGlow[character.rarity] || 'rgba(57,210,255,0.2)');
     
+    // Play character voice
+    this.voiceSystem.playVoice(character.voice);
+    
+    // Show fireworks
+    this.fireworksSystem.createFireworksShow(15, 5000);
+    
+    // Show result overlay
     document.getElementById('resultOverlay').classList.add('open');
     document.getElementById('resultOverlay').setAttribute('aria-hidden', 'false');
   }
@@ -1614,6 +2011,7 @@ class GachaSystem {
     document.getElementById('resultOverlay').classList.remove('open');
     document.getElementById('resultOverlay').setAttribute('aria-hidden', 'true');
     this.summonPortal.deactivateAll();
+    this.voiceSystem.stopVoice();
   }
 
   setMode(mode) {
@@ -1791,22 +2189,18 @@ class SubscriptionSecurity {
 
 /* ---------------------- INITIALIZATION ---------------------- */
 document.addEventListener('DOMContentLoaded', function() {
-  // Initialize systems
+  // Initialize semua systems
+  window.voiceSystem = new VoiceSystem();
+  window.musicPlayer = new MusicPlayerSystem();
   window.securitySystem = new SubscriptionSecurity();
   window.gachaSystem = new GachaSystem();
   
-  // Setup background music
-  const bgMusic = document.getElementById('bgMusic');
-  document.addEventListener('click', function() {
-    bgMusic.play().catch(() => {});
-  }, { once: true });
-
-  // Add error handlers to images
+  // Add error handlers ke images
   document.querySelectorAll('img').forEach(img => {
     img.addEventListener('error', () => handleImageError(img));
   });
 
-  console.log('🎮 Gacha System with Large Summon Portal Initialized');
+  console.log('🎮 Enhanced Gacha System with All Features Initialized');
 });
 </script>
 </html>
