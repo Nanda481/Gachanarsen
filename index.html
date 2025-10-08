@@ -1,512 +1,526 @@
+```html
 <!doctype html>
 <html lang="id">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>Gacha Showcase — Dark Stylish</title>
-<meta name="description" content="Gacha Showcase - 8 diagonal characters, aura per rarity, single-file ready.">
-<style>
-  /* ========== THEME ========== */
-  :root{
-    --bg:#06050a;
-    --panel: rgba(10,8,15,0.6);
-    --muted:#9aa4b2;
-    --accent:#7c3aed;
-    --glass: rgba(255,255,255,0.03);
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Gacha Showcase — Dark Stylish (Final)</title>
+  <meta name="description" content="Dark stylish 8-character showcase + gacha — single file, assets in /assets/">
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap');
 
-    /* aura colors */
-    --aur-ur: rgba(187,134,252,0.18); /* purple */
-    --aur-ssr: rgba(255,214,92,0.16); /* yellow */
-    --aur-sr: rgba(96,165,250,0.14);  /* blue */
-    --aur-r: rgba(52,211,153,0.12);   /* green */
-  }
+    :root{
+      --bg-1: #04040a;
+      --bg-2: #07020a;
+      --muted: #9aa4b2;
+      --accent-1: #7c3aed;
+      --accent-2: #4c1d95;
+      --aur-ur: rgba(187,134,252,0.24);
+      --aur-ssr: rgba(255,214,92,0.18);
+      --aur-sr: rgba(96,165,250,0.16);
+      --aur-r: rgba(52,211,153,0.12);
+    }
 
-  *{box-sizing:border-box}
-  html,body{height:100%}
-  body{
-    margin:0;
-    font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
-    -webkit-font-smoothing:antialiased;
-    background:
-      radial-gradient(800px 300px at 20% 10%, rgba(124,58,237,0.07), transparent),
-      linear-gradient(180deg,#030205,#07040a 60%);
-    color:#e9eef8;
-    overflow-x:hidden;
-  }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0;
+      font-family:Inter,system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial;
+      background: radial-gradient(800px 300px at 10% 10%, rgba(124,58,237,0.04), transparent),
+                  linear-gradient(180deg,var(--bg-1),var(--bg-2));
+      color:#eef2ff;
+      -webkit-font-smoothing:antialiased;
+      -moz-osx-font-smoothing:grayscale;
+    }
 
-  /* container */
-  .wrap{max-width:1400px;margin:28px auto;padding:18px;position:relative}
+    /* header */
+    header {
+      position:fixed;
+      top:10px;
+      left:0;
+      right:0;
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:12px;
+      padding:12px 28px;
+      z-index:1200;
+      pointer-events:none;
+    }
+    .logo-wrap{display:flex;align-items:center;gap:12px;pointer-events:auto}
+    #logo{
+      width:64px;height:64px;border-radius:12px;background:rgba(255,255,255,0.03);
+      display:flex;align-items:center;justify-content:center;font-weight:800;
+    }
+    .top-actions{display:flex;gap:10px;align-items:center;pointer-events:auto}
+    .btn{
+      border:0;padding:10px 14px;border-radius:12px;font-weight:700;cursor:pointer;background:transparent;color:inherit;
+      letter-spacing:0.6px;
+    }
+    .btn.primary{background:linear-gradient(90deg,var(--accent-1),var(--accent-2));color:#fff}
+    .btn.ghost{border:1px solid rgba(255,255,255,0.06);background:rgba(255,255,255,0.01)}
 
-  header{display:flex;align-items:center;justify-content:space-between;gap:12px}
-  .brand{display:flex;align-items:center;gap:14px}
-  #logo{width:64px;height:64px;border-radius:12px;background:var(--panel);display:flex;align-items:center;justify-content:center;font-weight:800}
-  h1{margin:0;font-size:18px}
-  .sub{color:var(--muted);font-size:13px}
+    /* main container */
+    .container{max-width:1400px;margin:110px auto 80px;padding:0 24px}
 
-  .actions{display:flex;gap:10px;align-items:center}
-  .btn{padding:10px 14px;border-radius:12px;border:0;cursor:pointer;font-weight:800;background:transparent;color:inherit}
-  .btn.primary{background:linear-gradient(90deg,var(--accent),#5b21b6);color:white}
-  .btn.ghost{border:1px solid rgba(255,255,255,0.06)}
-  .spins{font-weight:800;color:var(--muted)}
+    /* showcase row */
+    .showcase-wrap{position:relative;margin:0 auto;max-width:1280px}
+    .showcase{
+      display:flex;
+      gap:28px;
+      padding:28px 12px;
+      overflow-x:auto;
+      align-items:center;
+      scroll-behavior:smooth;
+      -webkit-overflow-scrolling:touch;
+    }
+    /* hide scrollbar track background for cleaner look; still usable */
+    .showcase::-webkit-scrollbar { height:10px }
+    .showcase::-webkit-scrollbar-thumb { background: linear-gradient(90deg,var(--accent-1),var(--accent-2)); border-radius:10px }
 
-  /* showcase area */
-  .showcase-wrap{margin-top:24px;position:relative;height:520px;display:flex;align-items:center;justify-content:center}
-  .showcase-stage{position:relative;width:100%;max-width:1200px;height:480px;display:flex;align-items:center;justify-content:center;overflow:visible}
+    /* card */
+    .card{
+      --w:320px; /* base width */
+      flex:0 0 var(--w);
+      height:520px;
+      border-radius:14px;
+      position:relative;
+      overflow:visible;
+      transform-origin:center;
+      transition: transform 360ms cubic-bezier(.2,.9,.18,1), box-shadow 300ms;
+      cursor:pointer;
+      transform: skewY(-6deg); /* diagonal look */
+      background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+      border:1px solid rgba(255,255,255,0.02);
+    }
+    .card img{
+      width:100%;
+      height:100%;
+      object-fit:cover;
+      border-radius:12px;
+      display:block;
+      transform: translateZ(0);
+    }
 
-  /* each diagonal panel */
-  .panel{
-    position:absolute;
-    width:220px;
-    height:420px;
-    transform-origin:center;
-    border-radius:8px;
-    overflow:visible;
-    transition:transform .42s cubic-bezier(.2,.9,.18,1), box-shadow .3s;
-    filter:drop-shadow(0 18px 40px rgba(0,0,0,0.6));
-    cursor:pointer;
-  }
-  .panel .img{
-    position:absolute;left:0;top:0;width:100%;height:100%;object-fit:cover;border-radius:8px;border:1px solid rgba(255,255,255,0.02);
-    transform: skewX(-18deg) translateZ(0); /* diagonal slant */
-  }
-  .panel .label{
-    position:absolute;left:10px;bottom:18px;color:#fff;font-weight:800;text-shadow:0 6px 30px rgba(0,0,0,0.6);transform:skewX(-18deg);
-    font-size:18px;letter-spacing:2px;
-  }
+    /* aura overlay */
+    .aura{
+      position:absolute;left:0;top:0;width:100%;height:100%;pointer-events:none;mix-blend-mode:screen;border-radius:14px;filter:blur(18px);
+      opacity:0.6; transition:opacity 240ms, transform 360ms;
+    }
 
-  /* aura overlay */
-  .aura{
-    position:absolute;inset: -16px; border-radius:12px; pointer-events:none; mix-blend-mode:screen;
-    background: radial-gradient(400px 120px at 50% 30%, rgba(255,255,255,0.02), transparent);
-    opacity:0; transition:opacity .35s, transform .6s;
-    filter: blur(18px);
-  }
+    /* labels */
+    .label{
+      position:absolute;left:16px;bottom:18px;transform:skewY(-6deg);z-index:40;
+      font-weight:800;font-size:18px;color:#fff;text-shadow:0 10px 40px rgba(0,0,0,0.6);
+    }
 
-  /* positioning 8 panels horizontally with diagonal stagger */
-  /* We'll place them using nth-child positions via container .panels */
-  .panels{position:relative;width:100%;height:100%;display:block}
+    /* hover & active */
+    .card:hover{ transform: translateY(-12px) skewY(-6deg) scale(1.08); box-shadow:0 30px 90px rgba(76,29,149,0.14); }
+    .card.active{ transform: translateY(-6px) skewY(-6deg) scale(1.22); box-shadow:0 40px 120px rgba(124,58,237,0.22); z-index:150; }
 
-  /* example positions (centered) */
-  /* index 0 .. 7 — left to right */
-  .panels .panel.p0{left:8%; top:36%; transform: rotate(-12deg) scale(.86);}
-  .panels .panel.p1{left:18%; top:18%; transform: rotate(-10deg) scale(.9);}
-  .panels .panel.p2{left:30%; top:6%;  transform: rotate(-8deg) scale(1.02);}
-  .panels .panel.p3{left:44%; top:2%;  transform: rotate(-6deg) scale(1.18);} /* center-left big */
-  .panels .panel.p4{left:58%; top:8%;  transform: rotate(-4deg) scale(1.28);} /* center big */
-  .panels .panel.p5{left:72%; top:18%; transform: rotate(-2deg) scale(1.02);}
-  .panels .panel.p6{left:82%; top:32%; transform: rotate(0deg)  scale(.94);}
-  .panels .panel.p7{left:90%; top:44%; transform: rotate(2deg)  scale(.82);}
+    /* aura colors per rarity (classes on card: r / sr / ssr / ur) */
+    .card.r .aura{ background: radial-gradient(300px 120px at 50% 30%, var(--aur-r), transparent 60%); }
+    .card.sr .aura{ background: radial-gradient(300px 120px at 50% 30%, var(--aur-sr), transparent 60%); }
+    .card.ssr .aura{ background: radial-gradient(300px 120px at 50% 30%, var(--aur-ssr), transparent 60%); }
+    .card.ur .aura{ background: radial-gradient(300px 140px at 50% 30%, var(--aur-ur), transparent 60%); }
 
-  /* hover/enlarge effect */
-  .panel:hover{transform:translateY(-12px) scale(1.06) rotate(0deg) !important; z-index:40}
-  .panel:hover .aura{opacity:1; transform: scale(1.08)}
-  .panel.focus{transform:scale(1.22) translateY(-6px); z-index:50}
-  .panel.focus .aura{opacity:1; transform:scale(1.18)}
+    /* shimmer for higher rarity (overlay) */
+    .shimmer{ position:absolute; left:-40%; top:0; width:180%; height:100%; pointer-events:none; transform:skewY(-6deg) translateX(-120%); background:linear-gradient(120deg, rgba(255,255,255,0.06), rgba(255,255,255,0.00) 40%, rgba(255,255,255,0.06) 60%, rgba(255,255,255,0.00)); opacity:0; transition: transform 1200ms, opacity 480ms }
+    .card.active .shimmer{ transform:skewY(-6deg) translateX(0); opacity:1; }
 
-  /* shimmer overlay for higher rarity */
-  .shimmer{
-    position:absolute;inset:0;border-radius:8px;pointer-events:none;mix-blend-mode:overlay;opacity:0;
-    background:linear-gradient(120deg, rgba(255,255,255,0.06), rgba(255,255,255,0.00) 40%, rgba(255,255,255,0.06) 60%, rgba(255,255,255,0.00));
-    transform: skewX(-18deg) translateX(-120%);
-    transition:opacity .45s, transform 1.2s;
-  }
-  .panel.focus .shimmer{opacity:1; transform: skewX(-18deg) translateX(0%);}
+    /* controls area: centered under showcase */
+    .controls{ display:flex; gap:12px; justify-content:center; align-items:center; margin-top:22px; }
+    .hint{ color:var(--muted); font-size:13px; margin-top:10px; text-align:center }
 
-  /* controls area */
-  .controls{display:flex;gap:12px;align-items:center;justify-content:center;margin-top:18px}
-  #spinBtn{padding:12px 26px;border-radius:999px;border:0;background:linear-gradient(90deg,var(--accent),#4c1d95);color:#fff;font-weight:900;cursor:pointer}
-  #spinBtn.disabled{opacity:.55;pointer-events:none}
+    /* preview modal */
+    .overlay{ position:fixed; inset:0; display:flex; align-items:center; justify-content:center; background: linear-gradient(rgba(0,0,0,0.65), rgba(0,0,0,0.85)); z-index:1400; opacity:0; pointer-events:none; transition:opacity 250ms }
+    .overlay.show{ opacity:1; pointer-events:auto; }
+    .modal{
+      width:920px; max-width:94%; background:linear-gradient(180deg, rgba(12,10,16,0.98), rgba(6,6,8,0.98)); border-radius:12px; padding:18px; display:flex; gap:18px; align-items:center; box-shadow:0 30px 80px rgba(0,0,0,0.7)
+    }
+    .modal .art{ width:46%; border-radius:8px; object-fit:contain }
+    .modal .meta{ flex:1; color:var(--muted) }
+    .modal .meta h2{ color:#fff; font-size:26px; margin-bottom:8px; font-weight:800 }
+    .modal .meta p{ margin-bottom:12px; }
+    .modal .meta .actions{ display:flex; gap:10px }
 
-  /* preview overlay (click) */
-  .overlay{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;background:linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6));z-index:9999;opacity:0;pointer-events:none;transition:opacity .18s}
-  .overlay.show{opacity:1;pointer-events:auto}
-  .preview-card{width:880px;max-width:94%;background:linear-gradient(180deg, rgba(12,10,16,0.98), rgba(6,6,8,0.98));padding:20px;border-radius:12px;border:1px solid rgba(255,255,255,0.03);display:flex;gap:18px;align-items:center}
-  .preview-art{width:48%; max-width:420px;border-radius:8px;object-fit:cover;filter:drop-shadow(0 18px 60px rgba(0,0,0,0.6))}
-  .preview-info{flex:1;color:var(--muted)}
-  .preview-name{font-size:28px;font-weight:900;color:#fff;margin-bottom:8px}
-  .preview-desc{color:var(--muted);margin-bottom:14px}
-  .preview-actions{display:flex;gap:10px;align-items:center}
+    /* result popup */
+    .result-popup{ position:fixed; left:50%; top:72%; transform:translate(-50%,-50%); z-index:1500; min-width:320px; background:linear-gradient(180deg, rgba(12,10,16,0.96), rgba(6,6,8,0.96)); padding:14px; border-radius:12px; border:1px solid rgba(255,255,255,0.04); display:none; align-items:center; gap:10px; flex-direction:column }
+    .result-name{ font-weight:900; color:#fff }
+    .result-rarity{ padding:6px 10px; border-radius:8px; font-weight:900; color:#111 }
 
-  /* result card */
-  .result-popup{position:fixed;left:50%;top:72%;transform:translate(-50%,-50%);z-index:10001;background:linear-gradient(180deg, rgba(12,10,16,0.96), rgba(6,6,8,0.96));padding:16px;border-radius:12px;border:1px solid rgba(255,255,255,0.04);min-width:320px;display:flex;flex-direction:column;align-items:center;gap:10px;box-shadow:0 20px 60px rgba(0,0,0,0.6)}
-  .result-name{font-weight:900;color:#fff;font-size:18px}
-  .result-rarity{padding:6px 10px;border-radius:8px;font-weight:900;color:#111}
-
-  /* small screens */
-  @media(max-width:980px){
-    .panel{width:150px;height:300px}
-    .panels .panel.p0{left:4%;top:36%}
-    .panels .panel.p1{left:14%;top:26%}
-    .panels .panel.p2{left:27%;top:14%}
-    .panels .panel.p3{left:40%;top:8%}
-    .panels .panel.p4{left:56%;top:12%}
-    .panels .panel.p5{left:70%;top:24%}
-    .panels .panel.p6{left:82%;top:36%}
-    .panels .panel.p7{left:90%;top:46%}
-    .preview-card{flex-direction:column;align-items:center}
-    .preview-art{width:88%}
-  }
-
-  /* utility */
-  .muted{color:var(--muted)}
-  a { color:inherit; text-decoration:none }
-</style>
+    /* responsive tweaks */
+    @media(max-width:980px){
+      .card{ --w:260px; height:420px }
+      .modal{ flex-direction:column; padding:14px }
+      header{ padding:10px 14px }
+    }
+    @media(max-width:640px){
+      .card{ --w:210px; height:360px }
+      .showcase{ gap:16px; padding-left:12px; padding-right:12px }
+    }
+  </style>
 </head>
 <body>
-<div class="wrap">
+  <!-- background music: replace with assets/music/bgm.mp3 -->
+  <audio id="bgm" loop crossorigin="anonymous"></audio>
+
   <header>
-    <div class="brand">
+    <div class="logo-wrap">
       <div id="logo">LOGO</div>
-      <div>
-        <h1>Gacha Showcase</h1>
-        <div class="sub">Dark stylish • 8 characters • click to preview • Subscribe -> get 5 spins</div>
+      <div style="display:flex;flex-direction:column">
+        <div style="font-weight:800">Gacha Showcase</div>
+        <div style="font-size:12px;color:var(--muted)">Dark stylish • 8 characters • click to preview</div>
       </div>
     </div>
 
-    <div class="actions">
-      <a id="subscribeBtn" class="btn ghost" target="_blank">Subscribe</a>
-      <div class="spins">Spins left: <strong id="spinsCount">0</strong></div>
-      <button id="enterBtn" class="btn primary disabled" disabled>Enter Gacha</button>
+    <div class="top-actions">
+      <!-- Top actions are pointer-events:auto; kept minimal -->
+      <button id="topSubscribe" class="btn ghost" title="Subscribe (opens channel)">Subscribe</button>
+      <div style="padding:8px 12px;border-radius:10px;background:rgba(255,255,255,0.02);font-weight:700;color:var(--muted)">Spins: <span id="spinsCount">0</span></div>
+      <button id="topEnter" class="btn primary" title="Enter (scrolls to showcase)">Enter</button>
     </div>
   </header>
 
-  <section class="showcase-wrap">
-    <div class="showcase-stage">
-      <div class="panels" id="panels">
-        <!-- panels injected by JS -->
+  <main class="container">
+    <section class="showcase-wrap">
+      <div id="showcase" class="showcase" aria-label="Character showcase">
+        <!-- cards injected by JS -->
+      </div>
+    </section>
+
+    <div class="controls">
+      <button id="subscribeBtn" class="btn ghost">Subscribe Channel</button>
+      <button id="spinBtn" class="btn primary" disabled>SPIN</button>
+    </div>
+
+    <div class="hint">Ganti aset di folder <code>/assets/</code> dan sesuaikan <code>CONFIG</code> di bawah (gambar, preview & link download).</div>
+  </main>
+
+  <!-- Preview modal (click card to open) -->
+  <div id="overlay" class="overlay" aria-hidden="true">
+    <div class="modal" role="dialog" aria-modal="true">
+      <img id="previewArt" class="art" src="" alt="Preview art">
+      <div class="meta">
+        <h2 id="previewTitle">Name</h2>
+        <p id="previewRarity" style="font-weight:800;color:#fff;padding:6px 10px;border-radius:8px;display:inline-block;background:rgba(255,255,255,0.04)">Rarity</p>
+        <p id="previewDesc" style="margin-top:12px;color:var(--muted)">Preview description. Change in CONFIG.CHARACTERS array.</p>
+        <div class="actions" style="margin-top:14px">
+          <button id="previewClose" class="btn ghost">Close</button>
+          <button id="previewMore" class="btn primary">Details</button>
+        </div>
       </div>
     </div>
-  </section>
-
-  <div class="controls">
-    <button id="spinBtn" class="btn primary disabled" disabled>SPIN</button>
   </div>
 
-</div>
-
-<!-- preview overlay -->
-<div id="overlay" class="overlay" aria-hidden="true">
-  <div class="preview-card" role="dialog" aria-modal="true">
-    <img id="previewArt" class="preview-art" src="" alt="preview">
-    <div class="preview-info">
-      <div id="previewTitle" class="preview-name">Name</div>
-      <div id="previewRarity" class="preview-desc muted">Rarity</div>
-      <div class="preview-actions">
-        <button id="previewClose" class="btn ghost">Close</button>
-        <button id="previewMore" class="btn primary">More Details</button>
-      </div>
-    </div>
+  <!-- result popup (appears after spin success) -->
+  <div id="resultPopup" class="result-popup" role="status" aria-live="polite">
+    <div id="resultName" class="result-name">You got ...</div>
+    <div id="resultRarity" class="result-rarity">RARITY</div>
+    <img id="resultArt" src="" alt="" style="max-width:320px;border-radius:10px;box-shadow:0 18px 60px rgba(0,0,0,0.6)">
+    <button id="downloadBtn" class="btn primary" style="margin-top:8px">Download Mod</button>
   </div>
-</div>
 
-<!-- result popup -->
-<div id="resultPopup" class="result-popup" style="display:none">
-  <div id="resultName" class="result-name"></div>
-  <div id="resultRarity" class="result-rarity"></div>
-  <img id="resultArt" src="" alt="" style="max-width:320px;border-radius:10px;box-shadow:0 12px 40px rgba(0,0,0,0.6)">
-  <button id="downloadBtn" class="btn primary" style="margin-top:8px">Download Mod</button>
-</div>
-
-<!-- audio -->
-<audio id="bgm" loop crossorigin="anonymous"></audio>
-<audio id="sfxSpin"></audio>
-<aio id="sfxUR"></aio>
-<aio id="sfxSSR"></aio>
-
-<script>
+  <script>
 /* =========================
    CONFIG - update assets in /assets/
    ========================= */
 const CONFIG = {
   YT_CHANNEL: 'https://youtube.com/@ChidorayMods', // change to your channel
   START_SPINS: 5,
-  MUSIC: 'assets/music/bgm.mp3', // put your mp3 here for reliable autoplay
+  MUSIC: 'assets/music/bgm.mp3', // put a direct mp3 in /assets/music/
   SFX: {
     spin: 'assets/sfx/spin.mp3',
     ur: 'assets/sfx/ur.mp3',
     ssr: 'assets/sfx/ssr.mp3'
   },
-  // 8 characters (showcase). replace images & preview & file links with your assets
   CHARACTERS: [
-    { id:'c01', name:'Celestia', img:'assets/char1.jpg', preview:'assets/char1_preview.png', file:'https://example.com/celestia.zip', rarity:'SSR' },
-    { id:'c02', name:'Sibylle',  img:'assets/char2.jpg', preview:'assets/char2_preview.png', file:'https://example.com/sibylle.zip', rarity:'UR' },
-    { id:'c03', name:'Fushu',    img:'assets/char3.jpg', preview:'assets/char3_preview.png', file:'https://example.com/fushu.zip', rarity:'SR' },
-    { id:'c04', name:'Berenica', img:'assets/char4.jpg', preview:'assets/char4_preview.png', file:'https://example.com/berenica.zip', rarity:'R' },
-    { id:'c05', name:'Rebecca',  img:'assets/char5.jpg', preview:'assets/char5_preview.png', file:'https://example.com/rebecca.zip', rarity:'SR' },
-    { id:'c06', name:'Noctis',   img:'assets/char6.jpg', preview:'assets/char6_preview.png', file:'https://example.com/noctis.zip', rarity:'SSR' },
-    { id:'c07', name:'Lyra',     img:'assets/char7.jpg', preview:'assets/char7_preview.png', file:'https://example.com/lyra.zip', rarity:'R' },
-    { id:'c08', name:'Kappa',    img:'assets/char8.jpg', preview:'assets/char8_preview.png', file:'https://example.com/kappa.zip', rarity:'R' }
+    /* id, name, img (showcase), preview (large), file (download link), rarity (UR/SSR/SR/R) */
+    { id:'c01', name:'Celestine', img:'assets/img/char1.png', preview:'assets/img/char1_preview.png', file:'https://example.com/mod1.zip', rarity:'UR' },
+    { id:'c02', name:'Lunaris',   img:'assets/img/char2.png', preview:'assets/img/char2_preview.png', file:'https://example.com/mod2.zip', rarity:'SSR' },
+    { id:'c03', name:'Kael',      img:'assets/img/char3.png', preview:'assets/img/char3_preview.png', file:'https://example.com/mod3.zip', rarity:'SR' },
+    { id:'c04', name:'Riven',     img:'assets/img/char4.png', preview:'assets/img/char4_preview.png', file:'https://example.com/mod4.zip', rarity:'R' },
+    { id:'c05', name:'Nyla',      img:'assets/img/char5.png', preview:'assets/img/char5_preview.png', file:'https://example.com/mod5.zip', rarity:'SR' },
+    { id:'c06', name:'Vex',       img:'assets/img/char6.png', preview:'assets/img/char6_preview.png', file:'https://example.com/mod6.zip', rarity:'R' },
+    { id:'c07', name:'Eira',      img:'assets/img/char7.png', preview:'assets/img/char7_preview.png', file:'https://example.com/mod7.zip', rarity:'SSR' },
+    { id:'c08', name:'Draven',    img:'assets/img/char8.png', preview:'assets/img/char8_preview.png', file:'https://example.com/mod8.zip', rarity:'R' }
   ],
-  // weights for gacha rarity selection
   RARITY_WEIGHTS: { UR:1, SSR:8, SR:20, R:71 }
 };
 /* ========================= */
 
-/* Elements */
-const panelsEl = document.getElementById('panels');
-const subscribeBtn = document.getElementById('subscribeBtn');
-const enterBtn = document.getElementById('enterBtn');
-const spinBtn = document.getElementById('spinBtn');
-const spinsCountEl = document.getElementById('spinsCount');
+const showcase = document.getElementById('showcase');
 const overlay = document.getElementById('overlay');
 const previewArt = document.getElementById('previewArt');
 const previewTitle = document.getElementById('previewTitle');
 const previewRarity = document.getElementById('previewRarity');
+const previewDesc = document.getElementById('previewDesc');
 const previewClose = document.getElementById('previewClose');
 const previewMore = document.getElementById('previewMore');
+
+const subscribeBtn = document.getElementById('subscribeBtn');
+const spinBtn = document.getElementById('spinBtn');
+const topSubscribe = document.getElementById('topSubscribe');
+const topEnter = document.getElementById('topEnter');
+const topSpinCount = document.getElementById('spinsCount');
+
 const resultPopup = document.getElementById('resultPopup');
 const resultName = document.getElementById('resultName');
 const resultRarity = document.getElementById('resultRarity');
 const resultArt = document.getElementById('resultArt');
 const downloadBtn = document.getElementById('downloadBtn');
+
 const bgm = document.getElementById('bgm');
-const sfxSpin = document.getElementById('sfxSpin');
-const sfxUR = document.getElementById('sfxUR');
-const sfxSSR = document.getElementById('sfxSSR');
 
 let spinsLeft = 0;
-const STORAGE_SPINS = 'gacha_spins_v_final';
-const STORAGE_SUB = 'gacha_sub_v_final';
+const STORAGE_SPINS = 'gacha_spins_final_v1';
+const STORAGE_SUB = 'gacha_sub_final_v1';
 let isSpinning = false;
 
-/* Build panels */
-function buildPanels(){
-  panelsEl.innerHTML = '';
+/* utility: play sfx */
+function playSfx(src){
+  if(!src) return;
+  try{
+    const a = new Audio(src);
+    a.volume = 0.9;
+    a.play().catch(()=>{});
+  }catch(e){}
+}
+
+/* build the horizontal cards from CONFIG.CHARACTERS */
+function buildShowcase(){
+  showcase.innerHTML = '';
   CONFIG.CHARACTERS.forEach((c, i)=>{
-    const d = document.createElement('div');
-    d.className = `panel p${i}`;
-    d.dataset.idx = i;
-    // aura element
+    const card = document.createElement('div');
+    card.className = 'card ' + (c.rarity ? c.rarity.toLowerCase() : 'r');
+    card.dataset.idx = i;
+    card.dataset.id = c.id;
+    card.dataset.name = c.name;
+    card.dataset.rarity = (c.rarity||'R').toUpperCase();
+
     const aura = document.createElement('div');
     aura.className = 'aura';
-    // color by rarity
-    const rar = (c.rarity||'R').toUpperCase();
-    if(rar==='UR') aura.style.background = 'radial-gradient(300px 120px at 50% 20%, var(--aur-ur), transparent)';
-    else if(rar==='SSR') aura.style.background = 'radial-gradient(300px 120px at 50% 20%, var(--aur-ssr), transparent)';
-    else if(rar==='SR') aura.style.background = 'radial-gradient(300px 120px at 50% 20%, var(--aur-sr), transparent)';
-    else aura.style.background = 'radial-gradient(300px 120px at 50% 20%, var(--aur-r), transparent)';
 
-    // image element
+    const shimmer = document.createElement('div');
+    shimmer.className = 'shimmer';
+
     const img = document.createElement('img');
-    img.className = 'img';
     img.src = c.img;
     img.alt = c.name;
 
     const label = document.createElement('div');
     label.className = 'label';
-    label.textContent = c.name;
+    label.textContent = c.name + ' • ' + (c.rarity||'R').toUpperCase();
 
-    const shimmer = document.createElement('div');
-    shimmer.className = 'shimmer';
+    card.appendChild(aura);
+    card.appendChild(img);
+    card.appendChild(shimmer);
+    card.appendChild(label);
 
-    d.appendChild(aura);
-    d.appendChild(img);
-    d.appendChild(shimmer);
-    d.appendChild(label);
-
-    // click -> open preview (no download)
-    d.addEventListener('click', (ev)=>{
+    // click -> preview (no download here)
+    card.addEventListener('click', ()=>{
       openPreview(i);
     });
 
-    panelsEl.appendChild(d);
+    showcase.appendChild(card);
   });
 }
 
-/* Preview logic */
+/* preview open */
 function openPreview(idx){
   const c = CONFIG.CHARACTERS[idx];
   previewArt.src = c.preview || c.img;
   previewTitle.textContent = c.name;
   previewRarity.textContent = (c.rarity||'R').toUpperCase();
-  // rarity color
-  previewRarity.style.color = '#fff';
-  if(c.rarity==='UR') previewRarity.style.background = 'linear-gradient(90deg,var(--aur-ur),#8b5cf6)';
-  else if(c.rarity==='SSR') previewRarity.style.background = 'linear-gradient(90deg,var(--aur-ssr),#f59e0b)';
-  else if(c.rarity==='SR') previewRarity.style.background = 'linear-gradient(90deg,var(--aur-sr),#60a5fa)';
+  previewDesc.textContent = `Rarity: ${c.rarity || 'R'}. Preview only — download available after gacha.`;
+  // style rarity pill
+  if(c.rarity === 'UR') previewRarity.style.background = 'linear-gradient(90deg,var(--aur-ur),#8b5cf6)';
+  else if(c.rarity === 'SSR') previewRarity.style.background = 'linear-gradient(90deg,var(--aur-ssr),#f59e0b)';
+  else if(c.rarity === 'SR') previewRarity.style.background = 'linear-gradient(90deg,var(--aur-sr),#60a5fa)';
   else previewRarity.style.background = 'linear-gradient(90deg,var(--aur-r),#34d399)';
-  previewRarity.style.padding = '6px 10px';
-  previewRarity.style.borderRadius = '8px';
+
   overlay.classList.add('show'); overlay.setAttribute('aria-hidden','false');
 
-  // focus the clicked panel visually
-  document.querySelectorAll('.panel').forEach(p=>p.classList.remove('focus'));
-  const panel = document.querySelector(`.panel.p${idx}`);
-  if(panel) panel.classList.add('focus');
+  // focus visual
+  document.querySelectorAll('.card').forEach(cd => cd.classList.remove('active'));
+  const panel = document.querySelector(`.card[data-idx="${idx}"]`);
+  if(panel) panel.classList.add('active');
 
-  // previewMore opens more (here it could open external details page)
-  previewMore.onclick = ()=>{ window.open(c.file,'_blank'); }; // or point to details page
+  // previewMore: open large preview in new tab (not file download)
+  previewMore.onclick = ()=>{ window.open(c.preview || c.img, '_blank'); };
 }
 
-/* close preview - delegation */
+/* close preview by click outside or Close button or ESC */
 document.addEventListener('click', (e)=>{
   if(e.target === overlay || e.target === previewClose) {
     overlay.classList.remove('show'); overlay.setAttribute('aria-hidden','true');
-    document.querySelectorAll('.panel').forEach(p=>p.classList.remove('focus'));
+    document.querySelectorAll('.card').forEach(cd => cd.classList.remove('active'));
   }
 });
+document.addEventListener('keydown', (e)=>{ if(e.key === 'Escape') { overlay.classList.remove('show'); overlay.setAttribute('aria-hidden','true'); document.querySelectorAll('.card').forEach(cd => cd.classList.remove('active')); } });
 
-/* Subscribe + spins */
-subscribeBtn.addEventListener('click', ()=>{
-  localStorage.setItem(STORAGE_SUB, Date.now());
-  spinsLeft = CONFIG.START_SPINS;
-  localStorage.setItem(STORAGE_SPINS, spinsLeft);
-  document.getElementById('spinsCount').textContent = spinsLeft;
-  unlockGacha();
-  // open channel
-  setTimeout(()=>{ try{ window.open(subscribeBtn.href || '#', '_blank'); }catch(e){} }, 60);
+/* subscribe handlers: top and bottom subscribe open YT and give spins */
+[topSubscribe, subscribeBtn].forEach(btn=>{
+  btn.addEventListener('click', ()=>{
+    try{ window.open(CONFIG.YT_CHANNEL, '_blank'); }catch(e){}
+    // give spins and enable
+    localStorage.setItem(STORAGE_SUB, Date.now());
+    spinsLeft = CONFIG.START_SPINS;
+    localStorage.setItem(STORAGE_SPINS, spinsLeft);
+    updateSpinsUI();
+    unlockGacha();
+  });
 });
 
-/* unlock gacha */
+/* topEnter scrolls to showcase */
+topEnter.addEventListener('click', ()=>{ document.querySelector('.showcase-wrap').scrollIntoView({behavior:'smooth', block:'center'}); });
+
+/* unlock gacha UI */
 function unlockGacha(){
-  enterBtn.disabled = false; enterBtn.classList.remove('disabled');
-  spinBtn.disabled = false; spinBtn.classList.remove('disabled');
+  spinBtn.disabled = false;
+  spinBtn.classList.remove('disabled');
+  document.querySelectorAll('.card').forEach(c=> c.style.pointerEvents = 'auto');
+}
+
+/* load state */
+function loadState(){
+  const s = parseInt(localStorage.getItem(STORAGE_SPINS) || '0', 10);
+  spinsLeft = isNaN(s) ? 0 : s;
+  updateSpinsUI();
+  if(localStorage.getItem(STORAGE_SUB)) unlockGacha();
+}
+
+/* update spins UI */
+function updateSpinsUI(){
   document.getElementById('spinsCount').textContent = spinsLeft;
 }
 
-/* Enter button scrolls to showcase and attempts to play bgm */
-enterBtn.addEventListener('click', ()=> {
-  document.querySelector('.showcase-stage').scrollIntoView({behavior:'smooth', block:'center'});
-  bgm.play().catch(()=>{});
-});
-
-/* Spin logic - weighted rarity pick and pick random char with that rarity */
+/* weighted rarity pick */
 function weightedPick(weights){
-  const arr = Object.entries(weights);
-  let total=0; arr.forEach(([k,v])=> total+=v);
-  let r=Math.random()*total;
-  for(const [k,v] of arr){
+  const entries = Object.entries(weights);
+  let total=0; entries.forEach(([k,v])=> total+=v);
+  let r = Math.random()*total;
+  for(const [k,v] of entries){
     if(r < v) return k;
     r -= v;
   }
-  return arr[arr.length-1][0];
+  return entries[entries.length-1][0];
 }
-function pickCharacterByRarity(rarity){
+
+/* pick a character by rarity */
+function pickCharByRarity(rarity){
   const arr = CONFIG.CHARACTERS.filter(c => (c.rarity||'R').toUpperCase() === rarity.toUpperCase());
-  if(!arr.length) return CONFIG.CHARACTERS[Math.floor(Math.random()*CONFIG.CHARACTERS.length)];
+  if(arr.length === 0) return CONFIG.CHARACTERS[Math.floor(Math.random()*CONFIG.CHARACTERS.length)];
   return arr[Math.floor(Math.random()*arr.length)];
 }
 
-/* play sfx helper */
-function playSfx(src){
-  if(!src) return;
-  const a = new Audio(src);
-  a.volume = 0.9;
-  a.play().catch(()=>{});
-}
-
-/* Do spin */
+/* spin animation: cycle highlight across cards and stop on chosen */
 spinBtn.addEventListener('click', ()=>{
   if(isSpinning) return;
-  if(spinsLeft <= 0){
-    alert('No spins left. Click Subscribe to get spins.');
-    return;
-  }
+  if(spinsLeft <= 0){ alert('No spins left. Click Subscribe to get spins.'); return; }
   isSpinning = true;
-  // spin sound
   playSfx(CONFIG.SFX.spin);
 
-  // determine rarity & character
+  // choose rarity and char
   const rarity = weightedPick(CONFIG.RARITY_WEIGHTS);
-  const chosen = pickCharacterByRarity(rarity);
+  const chosenChar = pickCharByRarity(rarity);
 
-  // animate highlight around panels: simple cycle effect ending on chosen panel
-  const panels = Array.from(document.querySelectorAll('.panel'));
-  // find an index where panel corresponds to chosen char (we mapped sequentially)
-  let targetIndex = CONFIG.CHARACTERS.findIndex(c => c.id === chosen.id);
-  if(targetIndex < 0) targetIndex = Math.floor(Math.random()*panels.length);
+  const cards = Array.from(document.querySelectorAll('.card'));
+  // find index of chosenChar in CONFIG.CHARACTERS and map to position in cards (same order)
+  let targetIndex = CONFIG.CHARACTERS.findIndex(c => c.id === chosenChar.id);
+  if(targetIndex < 0) targetIndex = Math.floor(Math.random()*cards.length);
 
   const totalLoops = 3 + Math.floor(Math.random()*3);
-  const totalSteps = totalLoops * panels.length + targetIndex;
+  const totalSteps = totalLoops * cards.length + targetIndex;
   let step = 0;
-  let interval = 80;
+  let interval = 70;
 
-  const runStep = ()=>{
-    const idx = step % panels.length;
-    panels.forEach(p => { p.style.transform = p.style.transform.replace(/scale\([0-9.]+\)/,''); p.style.zIndex = ''; });
-    const active = panels[idx];
-    if(active){
-      active.style.transform = active.style.transform + ' scale(1.06)';
-      active.style.zIndex = 60;
-    }
+  const run = ()=>{
+    const idx = step % cards.length;
+    cards.forEach((cd)=>{ cd.classList.remove('active'); cd.style.zIndex=''; });
+    const active = cards[idx];
+    if(active){ active.classList.add('active'); active.style.zIndex = 100; }
     step++;
     if(step <= totalSteps){
       interval = Math.min(500, interval * 1.06);
-      setTimeout(runStep, interval);
+      setTimeout(run, interval);
     } else {
       // finish
       setTimeout(()=>{
-        panels.forEach(p => { p.style.transform = p.style.transform.replace(/scale\([0-9.]+\)/,''); p.style.zIndex = ''; });
-        onSpinFinish(chosen, targetIndex, rarity);
+        cards.forEach((cd)=>{ cd.classList.remove('active'); cd.style.zIndex=''; });
+        onSpinFinish(chosenChar, targetIndex, rarity);
         isSpinning = false;
-      }, 200);
+      }, 220);
     }
   };
-  runStep();
+  run();
 });
 
-function onSpinFinish(char, panelIndex, rarity){
+/* when spin finishes */
+function onSpinFinish(char, index, rarity){
   // decrement spins
   spinsLeft = Math.max(0, spinsLeft - 1);
   localStorage.setItem(STORAGE_SPINS, spinsLeft);
-  spinsCountEl.textContent = spinsLeft;
+  updateSpinsUI();
 
-  // set result popup content
-  resultName.textContent = char.name;
+  // show result popup
+  resultName.textContent = `Selamat — Anda mendapatkan: ${char.name}`;
   resultArt.src = char.preview || char.img;
   resultRarity.textContent = rarity;
-  if(rarity === 'UR'){ resultRarity.style.background = 'linear-gradient(90deg,var(--aur-ur),#8b5cf6)'; resultRarity.style.color='#fff'; playSfx(CONFIG.SFX.ur); }
-  else if(rarity === 'SSR'){ resultRarity.style.background = 'linear-gradient(90deg,var(--aur-ssr),#f59e0b)'; resultRarity.style.color='#111'; playSfx(CONFIG.SFX.ssr); }
-  else if(rarity === 'SR'){ resultRarity.style.background = 'linear-gradient(90deg,var(--aur-sr),#60a5fa)'; resultRarity.style.color='#fff'; }
-  else { resultRarity.style.background = 'linear-gradient(90deg,var(--aur-r),#34d399)'; resultRarity.style.color='#04251a'; }
 
-  // show popup
-  resultPopup.style.display = 'flex';
-  resultPopup.style.opacity = '1';
+  // style rarity pill & sfx
+  if(rarity === 'UR'){ resultRarity.style.background = 'linear-gradient(90deg,var(--aur-ur),#8b5cf6)'; resultRarity.style.color = '#fff'; playSfx(CONFIG.SFX.ur); }
+  else if(rarity === 'SSR'){ resultRarity.style.background = 'linear-gradient(90deg,var(--aur-ssr),#f59e0b)'; resultRarity.style.color = '#111'; playSfx(CONFIG.SFX.ssr); }
+  else if(rarity === 'SR'){ resultRarity.style.background = 'linear-gradient(90deg,var(--aur-sr),#60a5fa)'; resultRarity.style.color = '#fff'; }
+  else { resultRarity.style.background = 'linear-gradient(90deg,var(--aur-r),#34d399)'; resultRarity.style.color = '#04251a'; }
+
   downloadBtn.onclick = ()=> window.open(char.file, '_blank');
-  // highlight the panel slightly
-  const p = document.querySelector(`.panel.p${panelIndex}`);
-  if(p){
-    p.classList.add('focus');
-    setTimeout(()=> p.classList.remove('focus'), 1400);
+
+  // highlight the winning card briefly
+  const winCard = document.querySelector(`.card[data-idx="${index}"]`);
+  if(winCard){
+    winCard.classList.add('active');
+    setTimeout(()=> winCard.classList.remove('active'), 1400);
+    // center the card by scrolling container
+    const rect = winCard.getBoundingClientRect();
+    const sc = document.querySelector('.showcase');
+    const scRect = sc.getBoundingClientRect();
+    const offset = rect.left - scRect.left - (scRect.width/2) + rect.width/2;
+    sc.scrollBy({ left: offset, behavior: 'smooth' });
   }
-  // auto-hide result after some time (optional)
-  setTimeout(()=>{ if(resultPopup) resultPopup.style.display = 'none'; }, 12000);
+
+  resultPopup.style.display = 'flex';
+  setTimeout(()=>{ resultPopup.style.display = 'none'; }, 10000);
 }
 
-/* load saved spins */
-function loadState(){
-  const s = parseInt(localStorage.getItem(STORAGE_SPINS) || '0',10);
-  spinsLeft = isNaN(s) ? 0 : s;
-  spinsCountEl.textContent = spinsLeft;
-  if(localStorage.getItem(STORAGE_SUB)){
-    unlockGacha();
-  }
-}
-
-/* Initialize audio and panels */
+/* init audio, build UI, load state */
 function init(){
-  // set subscribe link
-  subscribeBtn.href = CONFIG.YT_CHANNEL;
-  // bgm
-  bgm.src = CONFIG.MUSIC;
-  bgm.volume = 0.6;
-  // try autoplay when possible (browsers might block until interaction)
-  bgm.play().catch(()=>{});
-  // prebuild panels
-  buildPanels();
+  // set button links
+  document.getElementById('topSubscribe').addEventListener('click', ()=>{ try{ window.open(CONFIG.YT_CHANNEL, '_blank'); }catch(e){} });
+  subscribeBtn.addEventListener('click', ()=>{ try{ window.open(CONFIG.YT_CHANNEL, '_blank'); }catch(e){} });
+
+  // load music
+  bgm.src = CONFIG.MUSIC || '';
+  bgm.volume = 0.66;
+  bgm.play().catch(()=>{ /* may be blocked until interaction */ });
+
+  // build showcase
+  buildShowcase();
+
+  // restore spins state
   loadState();
 }
 init();
 
-/* small UX: click center to play music if blocked */
-document.addEventListener('click', ()=>{ if(bgm && bgm.paused) bgm.play().catch(()=>{}); });
+/* convenience: clicking anywhere attempts to resume audio if blocked */
+document.addEventListener('click', ()=>{ if(bgm && bgm.paused){ bgm.play().catch(()=>{}); } });
 
-/* keyboard: space to spin */
-window.addEventListener('keydown', (e)=>{ if(e.code === 'Space'){ e.preventDefault(); if(!isSpinning && spinsLeft>0) document.getElementById('spinBtn').click(); } });
+/* keyboard support */
+window.addEventListener('keydown', (e)=>{ if(e.code === 'Space' && !isSpinning && spinsLeft > 0){ document.getElementById('spinBtn').click(); } });
 
-/* expose for debugging */
-window.GACHA_FINAL = {CONFIG};
-</script>
+/* expose CONFIG for debugging in console */
+window.GACHA_CONFIG = CONFIG;
+  </script>
 </body>
 </html>
+```
