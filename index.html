@@ -3,10 +3,160 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>High-Tier Gacha Showcase • Subscription Required</title>
-  <meta name="description" content="High-end cinematic gacha showcase — Subscribe to access summon features"/>
+  <title>High-Tier Gacha Showcase • Shining Aura</title>
+  <meta name="description" content="High-end cinematic gacha showcase with shining effects and character auras — dual mode: Showcase & Gacha."/>
   <style>
-    /* ... (CSS sebelumnya tetap sama) ... */
+    /* ---------- THEME COLORS ---------- */
+    :root{
+      --bg-1:#041022; --bg-2:#07142a;
+      --panel:#081829; --glass:rgba(255,255,255,0.03);
+      --accent-a:#39d2ff; --accent-b:#9b7bff;
+      --muted:#94a6bf; --gold:#f3d48f;
+      --mythic-glow:#ffd700; --legend-glow:#9b7bff;
+      --elite-glow:#39d2ff; --common-glow:#94a6bf;
+    }
+
+    /* ---------- RESET & BASE ---------- */
+    *{box-sizing:border-box;margin:0;padding:0}
+    html,body{height:100%;width:100%;font-family:Inter, ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial;color:#e6f3ff;background:linear-gradient(180deg,var(--bg-1),var(--bg-2));-webkit-font-smoothing:antialiased;overflow:hidden}
+    a{color:inherit}
+    button{font-family:inherit}
+
+    /* ---------- LAYOUT ---------- */
+    .app{display:flex;flex-direction:column;height:100vh;width:100vw}
+    
+    /* Header dengan efek shine */
+    header.top{height:72px;display:flex;align-items:center;justify-content:space-between;padding:0 28px;background:linear-gradient(180deg, rgba(255,255,255,0.05), transparent);backdrop-filter:blur(6px);border-bottom:1px solid rgba(255,255,255,0.02);position:relative;overflow:hidden}
+    .shine-effect{position:absolute;top:0;left:-100%;width:100%;height:100%;background:linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);animation:shine 8s infinite}
+    
+    @keyframes shine{
+      0%{left:-100%}
+      20%{left:100%}
+      100%{left:100%}
+    }
+
+    .brand{display:flex;gap:14px;align-items:center;position:relative;z-index:2}
+    .logo{width:50px;height:50px;border-radius:12px;background:linear-gradient(135deg,var(--accent-a),var(--accent-b));display:flex;align-items:center;justify-content:center;color:#021226;font-weight:800;box-shadow:0 10px 40px rgba(57,210,255,0.15);animation:pulse 4s ease-in-out infinite}
+    .title{font-weight:800;letter-spacing:0.6px;background:linear-gradient(45deg, var(--accent-a), var(--accent-b));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+    .subtitle{font-size:12px;color:var(--muted);margin-top:2px}
+
+    @keyframes pulse{
+      0%, 100%{transform:scale(1);box-shadow:0 10px 40px rgba(57,210,255,0.15)}
+      50%{transform:scale(1.05);box-shadow:0 15px 50px rgba(57,210,255,0.25)}
+    }
+
+    nav.controls{display:flex;gap:10px;align-items:center;position:relative;z-index:2}
+    .btn{padding:10px 14px;border-radius:10px;border:1px solid rgba(255,255,255,0.06);background:transparent;color:inherit;cursor:pointer;font-weight:700;transition:all 0.3s ease;position:relative;overflow:hidden}
+    .btn.ghost{background:transparent}
+    .btn.primary{background:linear-gradient(90deg,var(--accent-a),var(--accent-b));color:#021226;border:none;box-shadow:0 8px 30px rgba(57,210,255,0.15)}
+    .btn.small{padding:8px 10px;font-size:13px}
+    .btn:disabled{opacity:0.6;cursor:not-allowed}
+    .btn:not(:disabled):hover{transform:translateY(-2px);box-shadow:0 12px 40px rgba(57,210,255,0.2)}
+
+    main.main{flex:1;display:flex;gap:28px;padding:26px 36px;position:relative;overflow:hidden}
+
+    /* left column */
+    aside.left{width:260px;display:flex;flex-direction:column;gap:18px}
+    .card{background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));border-radius:12px;padding:18px;border:1px solid rgba(255,255,255,0.03);box-shadow:0 16px 60px rgba(2,6,20,0.55);position:relative;overflow:hidden}
+    .card::before{content:'';position:absolute;top:0;left:-100%;width:100%;height:100%;background:linear-gradient(90deg, transparent, rgba(255,255,255,0.03), transparent);animation:cardShine 6s infinite}
+    .card h4{color:var(--accent-a);margin-bottom:10px;position:relative;z-index:1}
+    .muted{color:var(--muted);font-size:13px;position:relative;z-index:1}
+
+    @keyframes cardShine{
+      0%{left:-100%}
+      20%{left:100%}
+      100%{left:100%}
+    }
+
+    /* center area */
+    .center{flex:1;position:relative;display:flex;align-items:center;justify-content:center;overflow:hidden}
+
+    /* background slideshow container */
+    .bg-container{position:absolute;inset:0;z-index:0;overflow:hidden}
+    .bg-slide{position:absolute;inset:0;background-size:cover;background-position:center;opacity:0;transform:scale(1.03);transition:opacity 1200ms ease, transform 1000ms ease}
+    .bg-slide.active{opacity:1;transform:scale(1)}
+    .bg-overlay{position:absolute;inset:0;background:linear-gradient(180deg, rgba(2,6,20,0.25), rgba(2,6,30,0.6));z-index:1}
+
+    /* showcase carousel container */
+    .showcase-wrap{position:relative;z-index:2;width:100%;max-width:1400px;padding:48px 32px;display:flex;flex-direction:column;gap:18px;align-items:center;justify-content:center}
+    .showcase-title{display:flex;align-items:center;gap:12px;width:100%;justify-content:space-between}
+    .showcase-title h2{font-size:20px;letter-spacing:1px;background:linear-gradient(45deg, var(--accent-a), var(--accent-b));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+    .showcase-view{width:100%;overflow:hidden;padding:20px 0 28px 0;position:relative}
+    
+    /* slider navigation */
+    .slider-nav{display:flex;gap:10px;align-items:center}
+    .nav-btn{width:40px;height:40px;border-radius:50%;border:1px solid rgba(255,255,255,0.1);background:rgba(255,255,255,0.05);color:var(--accent-a);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:18px;transition:all 0.3s ease;position:relative;overflow:hidden}
+    .nav-btn:hover{background:rgba(255,255,255,0.1);transform:scale(1.1);box-shadow:0 0 20px rgba(57,210,255,0.3)}
+    .nav-btn:disabled{opacity:0.4;cursor:not-allowed}
+
+    .carousel{display:flex;gap:28px;align-items:center;will-change:transform;transition:transform 500ms cubic-bezier(.2,.9,.2,1)}
+    
+    /* panel - medium size dengan aura FIXED */
+    .panel{width:280px;height:620px;border-radius:14px;overflow:visible;background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(0,0,0,0.08));backdrop-filter:blur(6px);position:relative;box-shadow:0 40px 120px rgba(2,8,20,0.6);transform:skewX(-8deg) scale(0.95);transition:all 350ms cubic-bezier(0.25, 0.46, 0.45, 0.94)}
+    .panel-inner{transform:skewX(8deg);width:100%;height:100%;position:relative;display:flex;flex-direction:column;align-items:center;border-radius:14px;overflow:hidden}
+    
+    /* Aura effect container FIXED */
+    .aura-container{position:absolute;top:-5px;left:-5px;right:-5px;bottom:-5px;border-radius:16px;z-index:0;opacity:0;transition:opacity 0.5s ease;pointer-events:none;overflow:hidden}
+    .panel.active .aura-container{opacity:0.8}
+    .aura{position:absolute;top:50%;left:50%;width:140%;height:140%;background:conic-gradient(from 0deg, transparent, var(--aura-color), transparent);transform:translate(-50%, -50%) rotate(0deg);animation:rotateAura 4s linear infinite;border-radius:50%}
+    .aura-2{animation-delay:-2s; opacity:0.7}
+    
+    @keyframes rotateAura{
+      0%{transform:translate(-50%, -50%) rotate(0deg)}
+      100%{transform:translate(-50%, -50%) rotate(360deg)}
+    }
+
+    .panel img{width:100%;height:82%;object-fit:cover;display:block;border-bottom:1px solid rgba(255,255,255,0.03);position:relative;z-index:1;transition:all 0.3s ease;transform:scale(1.01)}
+    .panel.active img{filter:brightness(1.1) contrast(1.05)}
+    
+    .panel .meta{padding:16px;width:100%;display:flex;align-items:center;justify-content:space-between;position:relative;z-index:1;background:linear-gradient(180deg, transparent, rgba(8,24,41,0.95))}
+    .pname{font-weight:800;color:var(--accent-a);font-size:18px;text-shadow:0 2px 10px rgba(0,0,0,0.5)}
+    .prarity{font-weight:700;font-size:12px;padding:6px 10px;border-radius:999px;background:linear-gradient(90deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));border:1px solid rgba(255,255,255,0.03);color:var(--muted)}
+
+    /* hover focus dengan efek glow */
+    .panel:hover{transform:translateY(-18px) skewX(-8deg) scale(1.02);box-shadow:0 60px 140px rgba(3,12,30,0.75);filter:brightness(1.04)}
+    .panel:hover .aura-container{opacity:0.6}
+    .panel.active{transform:translateY(-12px) skewX(-8deg) scale(1);box-shadow:0 50px 130px var(--aura-glow, rgba(57,210,255,0.3))}
+
+    /* hero spotlight */
+    .hero-spot{position:absolute;right:4%;bottom:6%;z-index:3;width:420px;height:640px;border-radius:16px;padding:22px;display:flex;align-items:flex-end;justify-content:center;box-shadow:0 60px 160px rgba(3,10,20,0.6);background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(0,0,0,0.15));border:1px solid rgba(255,255,255,0.03);position:relative;overflow:hidden}
+    .hero-spot::before{content:'';position:absolute;top:0;left:-100%;width:100%;height:100%;background:linear-gradient(90deg, transparent, rgba(255,255,255,0.05), transparent);animation:cardShine 8s infinite}
+    .hero-spot h3{font-size:28px;color:var(--accent-b);margin-bottom:6px;position:relative;z-index:1}
+    .hero-spot p{color:var(--muted);font-size:14px;position:relative;z-index:1}
+
+    /* gacha board dengan efek shine - FIXED VISIBILITY */
+    .gacha-board{position:absolute;left:50%;transform:translateX(-50%);bottom:28px;z-index:4;background:linear-gradient(180deg, rgba(255,255,255,0.05), rgba(255,255,255,0.02));padding:18px 24px;border-radius:14px;border:1px solid rgba(255,255,255,0.05);display:flex;gap:24px;align-items:center;backdrop-filter:blur(12px);box-shadow:0 20px 80px rgba(2,6,20,0.8);min-width:max-content}
+    .gacha-board::before{content:'';position:absolute;top:0;left:-100%;width:100%;height:100%;background:linear-gradient(90deg, transparent, rgba(57,210,255,0.1), transparent);animation:cardShine 10s infinite}
+    
+    .gtiles{display:flex;gap:12px}
+    .gtile{width:88px;height:116px;border-radius:10px;overflow:hidden;background:rgba(255,255,255,0.03);display:flex;align-items:center;justify-content:center;border:1px solid rgba(255,255,255,0.06);transition:all 300ms ease;position:relative}
+    .gtile::before{content:'';position:absolute;top:0;left:0;right:0;bottom:0;border-radius:10px;background:linear-gradient(45deg, transparent, rgba(255,255,255,0.08), transparent);opacity:0;transition:opacity 0.3s ease}
+    .gtile:hover::before{opacity:1}
+    .gtile.sel{box-shadow:0 20px 60px rgba(57,210,255,0.4);transform:translateY(-10px) scale(1.05);border-color:var(--accent-a)}
+    
+    .spin-btn{padding:14px 32px;border-radius:12px;background:linear-gradient(90deg,var(--accent-a),var(--accent-b));border:none;font-weight:900;cursor:pointer;box-shadow:0 18px 60px rgba(57,210,255,0.2);transition:all 0.3s ease;position:relative;overflow:hidden;font-size:14px;letter-spacing:0.5px}
+    .spin-btn:disabled{opacity:0.6;cursor:not-allowed;transform:none !important}
+    .spin-btn:not(:disabled):hover{transform:translateY(-3px);box-shadow:0 25px 80px rgba(57,210,255,0.3)}
+    .spin-btn::before{content:'';position:absolute;top:0;left:-100%;width:100%;height:100%;background:linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);transition:left 0.6s ease}
+    .spin-btn:hover::before{left:100%}
+
+    /* result popup dengan efek glow */
+    .result-overlay{position:fixed;inset:0;z-index:60;display:flex;align-items:center;justify-content:center;background:rgba(0,6,12,0.9);pointer-events:none;opacity:0;transition:opacity 0.4s ease;backdrop-filter:blur(8px)}
+    .result-overlay.open{pointer-events:auto;opacity:1}
+    .result-card{width:520px;background:linear-gradient(180deg, rgba(255,255,255,0.08), rgba(255,255,255,0.03));padding:32px;border-radius:18px;border:1px solid rgba(255,255,255,0.08);text-align:center;box-shadow:0 40px 140px rgba(2,6,20,0.9);position:relative;overflow:hidden;transform:scale(0.9) translateY(20px);transition:all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);opacity:0}
+    .result-overlay.open .result-card{transform:scale(1) translateY(0);opacity:1}
+    .result-card::before{content:'';position:absolute;top:-50%;left:-50%;width:200%;height:200%;background:conic-gradient(from 0deg, transparent, var(--result-glow, rgba(57,210,255,0.15)), transparent);animation:rotateAura 6s linear infinite}
+    .result-card h2{color:var(--gold);margin-bottom:12px;position:relative;z-index:1;font-size:26px;text-shadow:0 2px 20px rgba(243,212,143,0.3)}
+    .result-card p{color:var(--muted);position:relative;z-index:1;font-size:15px;line-height:1.5}
+    .result-actions{display:flex;gap:14px;justify-content:center;margin-top:24px;position:relative;z-index:1}
+
+    /* loading spinner */
+    .spinner{width:20px;height:20px;border:2px solid transparent;border-top:2px solid currentColor;border-radius:50%;animation:spin 1s linear infinite;display:inline-block}
+
+    @keyframes spin{
+      0%{transform:rotate(0deg)}
+      100%{transform:rotate(360deg)}
+    }
 
     /* Subscription Verification Modal */
     .verification-modal {
@@ -237,25 +387,35 @@
       font-weight: 600;
     }
 
-    /* Disabled state for unsubscribed users */
-    .gacha-disabled {
-      position: relative;
+    /* notification */
+    .notification{position:fixed;top:20px;right:20px;padding:12px 20px;background:linear-gradient(90deg, var(--accent-a), var(--accent-b));color:#021226;border-radius:8px;font-weight:600;z-index:100;transform:translateX(100%);transition:transform 0.3s ease;box-shadow:0 10px 30px rgba(57,210,255,0.3)}
+    .notification.show{transform:translateX(0)}
+
+    /* small screens */
+    @media (max-width:1100px){
+      .hero-spot{display:none}
+      .panel{width:240px;height:520px}
+      .gacha-board{gap:18px; padding:16px 20px}
     }
-    
-    .gacha-disabled::after {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background: rgba(0,0,0,0.7);
-      backdrop-filter: blur(5px);
-      border-radius: 12px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: var(--accent-a);
-      font-weight: 800;
-      font-size: 14px;
+    @media (max-width:900px){
+      .gacha-board{flex-direction:column; gap:16px; width:90%}
+      .gtiles{order:2}
     }
+    @media (max-width:720px){
+      aside.left{display:none}
+      .panel{width:200px;height:420px}
+      .showcase-wrap{padding:20px 16px}
+      .gacha-board{left:5%;transform:translateX(0);bottom:16px; width:90%}
+      .main{padding:10px}
+      .shine-effect{animation:shine 12s infinite}
+      .carousel{gap:20px}
+    }
+
+    /* utility */
+    .hide{display:none !important}
+    .flex{display:flex}
+    .center{align-items:center;justify-content:center}
+    .sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);border:0}
   </style>
 </head>
 <body>
@@ -311,10 +471,117 @@
 
         <!-- SHOWCASE MODE -->
         <div class="showcase-wrap" id="showcaseWrap">
-          <!-- ... (showcase content sama seperti sebelumnya) ... -->
+          <div class="showcase-title">
+            <div>
+              <h2>Character Showcase</h2>
+              <div class="muted">Manual slider • 6 characters • Click to preview</div>
+            </div>
+            <div class="slider-nav">
+              <button id="prevBtn" class="nav-btn" aria-label="Previous character">←</button>
+              <span class="muted" id="slideCounter">1/6</span>
+              <button id="nextBtn" class="nav-btn" aria-label="Next character">→</button>
+            </div>
+          </div>
+
+          <div class="showcase-view" id="showcaseView">
+            <div id="carousel" class="carousel">
+              <!-- 6 panels dengan ukuran medium dan aura FIXED -->
+              <div class="panel" data-name="Aurelia" data-rarity="Mythic" data-file="aurelia" data-description="Abyss Walker" data-aura-color="#ffd700">
+                <div class="aura-container">
+                  <div class="aura" style="--aura-color: #ffd700"></div>
+                  <div class="aura aura-2" style="--aura-color: #ffd700"></div>
+                </div>
+                <div class="panel-inner">
+                  <img src="assets/panels/panel1.jpg" alt="Karakter Aurelia - Mythic rarity" onerror="handleImageError(this)">
+                  <div class="meta">
+                    <div class="pname">Aurelia</div>
+                    <div class="prarity">Mythic</div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="panel" data-name="Korven" data-rarity="Legendary" data-file="korven" data-description="Dragon Knight" data-aura-color="#9b7bff">
+                <div class="aura-container">
+                  <div class="aura" style="--aura-color: #9b7bff"></div>
+                  <div class="aura aura-2" style="--aura-color: #9b7bff"></div>
+                </div>
+                <div class="panel-inner">
+                  <img src="assets/panels/panel2.jpg" alt="Karakter Korven - Legendary rarity" onerror="handleImageError(this)">
+                  <div class="meta">
+                    <div class="pname">Korven</div>
+                    <div class="prarity">Legend</div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="panel" data-name="Sibyl" data-rarity="Elite" data-file="sibyl" data-description="Oracle Seer" data-aura-color="#39d2ff">
+                <div class="aura-container">
+                  <div class="aura" style="--aura-color: #39d2ff"></div>
+                  <div class="aura aura-2" style="--aura-color: #39d2ff"></div>
+                </div>
+                <div class="panel-inner">
+                  <img src="assets/panels/panel3.jpg" alt="Karakter Sibyl - Elite rarity" onerror="handleImageError(this)">
+                  <div class="meta">
+                    <div class="pname">Sibyl</div>
+                    <div class="prarity">Elite</div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="panel" data-name="Truffle" data-rarity="Common" data-file="truffle" data-description="Forest Guardian" data-aura-color="#94a6bf">
+                <div class="aura-container">
+                  <div class="aura" style="--aura-color: #94a6bf"></div>
+                  <div class="aura aura-2" style="--aura-color: #94a6bf"></div>
+                </div>
+                <div class="panel-inner">
+                  <img src="assets/panels/panel4.jpg" alt="Karakter Truffle - Common rarity" onerror="handleImageError(this)">
+                  <div class="meta">
+                    <div class="pname">Truffle</div>
+                    <div class="prarity">Common</div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="panel" data-name="Rebecca" data-rarity="Elite" data-file="rebecca" data-description="Cyber Ninja" data-aura-color="#39d2ff">
+                <div class="aura-container">
+                  <div class="aura" style="--aura-color: #39d2ff"></div>
+                  <div class="aura aura-2" style="--aura-color: #39d2ff"></div>
+                </div>
+                <div class="panel-inner">
+                  <img src="assets/panels/panel5.jpg" alt="Karakter Rebecca - Elite rarity" onerror="handleImageError(this)">
+                  <div class="meta">
+                    <div class="pname">Rebecca</div>
+                    <div class="prarity">Elite</div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="panel" data-name="Fen" data-rarity="Legendary" data-file="fen" data-description="Phoenix Mage" data-aura-color="#9b7bff">
+                <div class="aura-container">
+                  <div class="aura" style="--aura-color: #9b7bff"></div>
+                  <div class="aura aura-2" style="--aura-color: #9b7bff"></div>
+                </div>
+                <div class="panel-inner">
+                  <img src="assets/panels/panel6.jpg" alt="Karakter Fen - Legendary rarity" onerror="handleImageError(this)">
+                  <div class="meta">
+                    <div class="pname">Fen</div>
+                    <div class="prarity">Legend</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
 
-        <!-- GACHA MODE -->
+        <!-- hero spotlight -->
+        <div class="hero-spot" id="heroSpot">
+          <div>
+            <h3 id="heroName">Aurelia</h3>
+            <p id="heroDesc" class="muted">Mythic • Abyss Walker</p>
+          </div>
+        </div>
+
+        <!-- GACHA MODE - FIXED VISIBILITY -->
         <div class="gacha-board hide" id="gachaBoard" aria-label="Portal summon gacha">
           <div style="display:flex;flex-direction:column;gap:8px;min-width:200px;position:relative;z-index:1">
             <div style="font-weight:800; font-size:16px">Summon Portal</div>
@@ -322,12 +589,18 @@
           </div>
 
           <div class="gtiles" id="gtiles" style="position:relative;z-index:1">
-            <!-- 6 box thumbnails -->
+            <!-- 6 box thumbnails dengan gambar mod -->
+            <div class="gtile"><img src="assets/thumbnails/thumb1.jpg" style="width:100%;height:100%;object-fit:cover" alt="Aurelia Mod" onerror="handleImageError(this)"></div>
+            <div class="gtile"><img src="assets/thumbnails/thumb2.jpg" style="width:100%;height:100%;object-fit:cover" alt="Korven Mod" onerror="handleImageError(this)"></div>
+            <div class="gtile"><img src="assets/thumbnails/thumb3.jpg" style="width:100%;height:100%;object-fit:cover" alt="Sibyl Mod" onerror="handleImageError(this)"></div>
+            <div class="gtile"><img src="assets/thumbnails/thumb4.jpg" style="width:100%;height:100%;object-fit:cover" alt="Truffle Mod" onerror="handleImageError(this)"></div>
+            <div class="gtile"><img src="assets/thumbnails/thumb5.jpg" style="width:100%;height:100%;object-fit:cover" alt="Rebecca Mod" onerror="handleImageError(this)"></div>
+            <div class="gtile"><img src="assets/thumbnails/thumb6.jpg" style="width:100%;height:100%;object-fit:cover" alt="Fen Mod" onerror="handleImageError(this)"></div>
           </div>
 
           <div style="display:flex;flex-direction:column;gap:12px;align-items:center;position:relative;z-index:1">
-            <button id="summonBtn" class="spin-btn">SUMMON</button>
-            <button id="singleSummon" class="btn small">Single</button>
+            <button id="summonBtn" class="spin-btn" disabled>SUMMON</button>
+            <button id="singleSummon" class="btn small" disabled>Single</button>
           </div>
         </div>
       </section>
@@ -374,19 +647,34 @@
 
   <!-- Access Granted Animation -->
   <div class="access-granted" id="accessGranted">
-    <span>🎮</span> GACH ACCESS GRANTED!
+    <span>🎮</span> GACHA ACCESS GRANTED!
   </div>
 
-  <!-- ... (result overlay, notification, music sama seperti sebelumnya) ... -->
-</body>
+  <!-- Result Overlay -->
+  <div class="result-overlay" id="resultOverlay" aria-hidden="true">
+    <div class="result-card">
+      <h2 id="resultTitle">Mythic • You Obtained Aurelia</h2>
+      <p id="resultText">Beautiful reveal animation — Download secured with single-use token.</p>
+      <div class="result-actions">
+        <button id="claimBtn" class="btn primary">Download File</button>
+        <button id="closeResult" class="btn">Close</button>
+      </div>
+    </div>
+  </div>
 
-<script>
+  <!-- Notification -->
+  <div class="notification" id="notification"></div>
+
+  <!-- Background Music -->
+  <audio id="bgMusic" src="music.mp3" loop></audio>
+
+  <script>
 /************************************************************************
- * ENHANCED SUBSCRIPTION VERIFICATION SYSTEM
- * - Multi-layer verification without YouTube API
- * - Timestamp-based security
- * - Local storage with expiration
- * - User behavior analysis
+ * COMPLETE FIXED GACHA SYSTEM WITH SUBSCRIPTION VERIFICATION
+ * - Fixed UI/UX bugs
+ * - Working subscription system
+ * - Enhanced security
+ * - Complete functionality
  ************************************************************************/
 
 /* ---------------------- CONFIG ---------------------- */
@@ -406,6 +694,83 @@ const SECURITY_KEYS = {
   CHANNEL_OPENED: 'gacha_channel_opened'
 };
 
+// Background slides
+const SLIDES = [
+  'assets/backgrounds/bg1.jpg',
+  'assets/backgrounds/bg2.jpg',
+  'assets/backgrounds/bg3.jpg',
+  'assets/backgrounds/bg4.jpg'
+];
+
+// Rarity system
+const rarityRates = {
+  Mythic: 0.02,
+  Legendary: 0.08,
+  Elite: 0.2,
+  Common: 0.7
+};
+
+const rarityColors = {
+  Mythic: '#f3d48f',
+  Legendary: '#9b7bff',
+  Elite: '#39d2ff',
+  Common: '#94a6bf'
+};
+
+const rarityGlow = {
+  Mythic: 'rgba(243, 212, 143, 0.4)',
+  Legendary: 'rgba(155, 123, 255, 0.4)',
+  Elite: 'rgba(57, 210, 255, 0.4)',
+  Common: 'rgba(148, 166, 191, 0.4)'
+};
+
+/* ---------------------- UTILITY FUNCTIONS ---------------------- */
+function clamp(v, a=0, b=1){ return Math.max(a, Math.min(b, v)); }
+function rand(){ return Math.random(); }
+function sleep(ms){ return new Promise(r=>setTimeout(r, ms)); }
+
+// Error handling for images
+function handleImageError(img) {
+  img.src = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjMDgxODI5Ii8+PHRleHQgeD0iNTAlIiB5PSI1MCUiIGZvbnQtZmFtaWx5PSJzYW5zLXNlcmlmIiBmb250LXNpemU9IjE0IiBmaWxsPSIjMzlkMmZmIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBkeT0iLjNlbSI+SW1hZ2UgTm90IEZvdW5kPC90ZXh0Pjwvc3ZnPg==';
+  img.alt = 'Gambar tidak tersedia';
+}
+
+// Notification system
+function showNotification(message, duration = 3000) {
+  const notification = document.getElementById('notification');
+  notification.textContent = message;
+  notification.classList.add('show');
+  
+  setTimeout(() => {
+    notification.classList.remove('show');
+  }, duration);
+}
+
+// Secure download function
+async function secureDownload(filename) {
+  try {
+    showNotification('🔄 Generating secure download link...');
+    
+    // Simulate API call
+    await sleep(1000);
+    
+    const downloadUrl = `mods/${filename}.zip`;
+    const link = document.createElement('a');
+    link.href = downloadUrl;
+    link.download = `${filename}.zip`;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    
+    showNotification('✅ Download started!');
+    return true;
+  } catch (error) {
+    console.error('Download error:', error);
+    showNotification('❌ Download failed. Please try again.');
+    return false;
+  }
+}
+
 /* ---------------------- SECURITY SYSTEM ---------------------- */
 class SubscriptionSecurity {
   constructor() {
@@ -420,7 +785,6 @@ class SubscriptionSecurity {
     this.cleanupExpiredData();
   }
 
-  // Security: Check if user is verified
   checkVerification() {
     const verified = localStorage.getItem(SECURITY_KEYS.SUBSCRIPTION_VERIFIED);
     const sessionStart = localStorage.getItem(SECURITY_KEYS.SESSION_START);
@@ -431,7 +795,6 @@ class SubscriptionSecurity {
     return sessionAge < CONFIG.SESSION_DURATION;
   }
 
-  // Security: Get attempt count with reset after timeout
   getAttemptCount() {
     const attempts = localStorage.getItem(SECURITY_KEYS.ATTEMPT_COUNT);
     const timestamp = localStorage.getItem(SECURITY_KEYS.VERIFICATION_TIMESTAMP);
@@ -447,26 +810,22 @@ class SubscriptionSecurity {
     return parseInt(attempts);
   }
 
-  // Security: Increment attempt count
   incrementAttempts() {
     this.attempts++;
     localStorage.setItem(SECURITY_KEYS.ATTEMPT_COUNT, this.attempts.toString());
     localStorage.setItem(SECURITY_KEYS.VERIFICATION_TIMESTAMP, Date.now().toString());
   }
 
-  // Security: Reset attempts after timeout
   resetAttempts() {
     this.attempts = 0;
     localStorage.removeItem(SECURITY_KEYS.ATTEMPT_COUNT);
     localStorage.removeItem(SECURITY_KEYS.VERIFICATION_TIMESTAMP);
   }
 
-  // Security: Mark channel as opened
   markChannelOpened() {
     localStorage.setItem(SECURITY_KEYS.CHANNEL_OPENED, Date.now().toString());
   }
 
-  // Security: Check if channel was recently opened
   wasChannelOpened() {
     const opened = localStorage.getItem(SECURITY_KEYS.CHANNEL_OPENED);
     if (!opened) return false;
@@ -475,70 +834,55 @@ class SubscriptionSecurity {
     return timeSinceOpened < CONFIG.VERIFICATION_TIMEOUT;
   }
 
-  // Security: Verify subscription (multi-layer check)
   async verifySubscription() {
-    // Layer 1: Check if channel was opened recently
     if (!this.wasChannelOpened()) {
-      this.showNotification('❌ Please open the YouTube channel first');
+      showNotification('❌ Please open the YouTube channel first');
       return false;
     }
 
-    // Layer 2: Check attempt limits
     if (this.attempts >= CONFIG.MAX_VERIFICATION_ATTEMPTS) {
-      this.showNotification('❌ Too many attempts. Please try again later.');
+      showNotification('❌ Too many attempts. Please try again later.');
       return false;
     }
 
-    // Layer 3: Security delay to prevent automation
-    this.showNotification('🔒 Verifying subscription...');
-    await this.delay(CONFIG.SECURITY_DELAY);
+    showNotification('🔒 Verifying subscription...');
+    await sleep(CONFIG.SECURITY_DELAY);
 
-    // Layer 4: User behavior analysis (simple version)
     const userBehaviorScore = this.analyzeUserBehavior();
     if (userBehaviorScore < 0.7) {
-      this.showNotification('❌ Verification failed. Please try the process again.');
+      showNotification('❌ Verification failed. Please try the process again.');
       this.incrementAttempts();
       return false;
     }
 
-    // Layer 5: Final verification
     return this.finalizeVerification();
   }
 
-  // Security: Analyze user behavior patterns
   analyzeUserBehavior() {
     let score = 0;
     
-    // Check if user spent reasonable time (simulated)
     const channelOpenedTime = localStorage.getItem(SECURITY_KEYS.CHANNEL_OPENED);
     if (channelOpenedTime) {
       const timeSpent = Date.now() - parseInt(channelOpenedTime);
-      // Minimum 5 seconds, maximum 5 minutes considered reasonable
       if (timeSpent > 5000 && timeSpent < 300000) score += 0.4;
     }
     
-    // Check if this is not first attempt (returning user)
     if (this.attempts > 0) score += 0.3;
-    
-    // Random factor to prevent automation
     score += Math.random() * 0.3;
     
     return Math.min(score, 1);
   }
 
-  // Security: Final verification step
   finalizeVerification() {
-    // Set verification flags
     localStorage.setItem(SECURITY_KEYS.SUBSCRIPTION_VERIFIED, 'true');
     localStorage.setItem(SECURITY_KEYS.SESSION_START, Date.now().toString());
     this.resetAttempts();
     
     this.isVerified = true;
-    this.showNotification('✅ Subscription verified! Gacha access granted.');
+    showNotification('✅ Subscription verified! Gacha access granted.');
     return true;
   }
 
-  // Security: Cleanup expired data
   cleanupExpiredData() {
     const sessionStart = localStorage.getItem(SECURITY_KEYS.SESSION_START);
     if (sessionStart) {
@@ -549,7 +893,6 @@ class SubscriptionSecurity {
     }
   }
 
-  // Security: Reset session
   resetSession() {
     localStorage.removeItem(SECURITY_KEYS.SUBSCRIPTION_VERIFIED);
     localStorage.removeItem(SECURITY_KEYS.SESSION_START);
@@ -557,7 +900,6 @@ class SubscriptionSecurity {
     this.updateUI();
   }
 
-  // UI Updates
   updateUI() {
     const subBadge = document.getElementById('subBadge');
     const statusDot = document.getElementById('statusDot');
@@ -583,7 +925,6 @@ class SubscriptionSecurity {
     }
   }
 
-  // Event Listeners
   setupEventListeners() {
     const openChannelBtn = document.getElementById('openChannel');
     const enableBtn = document.getElementById('enableBtn');
@@ -621,15 +962,12 @@ class SubscriptionSecurity {
     });
   }
 
-  // Modal Controls
   showVerificationModal() {
     const modal = document.getElementById('verificationModal');
     const openYoutubeBtn = document.getElementById('openYoutube');
     const confirmSubscriptionBtn = document.getElementById('confirmSubscription');
     
     modal.classList.add('active');
-    
-    // Reset button states
     openYoutubeBtn.style.display = 'block';
     confirmSubscriptionBtn.style.display = 'none';
   }
@@ -644,15 +982,10 @@ class SubscriptionSecurity {
     successElement.classList.add('show');
   }
 
-  // YouTube Channel Handler
   openYouTubeChannel() {
-    // Mark channel as opened
     this.markChannelOpened();
-    
-    // Open channel in new tab
     window.open(CONFIG.YOUTUBE_CHANNEL, '_blank');
     
-    // Show confirmation button after a delay
     setTimeout(() => {
       const openYoutubeBtn = document.getElementById('openYoutube');
       const confirmSubscriptionBtn = document.getElementById('confirmSubscription');
@@ -662,7 +995,6 @@ class SubscriptionSecurity {
     }, 1000);
   }
 
-  // Access Granted Animation
   showAccessGranted() {
     const accessElement = document.getElementById('accessGranted');
     accessElement.classList.add('show');
@@ -671,66 +1003,294 @@ class SubscriptionSecurity {
       accessElement.classList.remove('show');
     }, 3000);
   }
+}
 
-  // Utility Functions
-  delay(ms) {
-    return new Promise(resolve => setTimeout(resolve, ms));
+/* ---------------------- GACHA SYSTEM ---------------------- */
+class GachaSystem {
+  constructor() {
+    this.panels = Array.from(document.querySelectorAll('.panel'));
+    this.currentSlide = 0;
+    this.totalSlides = this.panels.length;
+    this.init();
   }
 
-  showNotification(message) {
-    // Use existing notification system
-    if (window.showNotification) {
-      window.showNotification(message);
+  init() {
+    this.setupCarousel();
+    this.setupGacha();
+    this.setupBackground();
+    this.updateSlider();
+  }
+
+  setupCarousel() {
+    const prevBtn = document.getElementById('prevBtn');
+    const nextBtn = document.getElementById('nextBtn');
+
+    prevBtn.addEventListener('click', () => this.prevSlide());
+    nextBtn.addEventListener('click', () => this.nextSlide());
+
+    // Keyboard navigation
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowLeft') this.prevSlide();
+      if (e.key === 'ArrowRight') this.nextSlide();
+    });
+
+    // Panel interactions
+    this.panels.forEach((panel, index) => {
+      panel.addEventListener('click', () => {
+        this.goToSlide(index);
+      });
+    });
+  }
+
+  setupGacha() {
+    const summonBtn = document.getElementById('summonBtn');
+    const singleSummon = document.getElementById('singleSummon');
+    const claimBtn = document.getElementById('claimBtn');
+    const closeResult = document.getElementById('closeResult');
+    const modeBtn = document.getElementById('modeBtn');
+
+    summonBtn.addEventListener('click', (e) => {
+      if (!window.securitySystem.isVerified) {
+        e.preventDefault();
+        window.securitySystem.showVerificationModal();
+        showNotification('🔒 Subscription required for summoning');
+        return false;
+      }
+      this.performSummon(true);
+    });
+
+    singleSummon.addEventListener('click', (e) => {
+      if (!window.securitySystem.isVerified) {
+        e.preventDefault();
+        window.securitySystem.showVerificationModal();
+        showNotification('🔒 Subscription required for summoning');
+        return false;
+      }
+      this.performSummon(false);
+    });
+
+    claimBtn.addEventListener('click', async () => {
+      const filename = claimBtn.dataset.filename;
+      if (!filename) {
+        showNotification('❌ No file available for download.');
+        return;
+      }
+      await secureDownload(filename);
+      this.closeResult();
+    });
+
+    closeResult.addEventListener('click', () => {
+      this.closeResult();
+    });
+
+    // Mode switching
+    let currentMode = 'showcase';
+    modeBtn.addEventListener('click', () => {
+      currentMode = currentMode === 'showcase' ? 'gacha' : 'showcase';
+      modeBtn.textContent = `Mode: ${currentMode.charAt(0).toUpperCase() + currentMode.slice(1)}`;
+      this.setMode(currentMode);
+    });
+  }
+
+  setMode(mode) {
+    const showcaseWrap = document.getElementById('showcaseWrap');
+    const gachaBoard = document.getElementById('gachaBoard');
+    const heroSpot = document.getElementById('heroSpot');
+
+    if (mode === 'showcase') {
+      showcaseWrap.style.display = 'flex';
+      gachaBoard.classList.add('hide');
+      heroSpot.style.display = 'flex';
     } else {
-      console.log('Notification:', message);
+      showcaseWrap.style.display = 'none';
+      gachaBoard.classList.remove('hide');
+      heroSpot.style.display = 'none';
     }
+  }
+
+  setupBackground() {
+    const bgContainer = document.getElementById('bgContainer');
+    if (SLIDES.length === 0) return;
+
+    SLIDES.forEach((src, i) => {
+      const slide = document.createElement('div');
+      slide.className = 'bg-slide';
+      slide.style.backgroundImage = `url(${src})`;
+      if (i === 0) slide.classList.add('active');
+      bgContainer.appendChild(slide);
+    });
+
+    let idx = 0;
+    setInterval(() => {
+      const slides = bgContainer.querySelectorAll('.bg-slide');
+      if (!slides.length) return;
+      slides[idx].classList.remove('active');
+      idx = (idx + 1) % slides.length;
+      slides[idx].classList.add('active');
+    }, 6000);
+  }
+
+  updateSlider() {
+    const panelWidth = 280;
+    const gap = 28;
+    const offset = -this.currentSlide * (panelWidth + gap);
+    document.getElementById('carousel').style.transform = `translate3d(${offset}px, 0, 0)`;
+    document.getElementById('slideCounter').textContent = `${this.currentSlide + 1}/${this.totalSlides}`;
+    
+    document.getElementById('prevBtn').disabled = this.currentSlide === 0;
+    document.getElementById('nextBtn').disabled = this.currentSlide === this.totalSlides - 1;
+    
+    this.updateActivePanel();
+  }
+
+  updateActivePanel() {
+    this.panels.forEach((panel, index) => {
+      if (index === this.currentSlide) {
+        panel.classList.add('active');
+        const name = panel.dataset.name || 'Unknown';
+        const rarity = panel.dataset.rarity || '';
+        const description = panel.dataset.description || '';
+        
+        document.getElementById('heroName').textContent = name;
+        document.getElementById('heroDesc').textContent = `${rarity} • ${description}`;
+        
+        panel.style.setProperty('--aura-glow', rarityGlow[rarity] || 'rgba(57,210,255,0.3)');
+      } else {
+        panel.classList.remove('active');
+      }
+    });
+  }
+
+  goToSlide(index) {
+    this.currentSlide = clamp(index, 0, this.totalSlides - 1);
+    this.updateSlider();
+  }
+
+  nextSlide() {
+    if (this.currentSlide < this.totalSlides - 1) {
+      this.currentSlide++;
+      this.updateSlider();
+    }
+  }
+
+  prevSlide() {
+    if (this.currentSlide > 0) {
+      this.currentSlide--;
+      this.updateSlider();
+    }
+  }
+
+  async performSummon(full = true) {
+    const summonBtn = document.getElementById('summonBtn');
+    const singleSummon = document.getElementById('singleSummon');
+    const originalText = summonBtn.innerHTML;
+
+    summonBtn.innerHTML = '<div class="spinner"></div> Loading...';
+    summonBtn.disabled = true;
+    singleSummon.disabled = true;
+
+    try {
+      const gtiles = Array.from(document.querySelectorAll('.gtiles .gtile'));
+      let cycles = full ? 25 + Math.floor(Math.random() * 15) : 10 + Math.floor(Math.random() * 8);
+      
+      gtiles.forEach(t => t.classList.remove('sel'));
+      
+      for (let i = 0; i < cycles; i++) {
+        const sel = gtiles[i % gtiles.length];
+        sel.classList.add('sel');
+        await sleep(50 + Math.floor(i * 1.5));
+        if (i < cycles - 1) {
+          sel.classList.remove('sel');
+        }
+      }
+
+      const chosenRarity = this.chooseRarity();
+      const winnerPanel = this.pickPanelByRarity(chosenRarity);
+      
+      await sleep(500);
+      await this.revealPanel(winnerPanel);
+      
+    } catch (error) {
+      console.error('Summon error:', error);
+      showNotification('❌ Summon failed. Please try again.');
+    } finally {
+      summonBtn.innerHTML = originalText;
+      summonBtn.disabled = false;
+      singleSummon.disabled = false;
+    }
+  }
+
+  chooseRarity() {
+    const r = Math.random();
+    let sum = 0;
+    for (const [rarity, rate] of Object.entries(rarityRates)) {
+      sum += rate;
+      if (r <= sum) return rarity;
+    }
+    return 'Common';
+  }
+
+  pickPanelByRarity(rarity) {
+    const matches = this.panels.filter(p => 
+      (p.dataset.rarity || '').toLowerCase() === rarity.toLowerCase()
+    );
+    if (matches.length > 0) {
+      return matches[Math.floor(Math.random() * matches.length)];
+    }
+    return this.panels[Math.floor(Math.random() * this.panels.length)];
+  }
+
+  async revealPanel(panel) {
+    this.panels.forEach(x => x.classList.remove('sel'));
+    panel.classList.add('sel');
+    
+    const name = panel.dataset.name || 'Unknown';
+    const rarity = panel.dataset.rarity || 'Unknown';
+    const description = panel.dataset.description || '';
+    const filename = panel.dataset.file || '';
+    
+    document.getElementById('resultTitle').textContent = `${rarity} • You Obtained ${name}`;
+    document.getElementById('resultText').textContent = `${description} - Secure download ready!`;
+    document.getElementById('claimBtn').dataset.filename = filename;
+    
+    const resultCard = document.querySelector('.result-card');
+    resultCard.style.setProperty('--result-glow', rarityGlow[rarity] || 'rgba(57,210,255,0.2)');
+    
+    document.getElementById('resultOverlay').classList.add('open');
+    document.getElementById('resultOverlay').setAttribute('aria-hidden', 'false');
+  }
+
+  closeResult() {
+    document.getElementById('resultOverlay').classList.remove('open');
+    document.getElementById('resultOverlay').setAttribute('aria-hidden', 'true');
+    this.panels.forEach(x => x.classList.remove('sel'));
   }
 }
 
 /* ---------------------- INITIALIZATION ---------------------- */
-// Initialize security system
-const securitySystem = new SubscriptionSecurity();
+document.addEventListener('DOMContentLoaded', function() {
+  // Initialize systems
+  window.securitySystem = new SubscriptionSecurity();
+  window.gachaSystem = new GachaSystem();
+  
+  // Setup background music
+  const bgMusic = document.getElementById('bgMusic');
+  document.addEventListener('click', function() {
+    bgMusic.play().catch(() => {});
+  }, { once: true });
 
-// Expose to global scope for other functions
-window.securitySystem = securitySystem;
+  // Add error handlers to images
+  document.querySelectorAll('img').forEach(img => {
+    img.addEventListener('error', () => handleImageError(img));
+  });
 
-// Update existing enableBtn behavior
-document.getElementById('enableBtn').addEventListener('click', function() {
-  securitySystem.showVerificationModal();
+  // Auto-cleanup every hour
+  setInterval(() => {
+    window.securitySystem.cleanupExpiredData();
+  }, 60 * 60 * 1000);
+
+  console.log('🎮 Gacha System Fully Initialized');
 });
-
-// Modify existing summon buttons to check verification
-document.getElementById('summonBtn').addEventListener('click', function(e) {
-  if (!securitySystem.isVerified) {
-    e.preventDefault();
-    securitySystem.showVerificationModal();
-    securitySystem.showNotification('🔒 Subscription required for summoning');
-    return false;
-  }
-  // Continue with existing summon logic
-  if (window.performSummon) {
-    window.performSummon(true);
-  }
-});
-
-document.getElementById('singleSummon').addEventListener('click', function(e) {
-  if (!securitySystem.isVerified) {
-    e.preventDefault();
-    securitySystem.showVerificationModal();
-    securitySystem.showNotification('🔒 Subscription required for summoning');
-    return false;
-  }
-  // Continue with existing summon logic
-  if (window.performSummon) {
-    window.performSummon(false);
-  }
-});
-
-// Auto-cleanup every hour
-setInterval(() => {
-  securitySystem.cleanupExpiredData();
-}, 60 * 60 * 1000);
-
-console.log('🔒 Subscription Security System Activated');
 </script>
+</body>
 </html>
