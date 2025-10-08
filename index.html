@@ -182,16 +182,82 @@
       z-index: 1;
     }
 
-    /* gacha board dengan efek shine - FIXED VISIBILITY */
+    /* SUMMON PORTAL BESAR DI TENGAH - REVISI */
+    .summon-portal {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      z-index: 4;
+      width: 600px;
+      height: 400px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 20px;
+    }
+
+    .portal-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      grid-template-rows: repeat(2, 1fr);
+      gap: 15px;
+      width: 100%;
+      height: 300px;
+    }
+
+    .portal-character {
+      border-radius: 12px;
+      overflow: hidden;
+      background: rgba(255,255,255,0.03);
+      border: 2px solid rgba(255,255,255,0.1);
+      cursor: pointer;
+      transition: all 0.3s ease;
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .portal-character:hover {
+      transform: scale(1.05);
+      border-color: var(--accent-a);
+      box-shadow: 0 10px 30px rgba(57,210,255,0.3);
+    }
+
+    .portal-character.active {
+      transform: scale(1.1);
+      border-color: var(--accent-a);
+      box-shadow: 0 15px 40px rgba(57,210,255,0.5);
+      z-index: 2;
+    }
+
+    .portal-character img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.3s ease;
+    }
+
+    .portal-character:hover img {
+      transform: scale(1.1);
+    }
+
+    .portal-character.active img {
+      transform: scale(1.15);
+    }
+
+    .portal-controls {
+      display: flex;
+      gap: 20px;
+      align-items: center;
+      margin-top: 20px;
+    }
+
+    /* gacha board dengan efek shine - REVISI POSISI */
     .gacha-board{position:absolute;left:50%;transform:translateX(-50%);bottom:28px;z-index:4;background:linear-gradient(180deg, rgba(255,255,255,0.05), rgba(255,255,255,0.02));padding:18px 24px;border-radius:14px;border:1px solid rgba(255,255,255,0.05);display:flex;gap:24px;align-items:center;backdrop-filter:blur(12px);box-shadow:0 20px 80px rgba(2,6,20,0.8);min-width:max-content}
     .gacha-board::before{content:'';position:absolute;top:0;left:-100%;width:100%;height:100%;background:linear-gradient(90deg, transparent, rgba(57,210,255,0.1), transparent);animation:cardShine 10s infinite}
-    
-    /* Half Character Display di atas summon portal */
-    .character-display{position:absolute;top:-180px;left:50%;transform:translateX(-50%);width:600px;height:200px;display:flex;justify-content:center;gap:8px;z-index:5}
-    .character-half{width:90px;height:180px;border-radius:12px 12px 0 0;overflow:hidden;position:relative;background:linear-gradient(180deg, rgba(255,255,255,0.03), transparent);border:1px solid rgba(255,255,255,0.05);border-bottom:none;transition:all 0.3s ease;opacity:0.7}
-    .character-half:hover{opacity:1;transform:translateY(-5px);box-shadow:0 10px 30px rgba(57,210,255,0.2)}
-    .character-half img{width:100%;height:100%;object-fit:cover;object-position:top center}
-    .character-name{position:absolute;bottom:8px;left:0;right:0;text-align:center;font-size:10px;font-weight:700;color:var(--accent-a);background:linear-gradient(90deg, transparent, rgba(0,0,0,0.7), transparent);padding:2px 4px}
     
     .gtiles{display:flex;gap:12px}
     .gtile{width:88px;height:116px;border-radius:10px;overflow:hidden;background:rgba(255,255,255,0.03);display:flex;align-items:center;justify-content:center;border:1px solid rgba(255,255,255,0.06);transition:all 300ms ease;position:relative}
@@ -538,14 +604,25 @@
       .hero-spot{display:none}
       .panel{width:240px;height:520px}
       .gacha-board{gap:18px; padding:16px 20px}
-      .character-display{width:500px;top:-160px}
-      .character-half{width:75px;height:150px}
+      .summon-portal {
+        width: 500px;
+        height: 350px;
+      }
+      .portal-grid {
+        height: 250px;
+      }
     }
     @media (max-width:900px){
       .gacha-board{flex-direction:column; gap:16px; width:90%}
       .gtiles{order:2}
-      .character-display{width:400px;top:-140px}
-      .character-half{width:60px;height:130px}
+      .summon-portal {
+        width: 400px;
+        height: 300px;
+      }
+      .portal-grid {
+        height: 200px;
+        gap: 10px;
+      }
     }
     @media (max-width:720px){
       aside.left{display:none}
@@ -555,7 +632,14 @@
       .main{padding:10px}
       .shine-effect{animation:shine 12s infinite}
       .carousel{gap:20px}
-      .character-display{display:none}
+      .summon-portal {
+        width: 320px;
+        height: 240px;
+      }
+      .portal-grid {
+        height: 160px;
+        gap: 8px;
+      }
     }
 
     /* utility */
@@ -741,33 +825,28 @@
           </div>
         </div>
 
-        <!-- GACHA MODE - FIXED VISIBILITY -->
-        <div class="gacha-board hide" id="gachaBoard" aria-label="Portal summon gacha">
-          <!-- Half Character Display -->
-          <div class="character-display" id="characterDisplay">
-            <!-- Characters akan diisi oleh JavaScript -->
+        <!-- SUMMON PORTAL BESAR DI TENGAH - REVISI -->
+        <div class="summon-portal hide" id="summonPortal">
+          <div class="portal-grid" id="portalGrid">
+            <!-- Portal characters akan diisi oleh JavaScript -->
           </div>
-
-          <div style="display:flex;flex-direction:column;gap:8px;min-width:200px;position:relative;z-index:1">
-            <div style="font-weight:800; font-size:16px">Summon Portal</div>
-            <div class="muted" style="font-size:13px">
-              <span id="summonsLeft">5</span> summons remaining today
+          <div class="portal-controls">
+            <div style="display:flex;flex-direction:column;gap:8px;align-items:center;">
+              <div style="font-weight:800; font-size:18px">Summon Portal</div>
+              <div class="muted" style="font-size:14px">
+                <span id="summonsLeft">5</span> summons remaining today
+              </div>
             </div>
-          </div>
-
-          <div class="gtiles" id="gtiles" style="position:relative;z-index:1">
-            <!-- 6 box thumbnails dengan gambar mod -->
-            <div class="gtile"><img src="assets/thumbnails/thumb1.jpg" style="width:100%;height:100%;object-fit:cover" alt="Sasuke Mod" onerror="handleImageError(this)"></div>
-            <div class="gtile"><img src="assets/thumbnails/thumb2.jpg" style="width:100%;height:100%;object-fit:cover" alt="Obito Mod" onerror="handleImageError(this)"></div>
-            <div class="gtile"><img src="assets/thumbnails/thumb3.jpg" style="width:100%;height:100%;object-fit:cover" alt="Madara Mod" onerror="handleImageError(this)"></div>
-            <div class="gtile"><img src="assets/thumbnails/thumb4.jpg" style="width:100%;height:100%;object-fit:cover" alt="Naruto Mod" onerror="handleImageError(this)"></div>
-            <div class="gtile"><img src="assets/thumbnails/thumb5.jpg" style="width:100%;height:100%;object-fit:cover" alt="SasukeHebi Mod" onerror="handleImageError(this)"></div>
-            <div class="gtile"><img src="assets/thumbnails/thumb6.jpg" style="width:100%;height:100%;object-fit:cover" alt="BorutoUzumaki Mod" onerror="handleImageError(this)"></div>
-          </div>
-
-          <div style="display:flex;flex-direction:column;gap:12px;align-items:center;position:relative;z-index:1">
             <button id="summonBtn" class="spin-btn" disabled>SUMMON</button>
             <button id="singleSummon" class="btn small" disabled>Single</button>
+          </div>
+        </div>
+
+        <!-- GACHA MODE - REVISI -->
+        <div class="gacha-board hide" id="gachaBoard" aria-label="Portal summon gacha">
+          <div style="display:flex;flex-direction:column;gap:12px;align-items:center;position:relative;z-index:1">
+            <button id="summonBtnBottom" class="spin-btn" disabled>SUMMON</button>
+            <button id="singleSummonBottom" class="btn small" disabled>Single</button>
           </div>
         </div>
       </section>
@@ -843,11 +922,11 @@
 
   <script>
 /************************************************************************
- * COMPLETE FIXED GACHA SYSTEM WITH HERO SPOT IMAGES
- * - Fixed Hero Spot dengan gambar karakter
- * - Auto-update ketika slider berpindah
- * - Smooth transitions
- * - Working subscription system
+ * COMPLETE FIXED GACHA SYSTEM WITH SUMMON PORTAL BESAR DI TENGAH
+ * - Summon portal 3x2 grid di tengah layar
+ * - Character preview dengan zoom effect
+ * - Fixed summon result matching
+ * - Enhanced visual effects
  ************************************************************************/
 
 /* ---------------------- CHARACTER DATA ---------------------- */
@@ -857,7 +936,6 @@ const CHARACTERS = [
     name: 'Sasuke',
     rarity: 'Mythic',
     image: 'assets/panels/panel1.png',
-    halfImage: 'assets/half-characters/Sasuke-half.jpg',
     description: 'Abyss Walker',
     file: 'Sasuke',
     auraColor: '#ffd700'
@@ -867,7 +945,6 @@ const CHARACTERS = [
     name: 'Obito',
     rarity: 'Legendary',
     image: 'assets/panels/panel2.png',
-    halfImage: 'assets/half-characters/Obito-half.jpg',
     description: 'Dragon Knight',
     file: 'Obito',
     auraColor: '#9b7bff'
@@ -877,7 +954,6 @@ const CHARACTERS = [
     name: 'Madara',
     rarity: 'Elite',
     image: 'assets/panels/panel3.png',
-    halfImage: 'assets/half-characters/Madara-half.jpg',
     description: 'Oracle Seer',
     file: 'Madara',
     auraColor: '#39d2ff'
@@ -887,7 +963,6 @@ const CHARACTERS = [
     name: 'Naruto',
     rarity: 'Common',
     image: 'assets/panels/panel4.png',
-    halfImage: 'assets/half-characters/Naruto-half.jpg',
     description: 'Forest Guardian',
     file: 'Naruto',
     auraColor: '#94a6bf'
@@ -897,7 +972,6 @@ const CHARACTERS = [
     name: 'SasukeHebi',
     rarity: 'Elite',
     image: 'assets/panels/panel5.png',
-    halfImage: 'assets/half-characters/SasukeHebi-half.jpg',
     description: 'Cyber Ninja',
     file: 'SasukeHebi',
     auraColor: '#39d2ff'
@@ -907,68 +981,99 @@ const CHARACTERS = [
     name: 'BorutoUzumaki',
     rarity: 'Legendary',
     image: 'assets/panels/panel6.png',
-    halfImage: 'assets/half-characters/BorutoUzumaki-half.jpg',
     description: 'Phoenix Mage',
     file: 'BorutoUzumaki',
     auraColor: '#9b7bff'
   }
 ];
 
-/* ---------------------- HALF CHARACTER DISPLAY SYSTEM ---------------------- */
-class HalfCharacterDisplay {
+/* ---------------------- SUMMON PORTAL SYSTEM ---------------------- */
+class SummonPortalSystem {
   constructor() {
-    this.container = document.getElementById('characterDisplay');
+    this.container = document.getElementById('portalGrid');
+    this.currentActive = null;
     this.init();
   }
 
   init() {
-    this.createCharacterElements();
+    this.createPortalCharacters();
   }
 
-  createCharacterElements() {
+  createPortalCharacters() {
     this.container.innerHTML = '';
     
-    CHARACTERS.forEach(character => {
+    CHARACTERS.forEach((character, index) => {
       const characterElement = document.createElement('div');
-      characterElement.className = 'character-half';
+      characterElement.className = 'portal-character';
+      characterElement.dataset.characterId = character.id;
+      characterElement.dataset.index = index;
+      
       characterElement.innerHTML = `
-        <img src="${character.halfImage}" alt="${character.name}" onerror="handleImageError(this)">
-        <div class="character-name">${character.name}</div>
+        <img src="${character.image}" alt="${character.name}" onerror="handleImageError(this)">
       `;
       
-      // Add hover effect
-      characterElement.addEventListener('mouseenter', () => {
-        this.highlightCharacter(character.id);
-      });
-      
-      characterElement.addEventListener('mouseleave', () => {
-        this.removeHighlight();
+      // Click event untuk preview
+      characterElement.addEventListener('click', () => {
+        this.activateCharacter(characterElement, character);
       });
       
       this.container.appendChild(characterElement);
     });
   }
 
-  highlightCharacter(characterId) {
-    // Remove previous highlights
-    this.removeHighlight();
+  activateCharacter(element, character) {
+    // Remove active class dari semua characters
+    document.querySelectorAll('.portal-character').forEach(char => {
+      char.classList.remove('active');
+    });
     
-    // Add highlight to current character
-    const characterElement = this.container.querySelector(`[alt="${characterId}"]`)?.parentElement;
+    // Add active class ke character yang diklik
+    element.classList.add('active');
+    this.currentActive = character;
+    
+    // Show preview notification
+    showNotification(`👁️ Preview: ${character.name} - ${character.rarity}`, 2000);
+  }
+
+  deactivateAll() {
+    document.querySelectorAll('.portal-character').forEach(char => {
+      char.classList.remove('active');
+    });
+    this.currentActive = null;
+  }
+
+  highlightCharacter(characterId) {
+    this.deactivateAll();
+    const characterElement = this.container.querySelector(`[data-character-id="${characterId}"]`);
     if (characterElement) {
-      characterElement.style.opacity = '1';
-      characterElement.style.transform = 'translateY(-8px)';
-      characterElement.style.boxShadow = '0 15px 40px rgba(57,210,255,0.3)';
+      characterElement.classList.add('active');
+      this.currentActive = CHARACTERS.find(char => char.id === characterId);
     }
   }
 
-  removeHighlight() {
-    const allCharacters = this.container.querySelectorAll('.character-half');
-    allCharacters.forEach(char => {
-      char.style.opacity = '0.7';
-      char.style.transform = 'translateY(0)';
-      char.style.boxShadow = 'none';
-    });
+  getRandomCharacter() {
+    return CHARACTERS[Math.floor(Math.random() * CHARACTERS.length)];
+  }
+
+  // Highlight sequence untuk summon animation
+  async highlightSequence(finalCharacterId, duration = 2000) {
+    const characters = document.querySelectorAll('.portal-character');
+    const totalHighlights = 20; // Jumlah highlight selama animasi
+    
+    for (let i = 0; i < totalHighlights; i++) {
+      const randomIndex = Math.floor(Math.random() * characters.length);
+      characters[randomIndex].classList.add('active');
+      
+      await sleep(duration / totalHighlights);
+      
+      // Jangan remove highlight untuk yang terakhir
+      if (i < totalHighlights - 1) {
+        characters[randomIndex].classList.remove('active');
+      }
+    }
+    
+    // Pastikan final character yang aktif
+    this.highlightCharacter(finalCharacterId);
   }
 }
 
@@ -1081,6 +1186,8 @@ class SummonLimitSystem {
     const cooldownTimer = document.getElementById('cooldownTimer');
     const summonBtn = document.getElementById('summonBtn');
     const singleSummon = document.getElementById('singleSummon');
+    const summonBtnBottom = document.getElementById('summonBtnBottom');
+    const singleSummonBottom = document.getElementById('singleSummonBottom');
 
     // Update counter dots
     limitCounter.innerHTML = '';
@@ -1098,6 +1205,8 @@ class SummonLimitSystem {
     const canSummon = this.canSummon() && window.securitySystem?.isVerified;
     summonBtn.disabled = !canSummon;
     singleSummon.disabled = !canSummon;
+    summonBtnBottom.disabled = !canSummon;
+    singleSummonBottom.disabled = !canSummon;
 
     // Show cooldown timer jika limit habis
     if (!this.canSummon()) {
@@ -1160,14 +1269,14 @@ class SummonLimitSystem {
   }
 }
 
-/* ---------------------- GACHA SYSTEM DENGAN HERO SPOT FIXED ---------------------- */
+/* ---------------------- GACHA SYSTEM DENGAN SUMMON PORTAL BESAR ---------------------- */
 class GachaSystem {
   constructor() {
     this.panels = Array.from(document.querySelectorAll('.panel'));
     this.currentSlide = 0;
     this.totalSlides = this.panels.length;
     this.summonLimitSystem = new SummonLimitSystem();
-    this.characterDisplay = new HalfCharacterDisplay();
+    this.summonPortal = new SummonPortalSystem();
     this.init();
   }
 
@@ -1175,23 +1284,37 @@ class GachaSystem {
     this.setupCarousel();
     this.setupGacha();
     this.setupBackground();
-    this.preloadHeroImages(); // Preload images untuk smooth transition
+    this.preloadHeroImages();
     this.updateSlider();
   }
 
   setupGacha() {
     const summonBtn = document.getElementById('summonBtn');
     const singleSummon = document.getElementById('singleSummon');
+    const summonBtnBottom = document.getElementById('summonBtnBottom');
+    const singleSummonBottom = document.getElementById('singleSummonBottom');
     const claimBtn = document.getElementById('claimBtn');
     const closeResult = document.getElementById('closeResult');
     const modeBtn = document.getElementById('modeBtn');
 
+    // Summon dari portal besar
     summonBtn.addEventListener('click', (e) => {
       if (!this.checkSummonConditions()) return;
       this.performSummon(true);
     });
 
     singleSummon.addEventListener('click', (e) => {
+      if (!this.checkSummonConditions()) return;
+      this.performSummon(false);
+    });
+
+    // Summon dari bottom board
+    summonBtnBottom.addEventListener('click', (e) => {
+      if (!this.checkSummonConditions()) return;
+      this.performSummon(true);
+    });
+
+    singleSummonBottom.addEventListener('click', (e) => {
       if (!this.checkSummonConditions()) return;
       this.performSummon(false);
     });
@@ -1237,6 +1360,9 @@ class GachaSystem {
   async performSummon(full = true) {
     const summonBtn = document.getElementById('summonBtn');
     const singleSummon = document.getElementById('singleSummon');
+    const summonBtnBottom = document.getElementById('summonBtnBottom');
+    const singleSummonBottom = document.getElementById('singleSummonBottom');
+    
     const originalText = summonBtn.innerHTML;
 
     if (!this.summonLimitSystem.canSummon()) {
@@ -1244,45 +1370,46 @@ class GachaSystem {
       return;
     }
 
+    // Disable semua button
     summonBtn.innerHTML = '<div class="spinner"></div> Loading...';
     summonBtn.disabled = true;
     singleSummon.disabled = true;
+    summonBtnBottom.disabled = true;
+    singleSummonBottom.disabled = true;
 
     try {
-      const gtiles = Array.from(document.querySelectorAll('.gtiles .gtile'));
-      let cycles = full ? 25 + Math.floor(Math.random() * 15) : 10 + Math.floor(Math.random() * 8);
-      
-      gtiles.forEach(t => t.classList.remove('sel'));
-      
-      for (let i = 0; i < cycles; i++) {
-        const sel = gtiles[i % gtiles.length];
-        sel.classList.add('sel');
-        await sleep(50 + Math.floor(i * 1.5));
-        if (i < cycles - 1) {
-          sel.classList.remove('sel');
-        }
-      }
-
+      // Pilih rarity dan character yang benar-benar akan didapat
       const chosenRarity = this.chooseRarity();
-      const winnerPanel = this.pickPanelByRarity(chosenRarity);
+      const winnerCharacter = this.pickCharacterByRarity(chosenRarity);
+      
+      console.log(`🎯 Summon result: ${winnerCharacter.name} (${winnerCharacter.rarity})`);
+
+      // Highlight sequence di portal
+      await this.summonPortal.highlightSequence(winnerCharacter.id, full ? 2000 : 1500);
       
       await sleep(500);
       
+      // Increment summon count
       const summonSuccess = this.summonLimitSystem.incrementSummon();
       if (!summonSuccess) {
         showNotification('❌ Summon failed: Limit reached');
         return;
       }
       
-      await this.revealPanel(winnerPanel);
+      // Reveal result
+      await this.revealCharacter(winnerCharacter);
       
     } catch (error) {
       console.error('Summon error:', error);
       showNotification('❌ Summon failed. Please try again.');
     } finally {
+      // Reset button states
       summonBtn.innerHTML = 'SUMMON';
-      summonBtn.disabled = !this.summonLimitSystem.canSummon() || !window.securitySystem?.isVerified;
-      singleSummon.disabled = !this.summonLimitSystem.canSummon() || !window.securitySystem?.isVerified;
+      const canSummon = this.summonLimitSystem.canSummon() && window.securitySystem?.isVerified;
+      summonBtn.disabled = !canSummon;
+      singleSummon.disabled = !canSummon;
+      summonBtnBottom.disabled = !canSummon;
+      singleSummonBottom.disabled = !canSummon;
     }
   }
 
@@ -1356,7 +1483,6 @@ class GachaSystem {
     }, 6000);
   }
 
-  /* PRELOAD HERO IMAGES UNTUK SMOOTH TRANSITION */
   preloadHeroImages() {
     this.panels.forEach(panel => {
       const img = panel.querySelector('img');
@@ -1380,7 +1506,6 @@ class GachaSystem {
     this.updateActivePanel();
   }
 
-  /* UPDATE ACTIVE PANEL DENGAN HERO SPOT FIXED */
   updateActivePanel() {
     this.panels.forEach((panel, index) => {
       if (index === this.currentSlide) {
@@ -1394,7 +1519,7 @@ class GachaSystem {
         document.getElementById('heroName').textContent = name;
         document.getElementById('heroDesc').textContent = `${rarity} • ${description}`;
         
-        // Update hero image - FIXED: Gunakan image dari panel
+        // Update hero image
         const heroImage = document.getElementById('heroImage');
         if (heroImage && imageSrc) {
           heroImage.src = imageSrc;
@@ -1450,28 +1575,26 @@ class GachaSystem {
     return 'Common';
   }
 
-  pickPanelByRarity(rarity) {
-    const matches = this.panels.filter(p => 
-      (p.dataset.rarity || '').toLowerCase() === rarity.toLowerCase()
+  pickCharacterByRarity(rarity) {
+    const matches = CHARACTERS.filter(char => 
+      char.rarity.toLowerCase() === rarity.toLowerCase()
     );
+    
     if (matches.length > 0) {
       return matches[Math.floor(Math.random() * matches.length)];
     }
-    return this.panels[Math.floor(Math.random() * this.panels.length)];
+    
+    // Fallback ke random character jika tidak ada match
+    return CHARACTERS[Math.floor(Math.random() * CHARACTERS.length)];
   }
 
-  async revealPanel(panel) {
-    this.panels.forEach(x => x.classList.remove('sel'));
-    panel.classList.add('sel');
+  async revealCharacter(character) {
+    // Highlight character di portal
+    this.summonPortal.highlightCharacter(character.id);
     
-    const name = panel.dataset.name || 'Unknown';
-    const rarity = panel.dataset.rarity || 'Unknown';
-    const description = panel.dataset.description || '';
-    const filename = panel.dataset.file || '';
-    
-    document.getElementById('resultTitle').textContent = `${rarity} • You Obtained ${name}`;
-    document.getElementById('resultText').textContent = `${description} - Secure download ready!`;
-    document.getElementById('claimBtn').dataset.filename = filename;
+    document.getElementById('resultTitle').textContent = `${character.rarity} • You Obtained ${character.name}`;
+    document.getElementById('resultText').textContent = `${character.description} - Secure download ready!`;
+    document.getElementById('claimBtn').dataset.filename = character.file;
     
     const rarityGlow = {
       Mythic: 'rgba(243, 212, 143, 0.4)',
@@ -1481,7 +1604,7 @@ class GachaSystem {
     };
     
     const resultCard = document.querySelector('.result-card');
-    resultCard.style.setProperty('--result-glow', rarityGlow[rarity] || 'rgba(57,210,255,0.2)');
+    resultCard.style.setProperty('--result-glow', rarityGlow[character.rarity] || 'rgba(57,210,255,0.2)');
     
     document.getElementById('resultOverlay').classList.add('open');
     document.getElementById('resultOverlay').setAttribute('aria-hidden', 'false');
@@ -1490,22 +1613,25 @@ class GachaSystem {
   closeResult() {
     document.getElementById('resultOverlay').classList.remove('open');
     document.getElementById('resultOverlay').setAttribute('aria-hidden', 'true');
-    this.panels.forEach(x => x.classList.remove('sel'));
+    this.summonPortal.deactivateAll();
   }
 
   setMode(mode) {
     const showcaseWrap = document.getElementById('showcaseWrap');
     const gachaBoard = document.getElementById('gachaBoard');
     const heroSpot = document.getElementById('heroSpot');
+    const summonPortal = document.getElementById('summonPortal');
 
     if (mode === 'showcase') {
       showcaseWrap.style.display = 'flex';
       gachaBoard.classList.add('hide');
       heroSpot.style.display = 'flex';
+      summonPortal.classList.add('hide');
     } else {
       showcaseWrap.style.display = 'none';
       gachaBoard.classList.remove('hide');
       heroSpot.style.display = 'none';
+      summonPortal.classList.remove('hide');
     }
   }
 }
@@ -1519,7 +1645,6 @@ function handleImageError(img) {
   img.src = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAwIiBoZWlnaHQ9IjUwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjMDgxODI5Ii8+PHRleHQgeD0iNTAlIiB5PSI1MCUiIGZvbnQtZmFtaWx5PSJzYW5zLXNlcmlmIiBmb250LXNpemU9IjE2IiBmaWxsPSIjMzlkMmZmIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBkeT0iLjNlbSI+Q2hhcmFjdGVyIEltYWdlIE5vdCBGb3VuZDwvdGV4dD48L3N2Zz4=';
   img.alt = 'Character image not available';
   
-  // Jika ini hero image, tambahkan class untuk styling
   if (img.id === 'heroImage') {
     img.style.filter = 'grayscale(0.5) brightness(0.7)';
   }
@@ -1577,6 +1702,14 @@ class SubscriptionSecurity {
       statusDot.className = 'status-dot verified';
       statusText.textContent = 'Verified ✓';
       enableBtn.style.display = 'none';
+      
+      // Enable summon buttons jika limit masih ada
+      if (window.gachaSystem?.summonLimitSystem.canSummon()) {
+        document.getElementById('summonBtn').disabled = false;
+        document.getElementById('singleSummon').disabled = false;
+        document.getElementById('summonBtnBottom').disabled = false;
+        document.getElementById('singleSummonBottom').disabled = false;
+      }
     } else {
       subBadge.style.display = 'none';
       statusDot.className = 'status-dot';
@@ -1624,6 +1757,7 @@ class SubscriptionSecurity {
   }
 
   openYouTubeChannel() {
+    // GANTI DENGAN YOUTUBE CHANNEL ANDA
     const YT_CHANNEL = 'https://youtube.com/@your-channel';
     window.open(YT_CHANNEL, '_blank');
     
@@ -1646,13 +1780,12 @@ class SubscriptionSecurity {
     
     showNotification('✅ Subscription verified! Gacha access granted.');
     
-    // Update summon buttons
-    const summonBtn = document.getElementById('summonBtn');
-    const singleSummon = document.getElementById('singleSummon');
-    if (summonBtn && singleSummon && window.gachaSystem?.summonLimitSystem.canSummon()) {
-      summonBtn.disabled = false;
-      singleSummon.disabled = false;
-    }
+    // Show access granted animation
+    const accessGranted = document.getElementById('accessGranted');
+    accessGranted.classList.add('show');
+    setTimeout(() => {
+      accessGranted.classList.remove('show');
+    }, 3000);
   }
 }
 
@@ -1673,7 +1806,7 @@ document.addEventListener('DOMContentLoaded', function() {
     img.addEventListener('error', () => handleImageError(img));
   });
 
-  console.log('🎮 Gacha System with Hero Spot Images Initialized');
+  console.log('🎮 Gacha System with Large Summon Portal Initialized');
 });
 </script>
 </html>
