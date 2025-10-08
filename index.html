@@ -1,526 +1,355 @@
+# Gacha Web Template (Vercel-ready)
+
+This project contains a ready-to-deploy static frontend plus a simple Vercel serverless API (`/api/download.js`) implementing temporary single-use download tokens (in-memory demo). Edit the placeholder URLs/assets (YouTube URL, 6 download links, images, music) to your own and deploy to Vercel.
+
+---
+
+## File: `index.html`
 ```html
 <!doctype html>
-<html lang="id">
+<html lang="en">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Gacha Showcase — Dark Stylish (Final)</title>
-  <meta name="description" content="Dark stylish 8-character showcase + gacha — single file, assets in /assets/">
-  <style>
-    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap');
-
-    :root{
-      --bg-1: #04040a;
-      --bg-2: #07020a;
-      --muted: #9aa4b2;
-      --accent-1: #7c3aed;
-      --accent-2: #4c1d95;
-      --aur-ur: rgba(187,134,252,0.24);
-      --aur-ssr: rgba(255,214,92,0.18);
-      --aur-sr: rgba(96,165,250,0.16);
-      --aur-r: rgba(52,211,153,0.12);
-    }
-
-    *{box-sizing:border-box}
-    html,body{height:100%}
-    body{
-      margin:0;
-      font-family:Inter,system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial;
-      background: radial-gradient(800px 300px at 10% 10%, rgba(124,58,237,0.04), transparent),
-                  linear-gradient(180deg,var(--bg-1),var(--bg-2));
-      color:#eef2ff;
-      -webkit-font-smoothing:antialiased;
-      -moz-osx-font-smoothing:grayscale;
-    }
-
-    /* header */
-    header {
-      position:fixed;
-      top:10px;
-      left:0;
-      right:0;
-      display:flex;
-      justify-content:space-between;
-      align-items:center;
-      gap:12px;
-      padding:12px 28px;
-      z-index:1200;
-      pointer-events:none;
-    }
-    .logo-wrap{display:flex;align-items:center;gap:12px;pointer-events:auto}
-    #logo{
-      width:64px;height:64px;border-radius:12px;background:rgba(255,255,255,0.03);
-      display:flex;align-items:center;justify-content:center;font-weight:800;
-    }
-    .top-actions{display:flex;gap:10px;align-items:center;pointer-events:auto}
-    .btn{
-      border:0;padding:10px 14px;border-radius:12px;font-weight:700;cursor:pointer;background:transparent;color:inherit;
-      letter-spacing:0.6px;
-    }
-    .btn.primary{background:linear-gradient(90deg,var(--accent-1),var(--accent-2));color:#fff}
-    .btn.ghost{border:1px solid rgba(255,255,255,0.06);background:rgba(255,255,255,0.01)}
-
-    /* main container */
-    .container{max-width:1400px;margin:110px auto 80px;padding:0 24px}
-
-    /* showcase row */
-    .showcase-wrap{position:relative;margin:0 auto;max-width:1280px}
-    .showcase{
-      display:flex;
-      gap:28px;
-      padding:28px 12px;
-      overflow-x:auto;
-      align-items:center;
-      scroll-behavior:smooth;
-      -webkit-overflow-scrolling:touch;
-    }
-    /* hide scrollbar track background for cleaner look; still usable */
-    .showcase::-webkit-scrollbar { height:10px }
-    .showcase::-webkit-scrollbar-thumb { background: linear-gradient(90deg,var(--accent-1),var(--accent-2)); border-radius:10px }
-
-    /* card */
-    .card{
-      --w:320px; /* base width */
-      flex:0 0 var(--w);
-      height:520px;
-      border-radius:14px;
-      position:relative;
-      overflow:visible;
-      transform-origin:center;
-      transition: transform 360ms cubic-bezier(.2,.9,.18,1), box-shadow 300ms;
-      cursor:pointer;
-      transform: skewY(-6deg); /* diagonal look */
-      background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
-      border:1px solid rgba(255,255,255,0.02);
-    }
-    .card img{
-      width:100%;
-      height:100%;
-      object-fit:cover;
-      border-radius:12px;
-      display:block;
-      transform: translateZ(0);
-    }
-
-    /* aura overlay */
-    .aura{
-      position:absolute;left:0;top:0;width:100%;height:100%;pointer-events:none;mix-blend-mode:screen;border-radius:14px;filter:blur(18px);
-      opacity:0.6; transition:opacity 240ms, transform 360ms;
-    }
-
-    /* labels */
-    .label{
-      position:absolute;left:16px;bottom:18px;transform:skewY(-6deg);z-index:40;
-      font-weight:800;font-size:18px;color:#fff;text-shadow:0 10px 40px rgba(0,0,0,0.6);
-    }
-
-    /* hover & active */
-    .card:hover{ transform: translateY(-12px) skewY(-6deg) scale(1.08); box-shadow:0 30px 90px rgba(76,29,149,0.14); }
-    .card.active{ transform: translateY(-6px) skewY(-6deg) scale(1.22); box-shadow:0 40px 120px rgba(124,58,237,0.22); z-index:150; }
-
-    /* aura colors per rarity (classes on card: r / sr / ssr / ur) */
-    .card.r .aura{ background: radial-gradient(300px 120px at 50% 30%, var(--aur-r), transparent 60%); }
-    .card.sr .aura{ background: radial-gradient(300px 120px at 50% 30%, var(--aur-sr), transparent 60%); }
-    .card.ssr .aura{ background: radial-gradient(300px 120px at 50% 30%, var(--aur-ssr), transparent 60%); }
-    .card.ur .aura{ background: radial-gradient(300px 140px at 50% 30%, var(--aur-ur), transparent 60%); }
-
-    /* shimmer for higher rarity (overlay) */
-    .shimmer{ position:absolute; left:-40%; top:0; width:180%; height:100%; pointer-events:none; transform:skewY(-6deg) translateX(-120%); background:linear-gradient(120deg, rgba(255,255,255,0.06), rgba(255,255,255,0.00) 40%, rgba(255,255,255,0.06) 60%, rgba(255,255,255,0.00)); opacity:0; transition: transform 1200ms, opacity 480ms }
-    .card.active .shimmer{ transform:skewY(-6deg) translateX(0); opacity:1; }
-
-    /* controls area: centered under showcase */
-    .controls{ display:flex; gap:12px; justify-content:center; align-items:center; margin-top:22px; }
-    .hint{ color:var(--muted); font-size:13px; margin-top:10px; text-align:center }
-
-    /* preview modal */
-    .overlay{ position:fixed; inset:0; display:flex; align-items:center; justify-content:center; background: linear-gradient(rgba(0,0,0,0.65), rgba(0,0,0,0.85)); z-index:1400; opacity:0; pointer-events:none; transition:opacity 250ms }
-    .overlay.show{ opacity:1; pointer-events:auto; }
-    .modal{
-      width:920px; max-width:94%; background:linear-gradient(180deg, rgba(12,10,16,0.98), rgba(6,6,8,0.98)); border-radius:12px; padding:18px; display:flex; gap:18px; align-items:center; box-shadow:0 30px 80px rgba(0,0,0,0.7)
-    }
-    .modal .art{ width:46%; border-radius:8px; object-fit:contain }
-    .modal .meta{ flex:1; color:var(--muted) }
-    .modal .meta h2{ color:#fff; font-size:26px; margin-bottom:8px; font-weight:800 }
-    .modal .meta p{ margin-bottom:12px; }
-    .modal .meta .actions{ display:flex; gap:10px }
-
-    /* result popup */
-    .result-popup{ position:fixed; left:50%; top:72%; transform:translate(-50%,-50%); z-index:1500; min-width:320px; background:linear-gradient(180deg, rgba(12,10,16,0.96), rgba(6,6,8,0.96)); padding:14px; border-radius:12px; border:1px solid rgba(255,255,255,0.04); display:none; align-items:center; gap:10px; flex-direction:column }
-    .result-name{ font-weight:900; color:#fff }
-    .result-rarity{ padding:6px 10px; border-radius:8px; font-weight:900; color:#111 }
-
-    /* responsive tweaks */
-    @media(max-width:980px){
-      .card{ --w:260px; height:420px }
-      .modal{ flex-direction:column; padding:14px }
-      header{ padding:10px 14px }
-    }
-    @media(max-width:640px){
-      .card{ --w:210px; height:360px }
-      .showcase{ gap:16px; padding-left:12px; padding-right:12px }
-    }
-  </style>
+  <title>Gacha Mod Drop</title>
+  <link rel="stylesheet" href="/style.css">
 </head>
-<body>
-  <!-- background music: replace with assets/music/bgm.mp3 -->
-  <audio id="bgm" loop crossorigin="anonymous"></audio>
-
-  <header>
-    <div class="logo-wrap">
-      <div id="logo">LOGO</div>
-      <div style="display:flex;flex-direction:column">
-        <div style="font-weight:800">Gacha Showcase</div>
-        <div style="font-size:12px;color:var(--muted)">Dark stylish • 8 characters • click to preview</div>
-      </div>
-    </div>
-
-    <div class="top-actions">
-      <!-- Top actions are pointer-events:auto; kept minimal -->
-      <button id="topSubscribe" class="btn ghost" title="Subscribe (opens channel)">Subscribe</button>
-      <div style="padding:8px 12px;border-radius:10px;background:rgba(255,255,255,0.02);font-weight:700;color:var(--muted)">Spins: <span id="spinsCount">0</span></div>
-      <button id="topEnter" class="btn primary" title="Enter (scrolls to showcase)">Enter</button>
+<body class="dark">
+  <header class="topbar">
+    <div class="logo">YourLogo</div>
+    <div class="controls">
+      <button id="subscribeBtn" class="btn outline">Subscribe (Open Channel)</button>
+      <button id="gachaBtn" class="btn primary" disabled>Gacha</button>
+      <button id="muteBtn" class="btn small">🔊</button>
     </div>
   </header>
 
-  <main class="container">
-    <section class="showcase-wrap">
-      <div id="showcase" class="showcase" aria-label="Character showcase">
-        <!-- cards injected by JS -->
-      </div>
+  <main class="wrap">
+    <section class="leftpanel">
+      <h2>Characters</h2>
+      <ul class="navlist">
+        <li>Noctoyager</li>
+        <li>Hyperborean Empire</li>
+        <li>The Elysian Church</li>
+        <li>Republic of Luca</li>
+        <li>Huaxu</li>
+        <li>No Affiliation</li>
+      </ul>
     </section>
 
-    <div class="controls">
-      <button id="subscribeBtn" class="btn ghost">Subscribe Channel</button>
-      <button id="spinBtn" class="btn primary" disabled>SPIN</button>
-    </div>
+    <section class="gacha-area">
+      <div class="slideshow" id="slideshow">
+        <!-- put your background images in /assets/bg1.jpg, bg2.jpg, ... -->
+      </div>
 
-    <div class="hint">Ganti aset di folder <code>/assets/</code> dan sesuaikan <code>CONFIG</code> di bawah (gambar, preview & link download).</div>
+      <div class="gacha-stage">
+        <div class="tiles" id="tiles">
+          <!-- 6 items: edit data-image and data-file attributes later -->
+          <div class="tile" data-index="0" data-file="link0" data-name="Mod 1" data-rarity="SSR">
+            <div class="tile-inner"><img src="/assets/placeholder1.jpg" alt="mod1"></div>
+          </div>
+          <div class="tile" data-index="1" data-file="link1" data-name="Mod 2" data-rarity="SR">
+            <div class="tile-inner"><img src="/assets/placeholder2.jpg" alt="mod2"></div>
+          </div>
+          <div class="tile" data-index="2" data-file="link2" data-name="Mod 3" data-rarity="R">
+            <div class="tile-inner"><img src="/assets/placeholder3.jpg" alt="mod3"></div>
+          </div>
+          <div class="tile" data-index="3" data-file="link3" data-name="Mod 4" data-rarity="SR">
+            <div class="tile-inner"><img src="/assets/placeholder4.jpg" alt="mod4"></div>
+          </div>
+          <div class="tile" data-index="4" data-file="link4" data-name="Mod 5" data-rarity="R">
+            <div class="tile-inner"><img src="/assets/placeholder5.jpg" alt="mod5"></div>
+          </div>
+          <div class="tile" data-index="5" data-file="link5" data-name="Mod 6" data-rarity="SSR">
+            <div class="tile-inner"><img src="/assets/placeholder6.jpg" alt="mod6"></div>
+          </div>
+        </div>
+
+        <div class="panel">
+          <button id="spinBtn" class="spinBtn btn big" disabled>Spin</button>
+        </div>
+
+        <div id="resultModal" class="modal hidden">
+          <div class="modal-card">
+            <h3 id="resultName">You got ...</h3>
+            <p id="resultRarity"></p>
+            <div class="modal-actions">
+              <button id="downloadBtn" class="btn primary">Download</button>
+              <button id="closeModal" class="btn outline">Close</button>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
   </main>
 
-  <!-- Preview modal (click card to open) -->
-  <div id="overlay" class="overlay" aria-hidden="true">
-    <div class="modal" role="dialog" aria-modal="true">
-      <img id="previewArt" class="art" src="" alt="Preview art">
-      <div class="meta">
-        <h2 id="previewTitle">Name</h2>
-        <p id="previewRarity" style="font-weight:800;color:#fff;padding:6px 10px;border-radius:8px;display:inline-block;background:rgba(255,255,255,0.04)">Rarity</p>
-        <p id="previewDesc" style="margin-top:12px;color:var(--muted)">Preview description. Change in CONFIG.CHARACTERS array.</p>
-        <div class="actions" style="margin-top:14px">
-          <button id="previewClose" class="btn ghost">Close</button>
-          <button id="previewMore" class="btn primary">Details</button>
-        </div>
-      </div>
-    </div>
-  </div>
+  <audio id="bgAudio" loop>
+    <source src="/assets/music.mp3" type="audio/mpeg">
+  </audio>
 
-  <!-- result popup (appears after spin success) -->
-  <div id="resultPopup" class="result-popup" role="status" aria-live="polite">
-    <div id="resultName" class="result-name">You got ...</div>
-    <div id="resultRarity" class="result-rarity">RARITY</div>
-    <img id="resultArt" src="" alt="" style="max-width:320px;border-radius:10px;box-shadow:0 18px 60px rgba(0,0,0,0.6)">
-    <button id="downloadBtn" class="btn primary" style="margin-top:8px">Download Mod</button>
-  </div>
-
-  <script>
-/* =========================
-   CONFIG - update assets in /assets/
-   ========================= */
-const CONFIG = {
-  YT_CHANNEL: 'https://youtube.com/@ChidorayMods', // change to your channel
-  START_SPINS: 5,
-  MUSIC: 'assets/music/bgm.mp3', // put a direct mp3 in /assets/music/
-  SFX: {
-    spin: 'assets/sfx/spin.mp3',
-    ur: 'assets/sfx/ur.mp3',
-    ssr: 'assets/sfx/ssr.mp3'
-  },
-  CHARACTERS: [
-    /* id, name, img (showcase), preview (large), file (download link), rarity (UR/SSR/SR/R) */
-    { id:'c01', name:'Celestine', img:'assets/img/char1.png', preview:'assets/img/char1_preview.png', file:'https://example.com/mod1.zip', rarity:'UR' },
-    { id:'c02', name:'Lunaris',   img:'assets/img/char2.png', preview:'assets/img/char2_preview.png', file:'https://example.com/mod2.zip', rarity:'SSR' },
-    { id:'c03', name:'Kael',      img:'assets/img/char3.png', preview:'assets/img/char3_preview.png', file:'https://example.com/mod3.zip', rarity:'SR' },
-    { id:'c04', name:'Riven',     img:'assets/img/char4.png', preview:'assets/img/char4_preview.png', file:'https://example.com/mod4.zip', rarity:'R' },
-    { id:'c05', name:'Nyla',      img:'assets/img/char5.png', preview:'assets/img/char5_preview.png', file:'https://example.com/mod5.zip', rarity:'SR' },
-    { id:'c06', name:'Vex',       img:'assets/img/char6.png', preview:'assets/img/char6_preview.png', file:'https://example.com/mod6.zip', rarity:'R' },
-    { id:'c07', name:'Eira',      img:'assets/img/char7.png', preview:'assets/img/char7_preview.png', file:'https://example.com/mod7.zip', rarity:'SSR' },
-    { id:'c08', name:'Draven',    img:'assets/img/char8.png', preview:'assets/img/char8_preview.png', file:'https://example.com/mod8.zip', rarity:'R' }
-  ],
-  RARITY_WEIGHTS: { UR:1, SSR:8, SR:20, R:71 }
-};
-/* ========================= */
-
-const showcase = document.getElementById('showcase');
-const overlay = document.getElementById('overlay');
-const previewArt = document.getElementById('previewArt');
-const previewTitle = document.getElementById('previewTitle');
-const previewRarity = document.getElementById('previewRarity');
-const previewDesc = document.getElementById('previewDesc');
-const previewClose = document.getElementById('previewClose');
-const previewMore = document.getElementById('previewMore');
-
-const subscribeBtn = document.getElementById('subscribeBtn');
-const spinBtn = document.getElementById('spinBtn');
-const topSubscribe = document.getElementById('topSubscribe');
-const topEnter = document.getElementById('topEnter');
-const topSpinCount = document.getElementById('spinsCount');
-
-const resultPopup = document.getElementById('resultPopup');
-const resultName = document.getElementById('resultName');
-const resultRarity = document.getElementById('resultRarity');
-const resultArt = document.getElementById('resultArt');
-const downloadBtn = document.getElementById('downloadBtn');
-
-const bgm = document.getElementById('bgm');
-
-let spinsLeft = 0;
-const STORAGE_SPINS = 'gacha_spins_final_v1';
-const STORAGE_SUB = 'gacha_sub_final_v1';
-let isSpinning = false;
-
-/* utility: play sfx */
-function playSfx(src){
-  if(!src) return;
-  try{
-    const a = new Audio(src);
-    a.volume = 0.9;
-    a.play().catch(()=>{});
-  }catch(e){}
-}
-
-/* build the horizontal cards from CONFIG.CHARACTERS */
-function buildShowcase(){
-  showcase.innerHTML = '';
-  CONFIG.CHARACTERS.forEach((c, i)=>{
-    const card = document.createElement('div');
-    card.className = 'card ' + (c.rarity ? c.rarity.toLowerCase() : 'r');
-    card.dataset.idx = i;
-    card.dataset.id = c.id;
-    card.dataset.name = c.name;
-    card.dataset.rarity = (c.rarity||'R').toUpperCase();
-
-    const aura = document.createElement('div');
-    aura.className = 'aura';
-
-    const shimmer = document.createElement('div');
-    shimmer.className = 'shimmer';
-
-    const img = document.createElement('img');
-    img.src = c.img;
-    img.alt = c.name;
-
-    const label = document.createElement('div');
-    label.className = 'label';
-    label.textContent = c.name + ' • ' + (c.rarity||'R').toUpperCase();
-
-    card.appendChild(aura);
-    card.appendChild(img);
-    card.appendChild(shimmer);
-    card.appendChild(label);
-
-    // click -> preview (no download here)
-    card.addEventListener('click', ()=>{
-      openPreview(i);
-    });
-
-    showcase.appendChild(card);
-  });
-}
-
-/* preview open */
-function openPreview(idx){
-  const c = CONFIG.CHARACTERS[idx];
-  previewArt.src = c.preview || c.img;
-  previewTitle.textContent = c.name;
-  previewRarity.textContent = (c.rarity||'R').toUpperCase();
-  previewDesc.textContent = `Rarity: ${c.rarity || 'R'}. Preview only — download available after gacha.`;
-  // style rarity pill
-  if(c.rarity === 'UR') previewRarity.style.background = 'linear-gradient(90deg,var(--aur-ur),#8b5cf6)';
-  else if(c.rarity === 'SSR') previewRarity.style.background = 'linear-gradient(90deg,var(--aur-ssr),#f59e0b)';
-  else if(c.rarity === 'SR') previewRarity.style.background = 'linear-gradient(90deg,var(--aur-sr),#60a5fa)';
-  else previewRarity.style.background = 'linear-gradient(90deg,var(--aur-r),#34d399)';
-
-  overlay.classList.add('show'); overlay.setAttribute('aria-hidden','false');
-
-  // focus visual
-  document.querySelectorAll('.card').forEach(cd => cd.classList.remove('active'));
-  const panel = document.querySelector(`.card[data-idx="${idx}"]`);
-  if(panel) panel.classList.add('active');
-
-  // previewMore: open large preview in new tab (not file download)
-  previewMore.onclick = ()=>{ window.open(c.preview || c.img, '_blank'); };
-}
-
-/* close preview by click outside or Close button or ESC */
-document.addEventListener('click', (e)=>{
-  if(e.target === overlay || e.target === previewClose) {
-    overlay.classList.remove('show'); overlay.setAttribute('aria-hidden','true');
-    document.querySelectorAll('.card').forEach(cd => cd.classList.remove('active'));
-  }
-});
-document.addEventListener('keydown', (e)=>{ if(e.key === 'Escape') { overlay.classList.remove('show'); overlay.setAttribute('aria-hidden','true'); document.querySelectorAll('.card').forEach(cd => cd.classList.remove('active')); } });
-
-/* subscribe handlers: top and bottom subscribe open YT and give spins */
-[topSubscribe, subscribeBtn].forEach(btn=>{
-  btn.addEventListener('click', ()=>{
-    try{ window.open(CONFIG.YT_CHANNEL, '_blank'); }catch(e){}
-    // give spins and enable
-    localStorage.setItem(STORAGE_SUB, Date.now());
-    spinsLeft = CONFIG.START_SPINS;
-    localStorage.setItem(STORAGE_SPINS, spinsLeft);
-    updateSpinsUI();
-    unlockGacha();
-  });
-});
-
-/* topEnter scrolls to showcase */
-topEnter.addEventListener('click', ()=>{ document.querySelector('.showcase-wrap').scrollIntoView({behavior:'smooth', block:'center'}); });
-
-/* unlock gacha UI */
-function unlockGacha(){
-  spinBtn.disabled = false;
-  spinBtn.classList.remove('disabled');
-  document.querySelectorAll('.card').forEach(c=> c.style.pointerEvents = 'auto');
-}
-
-/* load state */
-function loadState(){
-  const s = parseInt(localStorage.getItem(STORAGE_SPINS) || '0', 10);
-  spinsLeft = isNaN(s) ? 0 : s;
-  updateSpinsUI();
-  if(localStorage.getItem(STORAGE_SUB)) unlockGacha();
-}
-
-/* update spins UI */
-function updateSpinsUI(){
-  document.getElementById('spinsCount').textContent = spinsLeft;
-}
-
-/* weighted rarity pick */
-function weightedPick(weights){
-  const entries = Object.entries(weights);
-  let total=0; entries.forEach(([k,v])=> total+=v);
-  let r = Math.random()*total;
-  for(const [k,v] of entries){
-    if(r < v) return k;
-    r -= v;
-  }
-  return entries[entries.length-1][0];
-}
-
-/* pick a character by rarity */
-function pickCharByRarity(rarity){
-  const arr = CONFIG.CHARACTERS.filter(c => (c.rarity||'R').toUpperCase() === rarity.toUpperCase());
-  if(arr.length === 0) return CONFIG.CHARACTERS[Math.floor(Math.random()*CONFIG.CHARACTERS.length)];
-  return arr[Math.floor(Math.random()*arr.length)];
-}
-
-/* spin animation: cycle highlight across cards and stop on chosen */
-spinBtn.addEventListener('click', ()=>{
-  if(isSpinning) return;
-  if(spinsLeft <= 0){ alert('No spins left. Click Subscribe to get spins.'); return; }
-  isSpinning = true;
-  playSfx(CONFIG.SFX.spin);
-
-  // choose rarity and char
-  const rarity = weightedPick(CONFIG.RARITY_WEIGHTS);
-  const chosenChar = pickCharByRarity(rarity);
-
-  const cards = Array.from(document.querySelectorAll('.card'));
-  // find index of chosenChar in CONFIG.CHARACTERS and map to position in cards (same order)
-  let targetIndex = CONFIG.CHARACTERS.findIndex(c => c.id === chosenChar.id);
-  if(targetIndex < 0) targetIndex = Math.floor(Math.random()*cards.length);
-
-  const totalLoops = 3 + Math.floor(Math.random()*3);
-  const totalSteps = totalLoops * cards.length + targetIndex;
-  let step = 0;
-  let interval = 70;
-
-  const run = ()=>{
-    const idx = step % cards.length;
-    cards.forEach((cd)=>{ cd.classList.remove('active'); cd.style.zIndex=''; });
-    const active = cards[idx];
-    if(active){ active.classList.add('active'); active.style.zIndex = 100; }
-    step++;
-    if(step <= totalSteps){
-      interval = Math.min(500, interval * 1.06);
-      setTimeout(run, interval);
-    } else {
-      // finish
-      setTimeout(()=>{
-        cards.forEach((cd)=>{ cd.classList.remove('active'); cd.style.zIndex=''; });
-        onSpinFinish(chosenChar, targetIndex, rarity);
-        isSpinning = false;
-      }, 220);
-    }
-  };
-  run();
-});
-
-/* when spin finishes */
-function onSpinFinish(char, index, rarity){
-  // decrement spins
-  spinsLeft = Math.max(0, spinsLeft - 1);
-  localStorage.setItem(STORAGE_SPINS, spinsLeft);
-  updateSpinsUI();
-
-  // show result popup
-  resultName.textContent = `Selamat — Anda mendapatkan: ${char.name}`;
-  resultArt.src = char.preview || char.img;
-  resultRarity.textContent = rarity;
-
-  // style rarity pill & sfx
-  if(rarity === 'UR'){ resultRarity.style.background = 'linear-gradient(90deg,var(--aur-ur),#8b5cf6)'; resultRarity.style.color = '#fff'; playSfx(CONFIG.SFX.ur); }
-  else if(rarity === 'SSR'){ resultRarity.style.background = 'linear-gradient(90deg,var(--aur-ssr),#f59e0b)'; resultRarity.style.color = '#111'; playSfx(CONFIG.SFX.ssr); }
-  else if(rarity === 'SR'){ resultRarity.style.background = 'linear-gradient(90deg,var(--aur-sr),#60a5fa)'; resultRarity.style.color = '#fff'; }
-  else { resultRarity.style.background = 'linear-gradient(90deg,var(--aur-r),#34d399)'; resultRarity.style.color = '#04251a'; }
-
-  downloadBtn.onclick = ()=> window.open(char.file, '_blank');
-
-  // highlight the winning card briefly
-  const winCard = document.querySelector(`.card[data-idx="${index}"]`);
-  if(winCard){
-    winCard.classList.add('active');
-    setTimeout(()=> winCard.classList.remove('active'), 1400);
-    // center the card by scrolling container
-    const rect = winCard.getBoundingClientRect();
-    const sc = document.querySelector('.showcase');
-    const scRect = sc.getBoundingClientRect();
-    const offset = rect.left - scRect.left - (scRect.width/2) + rect.width/2;
-    sc.scrollBy({ left: offset, behavior: 'smooth' });
-  }
-
-  resultPopup.style.display = 'flex';
-  setTimeout(()=>{ resultPopup.style.display = 'none'; }, 10000);
-}
-
-/* init audio, build UI, load state */
-function init(){
-  // set button links
-  document.getElementById('topSubscribe').addEventListener('click', ()=>{ try{ window.open(CONFIG.YT_CHANNEL, '_blank'); }catch(e){} });
-  subscribeBtn.addEventListener('click', ()=>{ try{ window.open(CONFIG.YT_CHANNEL, '_blank'); }catch(e){} });
-
-  // load music
-  bgm.src = CONFIG.MUSIC || '';
-  bgm.volume = 0.66;
-  bgm.play().catch(()=>{ /* may be blocked until interaction */ });
-
-  // build showcase
-  buildShowcase();
-
-  // restore spins state
-  loadState();
-}
-init();
-
-/* convenience: clicking anywhere attempts to resume audio if blocked */
-document.addEventListener('click', ()=>{ if(bgm && bgm.paused){ bgm.play().catch(()=>{}); } });
-
-/* keyboard support */
-window.addEventListener('keydown', (e)=>{ if(e.code === 'Space' && !isSpinning && spinsLeft > 0){ document.getElementById('spinBtn').click(); } });
-
-/* expose CONFIG for debugging in console */
-window.GACHA_CONFIG = CONFIG;
-  </script>
+  <script src="/script.js"></script>
 </body>
 </html>
 ```
+
+---
+
+## File: `style.css`
+```css
+:root{
+  --bg:#071026; /* dark blue futuristic */
+  --accent:#4fc3f7;
+  --muted:#9aa5b1;
+  --card: rgba(255,255,255,0.04);
+}
+*{box-sizing:border-box}
+html,body{height:100%;margin:0;font-family:Inter, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial;color:#e7eef8;background:var(--bg)}
+.topbar{display:flex;justify-content:space-between;align-items:center;padding:14px 28px;background:linear-gradient(180deg, rgba(255,255,255,0.02), transparent)}
+.logo{font-weight:700;color:var(--accent)}
+.controls .btn{margin-left:8px}
+.btn{padding:8px 14px;border-radius:8px;border:0;cursor:pointer;background:transparent;color:inherit}
+.btn.small{padding:6px 10px}
+.btn.outline{border:1px solid rgba(255,255,255,0.06)}
+.btn.primary{background:linear-gradient(90deg,var(--accent),#7bdff6);color:#021226}
+.btn.big{font-size:18px;padding:12px 24px}
+.wrap{display:flex;gap:20px;padding:30px}
+.leftpanel{width:240px}
+.leftpanel h2{color:var(--accent)}
+.navlist{list-style:none;padding:0;color:var(--muted)}
+.gacha-area{flex:1;position:relative;min-height:520px}
+.slideshow{position:absolute;inset:0;z-index:0;overflow:hidden;border-radius:12px}
+.slideshow img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0;transition:opacity 1s}
+.slideshow img.active{opacity:1}
+.gacha-stage{position:relative;z-index:2;display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%}
+.tiles{display:flex;gap:18px;transform:skewX(-20deg);}
+.tile{width:160px;height:420px;background:var(--card);border-radius:6px;overflow:hidden;position:relative;box-shadow:0 8px 30px rgba(3,10,20,0.5);transition:transform 300ms}
+.tile-inner{transform:skewX(20deg);height:100%;width:100%}
+.tile img{height:100%;width:100%;object-fit:cover;display:block}
+.tile.highlight{outline:4px solid rgba(79,195,247,0.9);transform:translateY(-12px) scale(1.02)}
+.panel{margin-top:18px}
+.hidden{display:none}
+.modal{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;background:rgba(2,6,12,0.6)}
+.modal-card{background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));padding:28px;border-radius:14px;text-align:center;color:#eef7ff}
+.modal-actions{display:flex;gap:12px;justify-content:center;margin-top:18px}
+
+/* responsive */
+@media (max-width:900px){.tiles{transform:skewX(-12deg);gap:8px}.tile{width:120px;height:320px}}
+```
+
+---
+
+## File: `script.js`
+```javascript
+// CONFIG --- edit these placeholders in your repo
+const YT_CHANNEL = 'https://youtube.com/your-channel'; // you'll edit later
+const DOWNLOAD_API = '/api/download'; // serverless endpoints
+const BG_IMAGES = ['/assets/bg1.jpg','/assets/bg2.jpg','/assets/bg3.jpg'];
+const SLIDESHOW_INTERVAL = 6000; // ms
+
+// --- UI refs
+const subscribeBtn = document.getElementById('subscribeBtn');
+const gachaBtn = document.getElementById('gachaBtn');
+const spinBtn = document.getElementById('spinBtn');
+const tilesEl = document.getElementById('tiles');
+const resultModal = document.getElementById('resultModal');
+const resultName = document.getElementById('resultName');
+const resultRarity = document.getElementById('resultRarity');
+const downloadBtn = document.getElementById('downloadBtn');
+const closeModal = document.getElementById('closeModal');
+const bgAudio = document.getElementById('bgAudio');
+const muteBtn = document.getElementById('muteBtn');
+
+// audio autoplay attempt
+bgAudio.volume = 0.6;
+function tryPlayAudio(){
+  bgAudio.play().catch(()=>{ bgAudio.muted = true; });
+}
+tryPlayAudio();
+muteBtn.addEventListener('click', ()=>{
+  if(bgAudio.muted){ bgAudio.muted=false; muteBtn.textContent='🔊'; } else { bgAudio.muted=true; muteBtn.textContent='🔈'; }
+});
+
+// Slideshow
+const slideshow = document.getElementById('slideshow');
+BG_IMAGES.forEach((src,i)=>{
+  const img = document.createElement('img'); img.src = src; if(i===0) img.classList.add('active'); slideshow.appendChild(img);
+});
+let slideIdx=0; setInterval(()=>{
+  const imgs = slideshow.querySelectorAll('img'); imgs[slideIdx].classList.remove('active'); slideIdx = (slideIdx+1)%imgs.length; imgs[slideIdx].classList.add('active');
+}, SLIDESHOW_INTERVAL);
+
+// Subscribe handling: user must click "Subscribe" button (open channel) to enable gacha
+subscribeBtn.addEventListener('click', ()=>{
+  // open channel in new tab
+  window.open(YT_CHANNEL, '_blank');
+  // mark clicked and require 2 seconds delay (so it's not accidental)
+  localStorage.setItem('subClicked', Date.now());
+  setTimeout(()=>{
+    checkSubscribeState();
+  }, 2000);
+});
+
+function checkSubscribeState(){
+  const t = localStorage.getItem('subClicked');
+  if(t){
+    gachaBtn.disabled = false; gachaBtn.classList.add('ready');
+    subscribeBtn.textContent = 'Subscribed?';
+  }
+}
+checkSubscribeState();
+
+// When gacha button clicked, go to gacha area (or enable spin)
+gachaBtn.addEventListener('click', ()=>{
+  // scroll to gacha
+  document.querySelector('.gacha-stage').scrollIntoView({behavior:'smooth'});
+  spinBtn.disabled = false; spinBtn.classList.remove('disabled');
+});
+
+// SPIN logic: random pick from 6 tiles with animation
+function sleep(ms){return new Promise(r=>setTimeout(r,ms));}
+
+async function spin(){
+  spinBtn.disabled = true;
+  const tiles = Array.from(document.querySelectorAll('.tile'));
+  const count = tiles.length;
+  // choose random index
+  const chosen = Math.floor(Math.random()*count);
+
+  // animation: highlight cycling
+  let cycles = 3*count + chosen; // total steps
+  let idx=0;
+  for(let step=0; step<cycles; step++){
+    tiles.forEach(t=>t.classList.remove('highlight'));
+    const cur = step % count;
+    tiles[cur].classList.add('highlight');
+    // slow down near end
+    const delay = 40 + Math.min(400, step*4);
+    await sleep(delay);
+  }
+  // final
+  tiles.forEach(t=>t.classList.remove('highlight'));
+  const winner = tiles[chosen]; winner.classList.add('highlight');
+
+  // show modal with result
+  const name = winner.dataset.name || 'Mod';
+  const rarity = winner.dataset.rarity || '';
+  resultName.textContent = name;
+  resultRarity.textContent = rarity;
+  resultModal.classList.remove('hidden');
+
+  // generate single-use token by calling server API
+  const fileKey = winner.dataset.file || ('file_'+chosen);
+  try{
+    const resp = await fetch(DOWNLOAD_API, {
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({ action:'create', fileKey })
+    });
+    const data = await resp.json();
+    if(data && data.token){
+      downloadBtn.dataset.token = data.token;
+    } else {
+      downloadBtn.dataset.token = '';
+    }
+  }catch(e){
+    console.error(e); downloadBtn.dataset.token='';
+  }
+}
+
+spinBtn.addEventListener('click', spin);
+
+// download consume token
+downloadBtn.addEventListener('click', async ()=>{
+  const token = downloadBtn.dataset.token;
+  if(!token){ alert('Download token not generated.'); return; }
+  // open link to /api/download?token=...
+  const win = window.open(`${DOWNLOAD_API}?token=${encodeURIComponent(token)}`, '_blank');
+  // optionally mark token used on client side
+});
+
+closeModal.addEventListener('click', ()=>{ resultModal.classList.add('hidden'); spinBtn.disabled=false; });
+
+// Initialize: enable spin if subClicked already present
+if(localStorage.getItem('subClicked')){ gachaBtn.disabled=false; spinBtn.disabled=true; }
+
+// Accessibility: allow user to customize images, names, files by editing DOM or data attributes in index.html
+```
+
+---
+
+## File: `/api/download.js` (Vercel Serverless)
+```javascript
+// This is a demo serverless handler for Vercel (Node.js). It implements a tiny in-memory
+// single-use token store. **Important:** In-memory store is ephemeral and not reliable for
+// production. For persistent single-use tokens, connect a DB (Redis, Firestore, etc.).
+
+const crypto = require('crypto');
+
+// map token -> {fileUrl, used, expires}
+const TOKENS = {};
+
+// Replace these placeholder file URLs with your real links (or store them securely).
+const FILE_MAP = {
+  'link0': 'https://example.com/yourfile0.zip',
+  'link1': 'https://example.com/yourfile1.zip',
+  'link2': 'https://example.com/yourfile2.zip',
+  'link3': 'https://example.com/yourfile3.zip',
+  'link4': 'https://example.com/yourfile4.zip',
+  'link5': 'https://example.com/yourfile5.zip',
+};
+
+function makeToken(){ return crypto.randomBytes(18).toString('hex'); }
+
+module.exports = (req, res) => {
+  if(req.method === 'POST'){
+    // create token
+    try{
+      const body = req.body || {};
+      if(body.action === 'create'){
+        const fileKey = body.fileKey;
+        const fileUrl = FILE_MAP[fileKey] || null;
+        if(!fileUrl){
+          return res.status(400).json({error:'unknown fileKey'});
+        }
+        const token = makeToken();
+        TOKENS[token] = { fileUrl, used:false, expires: Date.now() + 1000*60*10 }; // 10 min
+        return res.status(200).json({ token, expiresIn:600 });
+      }
+      return res.status(400).json({error:'invalid action'});
+    }catch(e){
+      console.error(e); return res.status(500).json({error:'server'});
+    }
+  }
+
+  if(req.method === 'GET'){
+    const token = req.query.token;
+    if(!token) return res.status(400).send('missing token');
+    const rec = TOKENS[token];
+    if(!rec) return res.status(404).send('token not found or expired');
+    if(rec.expires < Date.now()){ delete TOKENS[token]; return res.status(410).send('token expired'); }
+    if(rec.used) return res.status(403).send('token already used');
+    // mark used and redirect
+    rec.used = true;
+    // optional: clean up
+    setTimeout(()=>{ delete TOKENS[token]; }, 1000*60);
+    // redirect to actual file URL
+    res.writeHead(302, { Location: rec.fileUrl });
+    return res.end();
+  }
+
+  return res.status(405).send('method not allowed');
+};
+```
+
+---
+
+## Notes & Deployment
+- Edit `index.html` placeholders: images under `/assets/`, music `/assets/music.mp3`, tile `data-file` values and image `src` to your own files.
+- Replace `FILE_MAP` entries in `/api/download.js` with your real direct download URLs.
+- The "subscribe" flow is enforced client-side by requiring the user to click the subscribe button (which opens your channel) before enabling Gacha. Without YouTube API there's no reliable way to confirm subscription — this approach is a practical compromise.
+- For real single-use security, replace the in-memory `TOKENS` store with a persistent store (Redis/Firestore) and tighten expiry.
+- Deploy: push repo to GitHub → import to Vercel → Vercel will auto-detect `/api` as serverless functions.
+
+---
+
+If kamu mau, aku bisa langsung tambahkan style / tile shapes agar mirip persis dengan 4 screenshot yang kamu kirim (diagonal sliced tiles, layered look). Aku sudah buat struktur dasar dan animasi spin — sebutkan kalau mau aku sempurnakan tampilan (lebih diagonal, overlay, font, atau transisi cinematic) dan aku update file di sini.
