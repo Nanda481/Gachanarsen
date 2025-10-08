@@ -29,10 +29,11 @@
     .subtitle{font-size:12px;color:var(--muted);margin-top:2px}
 
     nav.controls{display:flex;gap:10px;align-items:center}
-    .btn{padding:10px 14px;border-radius:10px;border:1px solid rgba(255,255,255,0.06);background:transparent;color:inherit;cursor:pointer;font-weight:700}
+    .btn{padding:10px 14px;border-radius:10px;border:1px solid rgba(255,255,255,0.06);background:transparent;color:inherit;cursor:pointer;font-weight:700;transition:all 0.3s ease}
     .btn.ghost{background:transparent}
     .btn.primary{background:linear-gradient(90deg,var(--accent-a),var(--accent-b));color:#021226;border:none;box-shadow:0 8px 30px rgba(57,210,255,0.08)}
     .btn.small{padding:8px 10px;font-size:13px}
+    .btn:disabled{opacity:0.6;cursor:not-allowed}
 
     main.main{flex:1;display:flex;gap:28px;padding:26px 36px;position:relative;overflow:hidden}
 
@@ -55,20 +56,29 @@
     .showcase-wrap{position:relative;z-index:2;width:100%;max-width:1400px;padding:48px 32px;display:flex;flex-direction:column;gap:18px;align-items:center;justify-content:center}
     .showcase-title{display:flex;align-items:center;gap:12px}
     .showcase-title h2{font-size:20px;letter-spacing:1px}
-    .showcase-view{width:100%;overflow:hidden;padding:20px 0 28px 0}
+    .showcase-view{width:100%;overflow:hidden;padding:20px 0 28px 0;position:relative}
+    
+    /* slider navigation */
+    .slider-nav{display:flex;gap:10px;align-items:center}
+    .nav-btn{width:40px;height:40px;border-radius:50%;border:1px solid rgba(255,255,255,0.1);background:rgba(255,255,255,0.05);color:var(--accent-a);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:18px;transition:all 0.3s ease}
+    .nav-btn:hover{background:rgba(255,255,255,0.1);transform:scale(1.1)}
+    .nav-btn:disabled{opacity:0.4;cursor:not-allowed}
+
     .carousel{display:flex;gap:28px;align-items:center;will-change:transform;transition:transform 500ms cubic-bezier(.2,.9,.2,1)}
-    /* panel - slanted tile */
-    .panel{width:220px;height:520px;border-radius:14px;overflow:hidden;background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(0,0,0,0.08));backdrop-filter:blur(6px);position:relative;box-shadow:0 40px 120px rgba(2,8,20,0.6);transform:skewX(-14deg);transition:transform 350ms, box-shadow 350ms, filter 300ms}
-    .panel-inner{transform:skewX(14deg);width:100%;height:100%;position:relative;display:flex;flex-direction:column;align-items:center}
-    .panel img{width:100%;height:86%;object-fit:cover;display:block;border-bottom:1px solid rgba(255,255,255,0.03)}
-    .panel .meta{padding:12px;width:100%;display:flex;align-items:center;justify-content:space-between}
-    .pname{font-weight:800;color:var(--accent-a);font-size:16px}
+    
+    /* panel - medium size */
+    .panel{width:280px;height:620px;border-radius:14px;overflow:hidden;background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(0,0,0,0.08));backdrop-filter:blur(6px);position:relative;box-shadow:0 40px 120px rgba(2,8,20,0.6);transform:skewX(-8deg);transition:transform 350ms, box-shadow 350ms, filter 300ms}
+    .panel-inner{transform:skewX(8deg);width:100%;height:100%;position:relative;display:flex;flex-direction:column;align-items:center}
+    .panel img{width:100%;height:82%;object-fit:cover;display:block;border-bottom:1px solid rgba(255,255,255,0.03)}
+    .panel .meta{padding:16px;width:100%;display:flex;align-items:center;justify-content:space-between}
+    .pname{font-weight:800;color:var(--accent-a);font-size:18px}
     .prarity{font-weight:700;font-size:12px;padding:6px 10px;border-radius:999px;background:linear-gradient(90deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));border:1px solid rgba(255,255,255,0.03);color:var(--muted)}
 
     /* hover focus */
-    .panel:hover{transform:translateY(-18px) skewX(-14deg) scale(1.06);box-shadow:0 60px 140px rgba(3,12,30,0.75);filter:brightness(1.04)}
+    .panel:hover{transform:translateY(-18px) skewX(-8deg) scale(1.06);box-shadow:0 60px 140px rgba(3,12,30,0.75);filter:brightness(1.04)}
+    .panel.active{transform:translateY(-12px) skewX(-8deg) scale(1.03);box-shadow:0 50px 130px rgba(57,210,255,0.15)}
 
-    /* hero spotlight (optional on bigger screens) */
+    /* hero spotlight */
     .hero-spot{position:absolute;right:4%;bottom:6%;z-index:3;width:420px;height:640px;border-radius:16px;padding:22px;display:flex;align-items:flex-end;justify-content:center;box-shadow:0 60px 160px rgba(3,10,20,0.6);background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(0,0,0,0.15));border:1px solid rgba(255,255,255,0.03)}
     .hero-spot h3{font-size:28px;color:var(--accent-b);margin-bottom:6px}
     .hero-spot p{color:var(--muted);font-size:14px}
@@ -78,7 +88,8 @@
     .gtiles{display:flex;gap:12px}
     .gtile{width:88px;height:116px;border-radius:10px;overflow:hidden;background:rgba(255,255,255,0.02);display:flex;align-items:center;justify-content:center;border:1px solid rgba(255,255,255,0.03);transition:transform 300ms, box-shadow 300ms}
     .gtile.sel{box-shadow:0 20px 60px rgba(57,210,255,0.12);transform:translateY(-10px)}
-    .spin-btn{padding:12px 28px;border-radius:12px;background:linear-gradient(90deg,var(--accent-a),var(--accent-b));border:none;font-weight:900;cursor:pointer;box-shadow:0 18px 60px rgba(57,210,255,0.08)}
+    .spin-btn{padding:12px 28px;border-radius:12px;background:linear-gradient(90deg,var(--accent-a),var(--accent-b));border:none;font-weight:900;cursor:pointer;box-shadow:0 18px 60px rgba(57,210,255,0.08);transition:all 0.3s ease}
+    .spin-btn:disabled{opacity:0.6;cursor:not-allowed}
 
     /* result popup */
     .result-overlay{position:fixed;inset:0;z-index:60;display:flex;align-items:center;justify-content:center;background:rgba(0,6,12,0.6);pointer-events:none;opacity:0;transition:opacity 260ms}
@@ -88,45 +99,55 @@
     .result-card p{color:var(--muted)}
     .result-actions{display:flex;gap:12px;justify-content:center;margin-top:16px}
 
+    /* loading spinner */
+    .spinner{width:20px;height:20px;border:2px solid transparent;border-top:2px solid currentColor;border-radius:50%;animation:spin 1s linear infinite;display:inline-block}
+
+    @keyframes spin{
+      0%{transform:rotate(0deg)}
+      100%{transform:rotate(360deg)}
+    }
+
     /* small screens */
     @media (max-width:1100px){
       .hero-spot{display:none}
-      .panel{width:180px;height:420px}
+      .panel{width:240px;height:520px}
     }
     @media (max-width:720px){
       aside.left{display:none}
-      .panel{width:140px;height:340px}
+      .panel{width:200px;height:420px}
       .showcase-wrap{padding:20px}
-      .gacha-board{left:8%;transform:none;bottom:18px}
+      .gacha-board{left:8%;transform:none;bottom:18px;flex-direction:column;width:95%}
+      .main{padding:10px}
     }
 
     /* utility */
     .hide{display:none}
     .flex{display:flex}
     .center{align-items:center;justify-content:center}
+    .sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);border:0}
   </style>
 </head>
 <body>
   <div class="app">
-    <header class="top">
+    <header class="top" role="banner" aria-label="Header utama">
       <div class="brand">
-        <div class="logo">G</div>
+        <div class="logo" aria-label="Logo Gacha">G</div>
         <div>
           <div class="title">Gacha • Event Showcase</div>
           <div class="subtitle">Limited Summon • Cinematic Visual</div>
         </div>
       </div>
 
-      <nav class="controls">
+      <nav class="controls" aria-label="Navigasi kontrol">
         <button id="modeBtn" class="btn ghost small">Mode: Showcase</button>
         <button id="openChannel" class="btn small">Open Channel</button>
         <button id="enableBtn" class="btn primary" disabled>Enable Gacha</button>
       </nav>
     </header>
 
-    <main class="main">
+    <main class="main" role="main" aria-label="Konten utama">
       <!-- LEFT: info -->
-      <aside class="left">
+      <aside class="left" aria-label="Informasi panel">
         <div class="card">
           <h4>How it works</h4>
           <p class="muted">Open your channel, enable gacha, then switch to <strong>Gacha Mode</strong>. This template is client-side demo; edit assets & rarity in JS.</p>
@@ -144,7 +165,7 @@
       </aside>
 
       <!-- CENTER: showcase & gacha -->
-      <section class="center">
+      <section class="center" aria-label="Area showcase dan gacha">
         <div class="bg-container" id="bgContainer"><!-- slides added by JS --></div>
         <div class="bg-overlay"></div>
 
@@ -152,19 +173,21 @@
           <div class="showcase-title" style="width:100%;justify-content:space-between">
             <div>
               <h2>Character Showcase</h2>
-              <div class="muted">Auto-loop horizontal showcase • 6 characters</div>
+              <div class="muted">Manual slider • 6 characters • Click to preview</div>
             </div>
-            <div style="display:flex;gap:10px;align-items:center">
-              <button id="previewGachaBtn" class="btn small">Preview Gacha</button>
+            <div class="slider-nav">
+              <button id="prevBtn" class="nav-btn" aria-label="Previous character">←</button>
+              <span class="muted" id="slideCounter">1/6</span>
+              <button id="nextBtn" class="nav-btn" aria-label="Next character">→</button>
             </div>
           </div>
 
           <div class="showcase-view" id="showcaseView">
             <div id="carousel" class="carousel">
-              <!-- 6 panels — replace images / data in JS or HTML below -->
-              <div class="panel" data-name="Aurelia" data-rarity="Mythic" data-file="/mods/aurelia.zip">
+              <!-- 6 panels dengan ukuran medium -->
+              <div class="panel" data-name="Aurelia" data-rarity="Mythic" data-file="/mods/aurelia.zip" data-description="Abyss Walker">
                 <div class="panel-inner">
-                  <img src="assets/panel1.jpg" alt="Aurelia">
+                  <img src="assets/panel1.jpg" alt="Karakter Aurelia - Mythic rarity" onerror="handleImageError(this)">
                   <div class="meta">
                     <div class="pname">Aurelia</div>
                     <div class="prarity">Mythic</div>
@@ -172,9 +195,9 @@
                 </div>
               </div>
 
-              <div class="panel" data-name="Korven" data-rarity="Legendary" data-file="/mods/korven.zip">
+              <div class="panel" data-name="Korven" data-rarity="Legendary" data-file="/mods/korven.zip" data-description="Dragon Knight">
                 <div class="panel-inner">
-                  <img src="assets/panel2.jpg" alt="Korven">
+                  <img src="assets/panel2.jpg" alt="Karakter Korven - Legendary rarity" onerror="handleImageError(this)">
                   <div class="meta">
                     <div class="pname">Korven</div>
                     <div class="prarity">Legend</div>
@@ -182,9 +205,9 @@
                 </div>
               </div>
 
-              <div class="panel" data-name="Sibyl" data-rarity="Elite" data-file="/mods/sibyl.zip">
+              <div class="panel" data-name="Sibyl" data-rarity="Elite" data-file="/mods/sibyl.zip" data-description="Oracle Seer">
                 <div class="panel-inner">
-                  <img src="assets/panel3.jpg" alt="Sibyl">
+                  <img src="assets/panel3.jpg" alt="Karakter Sibyl - Elite rarity" onerror="handleImageError(this)">
                   <div class="meta">
                     <div class="pname">Sibyl</div>
                     <div class="prarity">Elite</div>
@@ -192,9 +215,9 @@
                 </div>
               </div>
 
-              <div class="panel" data-name="Truffle" data-rarity="Common" data-file="/mods/truffle.zip">
+              <div class="panel" data-name="Truffle" data-rarity="Common" data-file="/mods/truffle.zip" data-description="Forest Guardian">
                 <div class="panel-inner">
-                  <img src="assets/panel4.jpg" alt="Truffle">
+                  <img src="assets/panel4.jpg" alt="Karakter Truffle - Common rarity" onerror="handleImageError(this)">
                   <div class="meta">
                     <div class="pname">Truffle</div>
                     <div class="prarity">Common</div>
@@ -202,9 +225,9 @@
                 </div>
               </div>
 
-              <div class="panel" data-name="Rebecca" data-rarity="Elite" data-file="/mods/rebecca.zip">
+              <div class="panel" data-name="Rebecca" data-rarity="Elite" data-file="/mods/rebecca.zip" data-description="Cyber Ninja">
                 <div class="panel-inner">
-                  <img src="assets/panel5.jpg" alt="Rebecca">
+                  <img src="assets/panel5.jpg" alt="Karakter Rebecca - Elite rarity" onerror="handleImageError(this)">
                   <div class="meta">
                     <div class="pname">Rebecca</div>
                     <div class="prarity">Elite</div>
@@ -212,17 +235,15 @@
                 </div>
               </div>
 
-              <div class="panel" data-name="Fen" data-rarity="Legendary" data-file="/mods/fen.zip">
+              <div class="panel" data-name="Fen" data-rarity="Legendary" data-file="/mods/fen.zip" data-description="Phoenix Mage">
                 <div class="panel-inner">
-                  <img src="assets/panel6.jpg" alt="Fen">
+                  <img src="assets/panel6.jpg" alt="Karakter Fen - Legendary rarity" onerror="handleImageError(this)">
                   <div class="meta">
                     <div class="pname">Fen</div>
                     <div class="prarity">Legend</div>
                   </div>
                 </div>
               </div>
-
-              <!-- duplicated items for smooth infinite loop (cloned by JS as well) -->
             </div>
           </div>
         </div>
@@ -236,18 +257,20 @@
         </div>
 
         <!-- gacha board (hidden initially) -->
-        <div class="gacha-board hide" id="gachaBoard">
+        <div class="gacha-board hide" id="gachaBoard" aria-label="Portal summon gacha">
           <div style="display:flex;flex-direction:column;gap:8px;min-width:220px">
             <div style="font-weight:800">Summon Portal</div>
             <div class="muted" style="font-size:13px">Click SUMMON to perform a visual summon (client-side demo)</div>
           </div>
 
           <div class="gtiles" id="gtiles">
-            <div class="gtile"><img src="assets/thumb1.jpg" style="width:100%;height:100%;object-fit:cover" alt=""></div>
-            <div class="gtile"><img src="assets/thumb2.jpg" style="width:100%;height:100%;object-fit:cover" alt=""></div>
-            <div class="gtile"><img src="assets/thumb3.jpg" style="width:100%;height:100%;object-fit:cover" alt=""></div>
-            <div class="gtile"><img src="assets/thumb4.jpg" style="width:100%;height:100%;object-fit:cover" alt=""></div>
-            <div class="gtile"><img src="assets/thumb5.jpg" style="width:100%;height:100%;object-fit:cover" alt=""></div>
+            <!-- 6 box seperti yang diminta -->
+            <div class="gtile"><img src="assets/thumb1.jpg" style="width:100%;height:100%;object-fit:cover" alt="Thumbnail karakter 1" onerror="handleImageError(this)"></div>
+            <div class="gtile"><img src="assets/thumb2.jpg" style="width:100%;height:100%;object-fit:cover" alt="Thumbnail karakter 2" onerror="handleImageError(this)"></div>
+            <div class="gtile"><img src="assets/thumb3.jpg" style="width:100%;height:100%;object-fit:cover" alt="Thumbnail karakter 3" onerror="handleImageError(this)"></div>
+            <div class="gtile"><img src="assets/thumb4.jpg" style="width:100%;height:100%;object-fit:cover" alt="Thumbnail karakter 4" onerror="handleImageError(this)"></div>
+            <div class="gtile"><img src="assets/thumb5.jpg" style="width:100%;height:100%;object-fit:cover" alt="Thumbnail karakter 5" onerror="handleImageError(this)"></div>
+            <div class="gtile"><img src="assets/thumb6.jpg" style="width:100%;height:100%;object-fit:cover" alt="Thumbnail karakter 6" onerror="handleImageError(this)"></div>
           </div>
 
           <div style="display:flex;flex-direction:column;gap:10px;align-items:center">
@@ -260,7 +283,7 @@
   </div>
 
   <!-- result overlay -->
-  <div class="result-overlay" id="resultOverlay">
+  <div class="result-overlay" id="resultOverlay" aria-hidden="true">
     <div class="result-card">
       <h2 id="resultTitle">Mythic • You Obtained Aurelia</h2>
       <p id="resultText">Beautiful reveal animation — replace file logic later.</p>
@@ -276,21 +299,15 @@
 
   <script>
     /************************************************************************
-     * FINAL TEMPLATE SCRIPT
-     * - Infinite horizontal auto-looping showcase with 6 panels
-     * - Dual mode: Showcase (default) and Gacha (portal)
-     * - Configurable rarityRates (custom names & probabilities)
-     * - Simple client-side summon logic (no payments)
-     * - Replace assets in /assets/ folder and adjust file links in data-file attributes
+     * IMPROVED TEMPLATE SCRIPT
+     * - Manual slider system (no auto-loop)
+     * - Medium sized panels for better visibility
+     * - 6 boxes in summon portal
+     * - Better accessibility and error handling
      ************************************************************************/
 
     /* ---------------------- CONFIG (edit these) ---------------------- */
-
-    // Background slides: leave empty and fill with your local '/assets/bgX.jpg' later.
-    const SLIDES = []; // example: ['assets/bg1.jpg','assets/bg2.jpg']
-
-    // Rarity names & probabilities (must sum to 1)
-    // Edit names & rates as you like. Example below is default: Mythic rarest.
+    const SLIDES = [];
     const rarityRates = {
       Mythic: 0.02,
       Legendary: 0.08,
@@ -298,7 +315,6 @@
       Common: 0.7
     };
 
-    // Optional mapping for rarity -> visual color
     const rarityColors = {
       Mythic: '#f3d48f',
       Legendary: '#9b7bff',
@@ -306,31 +322,50 @@
       Common: '#94a6bf'
     };
 
-    // YouTube channel URL (update to your channel)
-    const YT_CHANNEL = 'https://youtube.com/'; // edit after deploy
+    const YT_CHANNEL = 'https://youtube.com/';
 
-    /* ---------------------- END CONFIG ---------------------- */
-
-    // utilities
+    /* ---------------------- UTILITY FUNCTIONS ---------------------- */
     function clamp(v, a=0, b=1){ return Math.max(a, Math.min(b, v)); }
     function rand(){ return Math.random(); }
+    function sleep(ms){ return new Promise(r=>setTimeout(r, ms)); }
 
-    // validate rarityRates sum and prepare cumulative distribution
+    // Error handling for images
+    function handleImageError(img) {
+      img.src = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjMDgxODI5Ii8+PHRleHQgeD0iNTAlIiB5PSI1MCUiIGZvbnQtZmFtaWx5PSJzYW5zLXNlcmlmIiBmb250LXNpemU9IjE0IiBmaWxsPSIjMzlkMmZmIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBkeT0iLjNlbSI+SW1hZ2UgTm90IEZvdW5kPC90ZXh0Pjwvc3ZnPg==';
+      img.alt = 'Gambar tidak tersedia';
+    }
+
+    // Preload critical images
+    function preloadImages() {
+      const criticalImages = [
+        'assets/panel1.jpg', 'assets/panel2.jpg', 'assets/panel3.jpg',
+        'assets/panel4.jpg', 'assets/panel5.jpg', 'assets/panel6.jpg',
+        'assets/thumb1.jpg', 'assets/thumb2.jpg', 'assets/thumb3.jpg',
+        'assets/thumb4.jpg', 'assets/thumb5.jpg', 'assets/thumb6.jpg'
+      ];
+      
+      criticalImages.forEach(src => {
+        const img = new Image();
+        img.src = src;
+      });
+    }
+
+    /* ---------------------- INITIALIZATION ---------------------- */
+    // Validate and build rarity CDF
     const rarityKeys = Object.keys(rarityRates);
     const rates = rarityKeys.map(k => rarityRates[k]);
     const totalRate = rates.reduce((s,x)=>s+x,0);
     if(Math.abs(totalRate - 1) > 1e-6){
-      // normalize if not exactly 1
       for(const k of rarityKeys) rarityRates[k] = rarityRates[k] / totalRate;
     }
-    // build CDF
+
     let cdf = [];
     (function buildCDF(){
       let sum = 0;
       for(const k of rarityKeys){ sum += rarityRates[k]; cdf.push({key:k, at:sum}); }
     })();
 
-    // DOM refs
+    // DOM references
     const modeBtn = document.getElementById('modeBtn');
     const openChannelBtn = document.getElementById('openChannel');
     const enableBtn = document.getElementById('enableBtn');
@@ -349,20 +384,69 @@
     const closeResult = document.getElementById('closeResult');
     const bgContainer = document.getElementById('bgContainer');
     const ratesSummary = document.getElementById('ratesSummary');
-    const modeLabelBtn = document.getElementById('modeBtn');
-    const previewGachaBtn = document.getElementById('previewGachaBtn');
-    const enableButton = enableBtn;
+    const prevBtn = document.getElementById('prevBtn');
+    const nextBtn = document.getElementById('nextBtn');
+    const slideCounter = document.getElementById('slideCounter');
 
-    // showcase panels (live NodeList)
     let panels = Array.from(document.querySelectorAll('.panel'));
+    let currentSlide = 0;
+    const totalSlides = panels.length;
 
-    // update left panel rates summary
+    /* ---------------------- IMPROVED FUNCTIONS ---------------------- */
     function updateRatesSummary(){
       ratesSummary.textContent = rarityKeys.map(k => `${k}: ${(rarityRates[k]*100).toFixed(2)}%`).join(' • ');
     }
     updateRatesSummary();
 
-    /* ------------------ Background slideshow (empty placeholder) ------------------ */
+    // Manual slider system (no auto-loop)
+    function updateSlider() {
+      const offset = -currentSlide * (280 + 28); // panel width + gap
+      carousel.style.transform = `translate3d(${offset}px, 0, 0)`;
+      slideCounter.textContent = `${currentSlide + 1}/${totalSlides}`;
+      
+      // Update navigation buttons
+      prevBtn.disabled = currentSlide === 0;
+      nextBtn.disabled = currentSlide === totalSlides - 1;
+      
+      // Update active panel and hero spotlight
+      updateActivePanel();
+    }
+
+    function updateActivePanel() {
+      panels.forEach((panel, index) => {
+        if (index === currentSlide) {
+          panel.classList.add('active');
+          const name = panel.dataset.name || 'Unknown';
+          const rarity = panel.dataset.rarity || '';
+          const description = panel.dataset.description || '';
+          heroName.textContent = name;
+          heroDesc.textContent = `${rarity} • ${description}`;
+        } else {
+          panel.classList.remove('active');
+        }
+      });
+    }
+
+    function goToSlide(index) {
+      currentSlide = clamp(index, 0, totalSlides - 1);
+      updateSlider();
+    }
+
+    function nextSlide() {
+      if (currentSlide < totalSlides - 1) {
+        currentSlide++;
+        updateSlider();
+      }
+    }
+
+    function prevSlide() {
+      if (currentSlide > 0) {
+        currentSlide--;
+        updateSlider();
+      }
+    }
+
+    // Background slideshow (optional)
     (function setupBackgroundSlides(){
       if(SLIDES.length === 0) return;
       SLIDES.forEach((src,i)=>{
@@ -382,109 +466,32 @@
       }, 6000);
     })();
 
-    /* ------------------ Infinite auto-loop carousel ------------------ */
-    // Implementation idea:
-    // - Duplicate panel nodes (clone) to left/right so scrolling can be seamless.
-    // - Use transformX animation using requestAnimationFrame.
-    // - Pause on hover or when user drags.
-    (function initCarousel(){
-      // clone panels to double the length for seamless loop
-      const original = Array.from(carousel.children);
-      original.forEach(node => carousel.appendChild(node.cloneNode(true)));
-      original.forEach(node => carousel.appendChild(node.cloneNode(true))); // extra buffer
+    /* ---------------------- EVENT LISTENERS ---------------------- */
+    // Slider navigation
+    prevBtn.addEventListener('click', prevSlide);
+    nextBtn.addEventListener('click', nextSlide);
 
-      // recompute panels array
-      panels = Array.from(carousel.querySelectorAll('.panel'));
-
-      let speed = 0.25; // px per ms base speed
-      let offset = 0;
-      let last = performance.now();
-      let paused = false;
-      let manualDrag = false;
-      let dragStartX = 0;
-      let startOffset = 0;
-
-      // auto-play
-      function tick(now){
-        const dt = Math.min(40, now - last);
-        last = now;
-        if(!paused && !manualDrag){
-          offset += speed * dt;
-        }
-        // loop: when offset exceeds half width, wrap
-        const totalWidth = carousel.scrollWidth;
-        if(offset >= totalWidth/3) offset = offset - totalWidth/3;
-        carousel.style.transform = `translate3d(calc(-${offset}px), 0, 0)`;
-        requestAnimationFrame(tick);
+    // Keyboard navigation
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowLeft') prevSlide();
+      if (e.key === 'ArrowRight') nextSlide();
+      if (e.key === 'Escape' && resultOverlay.classList.contains('open')) {
+        resultOverlay.classList.remove('open');
       }
-      requestAnimationFrame(tick);
+    });
 
-      // pause on hover
-      showcaseView.addEventListener('mouseenter', ()=>{ paused = true; });
-      showcaseView.addEventListener('mouseleave', ()=>{ paused = false; });
-
-      // drag to scroll
-      showcaseView.addEventListener('pointerdown', (e)=>{
-        manualDrag = true;
-        dragStartX = e.clientX;
-        startOffset = offset;
-        showcaseView.setPointerCapture(e.pointerId);
-      });
-      showcaseView.addEventListener('pointermove', (e)=>{
-        if(!manualDrag) return;
-        const dx = e.clientX - dragStartX;
-        offset = clamp(startOffset - dx, 0, carousel.scrollWidth);
-      });
-      showcaseView.addEventListener('pointerup', (e)=>{
-        manualDrag = false;
-      });
-      showcaseView.addEventListener('pointercancel', ()=>{ manualDrag=false; });
-
-      // spotlight first visible panel
-      function refreshHeroFromCenter(){
-        // Determine mid point of view and pick nearest panel center
-        const rect = showcaseView.getBoundingClientRect();
-        const centerX = rect.left + rect.width / 2;
-        let best = null; let bestDist = Infinity;
-        panels.forEach(p=>{
-          const r = p.getBoundingClientRect();
-          const px = r.left + r.width/2;
-          const d = Math.abs(px - centerX);
-          if(d < bestDist){ bestDist = d; best = p; }
-        });
-        if(best){
-          const name = best.dataset.name || 'Unknown';
-          const rarity = best.dataset.rarity || '';
-          heroName.textContent = name;
-          heroDesc.textContent = rarity;
-        }
-      }
-      setInterval(refreshHeroFromCenter, 400);
-    })();
-
-    /* ------------------ Showcase interactions ------------------ */
-    panels.forEach(p=>{
-      p.addEventListener('mouseenter', ()=>{
-        panels.forEach(x=>x.style.filter='brightness(0.65)');
-        p.style.filter='brightness(1)';
-      });
-      p.addEventListener('mouseleave', ()=>{ panels.forEach(x=>x.style.filter=''); });
-      p.addEventListener('click', ()=> {
-        const name = p.dataset.name || 'Unknown';
-        const rarity = p.dataset.rarity || '';
-        heroName.textContent = name;
-        heroDesc.textContent = rarity;
-        // small preview effect
-        p.classList.add('active');
-        setTimeout(()=>p.classList.remove('active'), 700);
+    // Panel interactions
+    panels.forEach((panel, index) => {
+      panel.addEventListener('click', () => {
+        goToSlide(index);
       });
     });
 
-    /* ------------------ Mode switching (Showcase / Gacha) ------------------ */
-    let currentMode = 'showcase'; // default
+    // Mode switching
+    let currentMode = 'showcase';
     function setMode(mode){
       currentMode = mode;
-      modeLabelBtn.textContent = `Mode: ${mode.charAt(0).toUpperCase()+mode.slice(1)}`;
+      modeBtn.textContent = `Mode: ${mode.charAt(0).toUpperCase()+mode.slice(1)}`;
       if(mode === 'showcase'){
         document.getElementById('showcaseWrap').style.opacity = 1;
         gachaBoard.classList.add('hide');
@@ -493,57 +500,42 @@
         gachaBoard.classList.remove('hide');
       }
     }
-    modeBtn.addEventListener('click', ()=>{ setMode(currentMode==='showcase' ? 'gacha' : 'showcase'); });
+    modeBtn.addEventListener('click', ()=>{ 
+      setMode(currentMode==='showcase' ? 'gacha' : 'showcase'); 
+    });
 
-    /* ------------------ Subscribe button & enable gacha ------------------ */
+    // Channel subscription
     openChannelBtn.addEventListener('click', ()=>{
       window.open(YT_CHANNEL, '_blank');
       localStorage.setItem('subClicked', Date.now());
       enableBtn.disabled = false;
       enableBtn.classList.add('primary');
     });
-    // enable button simulates permission to use gacha (client-side)
+
     enableBtn.addEventListener('click', ()=>{
       setMode('gacha');
       summonBtn.disabled = false;
       singleSummon.disabled = false;
     });
-    if(localStorage.getItem('subClicked')){ enableBtn.disabled = false; }
 
-    /* ------------------ Gacha logic (client-side probabilities) ------------------ */
-    // choose rarity from CDF
+    if(localStorage.getItem('subClicked')){ 
+      enableBtn.disabled = false;
+      enableBtn.classList.add('primary');
+    }
+
+    /* ---------------------- IMPROVED GACHA SYSTEM ---------------------- */
     function chooseRarity(){
       const r = Math.random();
       for(const node of cdf){ if(r <= node.at) return node.key; }
       return cdf[cdf.length-1].key;
     }
 
-    // pick a random panel that matches rarity if possible, otherwise fallback
     function pickPanelByRarity(rarity){
       const matches = panels.filter(p => (p.dataset.rarity || '').toLowerCase() === rarity.toLowerCase());
       if(matches.length > 0) return matches[Math.floor(Math.random()*matches.length)];
-      // fallback: random panel
       return panels[Math.floor(Math.random()*panels.length)];
     }
 
-    // cinematic visual reveal for a given panel (no server)
-    async function revealPanel(panel){
-      // visual: highlight panel, show popup
-      panels.forEach(x=>x.classList.remove('sel')); panel.classList.add('sel');
-      const name = panel.dataset.name || 'Unknown';
-      const rarity = panel.dataset.rarity || 'Unknown';
-      // result overlay content
-      resultTitle.textContent = `${rarity} • You Obtained ${name}`;
-      resultText.textContent = `Demo reveal — replace client-side claim with secure server API when ready.`;
-      claimBtn.dataset.file = panel.dataset.file || '';
-      // style popup by rarity color
-      const color = rarityColors[rarity] || '#39d2ff';
-      document.querySelector('.result-card').style.boxShadow = `0 40px 140px ${hexToRgba(color,0.18)}`;
-      // show overlay
-      resultOverlay.classList.add('open');
-    }
-
-    // hex to rgba helper
     function hexToRgba(hex, a=1){
       try{
         const h = hex.replace('#','');
@@ -555,79 +547,118 @@
       }catch(e){ return `rgba(57,210,255,${a})`; }
     }
 
-    // Summon animation sequence
-    async function performSummon(full=true){
-      // disable buttons
-      summonBtn.disabled = true; singleSummon.disabled = true;
-      // animate gtiles selection
-      const gtiles = Array.from(document.querySelectorAll('.gtiles .gtile'));
-      // cycling highlight
-      let cycles = full ? 30 + Math.floor(Math.random()*20) : 12 + Math.floor(Math.random()*8);
-      for(let i=0;i<cycles;i++){
-        gtiles.forEach(t=>t.classList.remove('sel'));
-        const sel = gtiles[i % gtiles.length];
-        sel.classList.add('sel');
-        await sleep(40 + Math.floor(i*i/30));
-      }
-      // choose rarity
-      const chosenRarity = chooseRarity();
-      // pick panel of that rarity
-      const winnerPanel = pickPanelByRarity(chosenRarity);
-      // small delay then reveal panel
-      await sleep(350);
-      await revealPanel(winnerPanel);
-      // re-enable
-      summonBtn.disabled = false; singleSummon.disabled = false;
+    async function revealPanel(panel){
+      panels.forEach(x=>x.classList.remove('sel')); 
+      panel.classList.add('sel');
+      
+      const name = panel.dataset.name || 'Unknown';
+      const rarity = panel.dataset.rarity || 'Unknown';
+      const description = panel.dataset.description || '';
+      
+      resultTitle.textContent = `${rarity} • You Obtained ${name}`;
+      resultText.textContent = `${description} - Demo reveal animation`;
+      claimBtn.dataset.file = panel.dataset.file || '';
+      
+      const color = rarityColors[rarity] || '#39d2ff';
+      document.querySelector('.result-card').style.boxShadow = `0 40px 140px ${hexToRgba(color,0.18)}`;
+      
+      resultOverlay.classList.add('open');
+      resultOverlay.setAttribute('aria-hidden', 'false');
     }
 
-    // bind summon buttons
+    async function performSummon(full=true){
+      // Show loading state
+      const originalText = summonBtn.innerHTML;
+      summonBtn.innerHTML = '<div class="spinner"></div>';
+      summonBtn.disabled = true;
+      singleSummon.disabled = true;
+
+      try {
+        const gtiles = Array.from(document.querySelectorAll('.gtiles .gtile'));
+        let cycles = full ? 30 + Math.floor(Math.random()*20) : 12 + Math.floor(Math.random()*8);
+        
+        for(let i=0;i<cycles;i++){
+          gtiles.forEach(t=>t.classList.remove('sel'));
+          const sel = gtiles[i % gtiles.length];
+          sel.classList.add('sel');
+          await sleep(40 + Math.floor(i*i/30));
+        }
+
+        const chosenRarity = chooseRarity();
+        const winnerPanel = pickPanelByRarity(chosenRarity);
+        
+        await sleep(350);
+        await revealPanel(winnerPanel);
+        
+      } catch (error) {
+        console.error('Summon error:', error);
+        alert('Terjadi error saat summon. Coba lagi.');
+      } finally {
+        // Reset button state
+        summonBtn.innerHTML = originalText;
+        summonBtn.disabled = false;
+        singleSummon.disabled = false;
+      }
+    }
+
+    // Bind summon buttons
     summonBtn.addEventListener('click', ()=>performSummon(true));
     singleSummon.addEventListener('click', ()=>performSummon(false));
 
-    // helper sleep
-    function sleep(ms){ return new Promise(r=>setTimeout(r, ms)); }
-
-    // claim & close handlers
+    // Result handlers
     claimBtn.addEventListener('click', ()=>{
       const f = claimBtn.dataset.file || '';
-      if(!f){ alert('No file linked. Implement server-side claim to enable single-use downloads.'); return; }
+      if(!f){ 
+        alert('No file linked. Implement server-side claim to enable single-use downloads.'); 
+        return; 
+      }
       window.open(f, '_blank');
     });
-    closeResult.addEventListener('click', ()=>{ resultOverlay.classList.remove('open'); panels.forEach(x=>x.classList.remove('sel')); });
 
-    // preview gacha button simply switches to gacha mode
-    previewGachaBtn.addEventListener('click', ()=>{ setMode('gacha'); });
+    closeResult.addEventListener('click', ()=>{ 
+      resultOverlay.classList.remove('open');
+      resultOverlay.setAttribute('aria-hidden', 'true');
+      panels.forEach(x=>x.classList.remove('sel')); 
+    });
 
-    // background music best-effort autoplay
+    // Background music with better error handling
     const bgMusic = document.getElementById('bgMusic');
-    document.addEventListener('click', ()=>{ bgMusic.play().catch(()=>{}); }, {once:true});
+    document.addEventListener('click', ()=>{ 
+      bgMusic.play().catch((e)=>{
+        console.log('Autoplay blocked:', e);
+      }); 
+    }, {once:true});
 
-    /* ------------------ Accessibility / finalize ------------------ */
-    // Prevent accidental text selection dragging
-    document.addEventListener('selectstart', e => { if(e.target.closest('.carousel')) e.preventDefault(); });
+    /* ---------------------- INITIALIZATION ---------------------- */
+    // Initialize slider
+    updateSlider();
+    
+    // Preload images
+    document.addEventListener('DOMContentLoaded', preloadImages);
+    
+    // Add error handlers to all images
+    document.querySelectorAll('img').forEach(img => {
+      img.addEventListener('error', () => handleImageError(img));
+    });
 
-    // Expose a small API to update rates runtime (developer convenience)
+    // Prevent text selection
+    document.addEventListener('selectstart', e => { 
+      if(e.target.closest('.carousel')) e.preventDefault(); 
+    });
+
+    // Developer API
     window.GACHA = {
       setRates(newRates){
-        // set and rebuild cdf
         for(const k in newRates) if(newRates.hasOwnProperty(k)) rarityRates[k] = newRates[k];
-        // normalize
         const sum = Object.values(rarityRates).reduce((s,x)=>s+x,0);
         for(const k in rarityRates) rarityRates[k] = rarityRates[k]/sum;
-        // rebuild cdf
         cdf = []; let s=0; for(const k of Object.keys(rarityRates)){ s+=rarityRates[k]; cdf.push({key:k,at:s}); }
         updateRatesSummary();
       },
-      getRates(){ return Object.assign({}, rarityRates); }
+      getRates(){ return Object.assign({}, rarityRates); },
+      goToSlide: goToSlide,
+      currentSlide: () => currentSlide
     };
-
-    // initial small hero refresh
-    (function initHero(){
-      const first = panels[0];
-      if(first){ heroName.textContent = first.dataset.name || 'Unknown'; heroDesc.textContent = first.dataset.rarity || ''; }
-    })();
-
-    // End of script
   </script>
 </body>
 </html>
