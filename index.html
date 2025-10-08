@@ -6,7 +6,164 @@
   <title>High-Tier Gacha Showcase • Limited Summon</title>
   <meta name="description" content="High-end cinematic gacha showcase with summon limits — dual mode: Showcase & Gacha."/>
   <style>
-    /* ... (CSS sebelumnya tetap sama) ... */
+    /* ---------- THEME COLORS ---------- */
+    :root{
+      --bg-1:#041022; --bg-2:#07142a;
+      --panel:#081829; --glass:rgba(255,255,255,0.03);
+      --accent-a:#39d2ff; --accent-b:#9b7bff;
+      --muted:#94a6bf; --gold:#f3d48f;
+      --mythic-glow:#ffd700; --legend-glow:#9b7bff;
+      --elite-glow:#39d2ff; --common-glow:#94a6bf;
+    }
+
+    /* ---------- RESET & BASE ---------- */
+    *{box-sizing:border-box;margin:0;padding:0}
+    html,body{height:100%;width:100%;font-family:Inter, ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial;color:#e6f3ff;background:linear-gradient(180deg,var(--bg-1),var(--bg-2));-webkit-font-smoothing:antialiased;overflow:hidden}
+    a{color:inherit}
+    button{font-family:inherit}
+
+    /* ---------- LAYOUT ---------- */
+    .app{display:flex;flex-direction:column;height:100vh;width:100vw}
+    
+    /* Header dengan efek shine */
+    header.top{height:72px;display:flex;align-items:center;justify-content:space-between;padding:0 28px;background:linear-gradient(180deg, rgba(255,255,255,0.05), transparent);backdrop-filter:blur(6px);border-bottom:1px solid rgba(255,255,255,0.02);position:relative;overflow:hidden}
+    .shine-effect{position:absolute;top:0;left:-100%;width:100%;height:100%;background:linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);animation:shine 8s infinite}
+    
+    @keyframes shine{
+      0%{left:-100%}
+      20%{left:100%}
+      100%{left:100%}
+    }
+
+    .brand{display:flex;gap:14px;align-items:center;position:relative;z-index:2}
+    .logo{width:50px;height:50px;border-radius:12px;background:linear-gradient(135deg,var(--accent-a),var(--accent-b));display:flex;align-items:center;justify-content:center;color:#021226;font-weight:800;box-shadow:0 10px 40px rgba(57,210,255,0.15);animation:pulse 4s ease-in-out infinite}
+    .title{font-weight:800;letter-spacing:0.6px;background:linear-gradient(45deg, var(--accent-a), var(--accent-b));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+    .subtitle{font-size:12px;color:var(--muted);margin-top:2px}
+
+    @keyframes pulse{
+      0%, 100%{transform:scale(1);box-shadow:0 10px 40px rgba(57,210,255,0.15)}
+      50%{transform:scale(1.05);box-shadow:0 15px 50px rgba(57,210,255,0.25)}
+    }
+
+    nav.controls{display:flex;gap:10px;align-items:center;position:relative;z-index:2}
+    .btn{padding:10px 14px;border-radius:10px;border:1px solid rgba(255,255,255,0.06);background:transparent;color:inherit;cursor:pointer;font-weight:700;transition:all 0.3s ease;position:relative;overflow:hidden}
+    .btn.ghost{background:transparent}
+    .btn.primary{background:linear-gradient(90deg,var(--accent-a),var(--accent-b));color:#021226;border:none;box-shadow:0 8px 30px rgba(57,210,255,0.15)}
+    .btn.small{padding:8px 10px;font-size:13px}
+    .btn:disabled{opacity:0.6;cursor:not-allowed}
+    .btn:not(:disabled):hover{transform:translateY(-2px);box-shadow:0 12px 40px rgba(57,210,255,0.2)}
+
+    main.main{flex:1;display:flex;gap:28px;padding:26px 36px;position:relative;overflow:hidden}
+
+    /* left column */
+    aside.left{width:260px;display:flex;flex-direction:column;gap:18px}
+    .card{background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));border-radius:12px;padding:18px;border:1px solid rgba(255,255,255,0.03);box-shadow:0 16px 60px rgba(2,6,20,0.55);position:relative;overflow:hidden}
+    .card::before{content:'';position:absolute;top:0;left:-100%;width:100%;height:100%;background:linear-gradient(90deg, transparent, rgba(255,255,255,0.03), transparent);animation:cardShine 6s infinite}
+    .card h4{color:var(--accent-a);margin-bottom:10px;position:relative;z-index:1}
+    .muted{color:var(--muted);font-size:13px;position:relative;z-index:1}
+
+    @keyframes cardShine{
+      0%{left:-100%}
+      20%{left:100%}
+      100%{left:100%}
+    }
+
+    /* center area */
+    .center{flex:1;position:relative;display:flex;align-items:center;justify-content:center;overflow:hidden}
+
+    /* background slideshow container */
+    .bg-container{position:absolute;inset:0;z-index:0;overflow:hidden}
+    .bg-slide{position:absolute;inset:0;background-size:cover;background-position:center;opacity:0;transform:scale(1.03);transition:opacity 1200ms ease, transform 1000ms ease}
+    .bg-slide.active{opacity:1;transform:scale(1)}
+    .bg-overlay{position:absolute;inset:0;background:linear-gradient(180deg, rgba(2,6,20,0.25), rgba(2,6,30,0.6));z-index:1}
+
+    /* showcase carousel container */
+    .showcase-wrap{position:relative;z-index:2;width:100%;max-width:1400px;padding:48px 32px;display:flex;flex-direction:column;gap:18px;align-items:center;justify-content:center}
+    .showcase-title{display:flex;align-items:center;gap:12px;width:100%;justify-content:space-between}
+    .showcase-title h2{font-size:20px;letter-spacing:1px;background:linear-gradient(45deg, var(--accent-a), var(--accent-b));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+    .showcase-view{width:100%;overflow:hidden;padding:20px 0 28px 0;position:relative}
+    
+    /* slider navigation */
+    .slider-nav{display:flex;gap:10px;align-items:center}
+    .nav-btn{width:40px;height:40px;border-radius:50%;border:1px solid rgba(255,255,255,0.1);background:rgba(255,255,255,0.05);color:var(--accent-a);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:18px;transition:all 0.3s ease;position:relative;overflow:hidden}
+    .nav-btn:hover{background:rgba(255,255,255,0.1);transform:scale(1.1);box-shadow:0 0 20px rgba(57,210,255,0.3)}
+    .nav-btn:disabled{opacity:0.4;cursor:not-allowed}
+
+    .carousel{display:flex;gap:28px;align-items:center;will-change:transform;transition:transform 500ms cubic-bezier(.2,.9,.2,1)}
+    
+    /* panel - medium size dengan aura FIXED */
+    .panel{width:280px;height:620px;border-radius:14px;overflow:visible;background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(0,0,0,0.08));backdrop-filter:blur(6px);position:relative;box-shadow:0 40px 120px rgba(2,8,20,0.6);transform:skewX(-8deg) scale(0.95);transition:all 350ms cubic-bezier(0.25, 0.46, 0.45, 0.94)}
+    .panel-inner{transform:skewX(8deg);width:100%;height:100%;position:relative;display:flex;flex-direction:column;align-items:center;border-radius:14px;overflow:hidden}
+    
+    /* Aura effect container FIXED */
+    .aura-container{position:absolute;top:-5px;left:-5px;right:-5px;bottom:-5px;border-radius:16px;z-index:0;opacity:0;transition:opacity 0.5s ease;pointer-events:none;overflow:hidden}
+    .panel.active .aura-container{opacity:0.8}
+    .aura{position:absolute;top:50%;left:50%;width:140%;height:140%;background:conic-gradient(from 0deg, transparent, var(--aura-color), transparent);transform:translate(-50%, -50%) rotate(0deg);animation:rotateAura 4s linear infinite;border-radius:50%}
+    .aura-2{animation-delay:-2s; opacity:0.7}
+    
+    @keyframes rotateAura{
+      0%{transform:translate(-50%, -50%) rotate(0deg)}
+      100%{transform:translate(-50%, -50%) rotate(360deg)}
+    }
+
+    .panel img{width:100%;height:82%;object-fit:cover;display:block;border-bottom:1px solid rgba(255,255,255,0.03);position:relative;z-index:1;transition:all 0.3s ease;transform:scale(1.01)}
+    .panel.active img{filter:brightness(1.1) contrast(1.05)}
+    
+    .panel .meta{padding:16px;width:100%;display:flex;align-items:center;justify-content:space-between;position:relative;z-index:1;background:linear-gradient(180deg, transparent, rgba(8,24,41,0.95))}
+    .pname{font-weight:800;color:var(--accent-a);font-size:18px;text-shadow:0 2px 10px rgba(0,0,0,0.5)}
+    .prarity{font-weight:700;font-size:12px;padding:6px 10px;border-radius:999px;background:linear-gradient(90deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));border:1px solid rgba(255,255,255,0.03);color:var(--muted)}
+
+    /* hover focus dengan efek glow */
+    .panel:hover{transform:translateY(-18px) skewX(-8deg) scale(1.02);box-shadow:0 60px 140px rgba(3,12,30,0.75);filter:brightness(1.04)}
+    .panel:hover .aura-container{opacity:0.6}
+    .panel.active{transform:translateY(-12px) skewX(-8deg) scale(1);box-shadow:0 50px 130px var(--aura-glow, rgba(57,210,255,0.3))}
+
+    /* hero spotlight */
+    .hero-spot{position:absolute;right:4%;bottom:6%;z-index:3;width:420px;height:640px;border-radius:16px;padding:22px;display:flex;align-items:flex-end;justify-content:center;box-shadow:0 60px 160px rgba(3,10,20,0.6);background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(0,0,0,0.15));border:1px solid rgba(255,255,255,0.03);position:relative;overflow:hidden}
+    .hero-spot::before{content:'';position:absolute;top:0;left:-100%;width:100%;height:100%;background:linear-gradient(90deg, transparent, rgba(255,255,255,0.05), transparent);animation:cardShine 8s infinite}
+    .hero-spot h3{font-size:28px;color:var(--accent-b);margin-bottom:6px;position:relative;z-index:1}
+    .hero-spot p{color:var(--muted);font-size:14px;position:relative;z-index:1}
+
+    /* gacha board dengan efek shine - FIXED VISIBILITY */
+    .gacha-board{position:absolute;left:50%;transform:translateX(-50%);bottom:28px;z-index:4;background:linear-gradient(180deg, rgba(255,255,255,0.05), rgba(255,255,255,0.02));padding:18px 24px;border-radius:14px;border:1px solid rgba(255,255,255,0.05);display:flex;gap:24px;align-items:center;backdrop-filter:blur(12px);box-shadow:0 20px 80px rgba(2,6,20,0.8);min-width:max-content}
+    .gacha-board::before{content:'';position:absolute;top:0;left:-100%;width:100%;height:100%;background:linear-gradient(90deg, transparent, rgba(57,210,255,0.1), transparent);animation:cardShine 10s infinite}
+    
+    /* Half Character Display di atas summon portal */
+    .character-display{position:absolute;top:-180px;left:50%;transform:translateX(-50%);width:600px;height:200px;display:flex;justify-content:center;gap:8px;z-index:5}
+    .character-half{width:90px;height:180px;border-radius:12px 12px 0 0;overflow:hidden;position:relative;background:linear-gradient(180deg, rgba(255,255,255,0.03), transparent);border:1px solid rgba(255,255,255,0.05);border-bottom:none;transition:all 0.3s ease;opacity:0.7}
+    .character-half:hover{opacity:1;transform:translateY(-5px);box-shadow:0 10px 30px rgba(57,210,255,0.2)}
+    .character-half img{width:100%;height:100%;object-fit:cover;object-position:top center}
+    .character-name{position:absolute;bottom:8px;left:0;right:0;text-align:center;font-size:10px;font-weight:700;color:var(--accent-a);background:linear-gradient(90deg, transparent, rgba(0,0,0,0.7), transparent);padding:2px 4px}
+    
+    .gtiles{display:flex;gap:12px}
+    .gtile{width:88px;height:116px;border-radius:10px;overflow:hidden;background:rgba(255,255,255,0.03);display:flex;align-items:center;justify-content:center;border:1px solid rgba(255,255,255,0.06);transition:all 300ms ease;position:relative}
+    .gtile::before{content:'';position:absolute;top:0;left:0;right:0;bottom:0;border-radius:10px;background:linear-gradient(45deg, transparent, rgba(255,255,255,0.08), transparent);opacity:0;transition:opacity 0.3s ease}
+    .gtile:hover::before{opacity:1}
+    .gtile.sel{box-shadow:0 20px 60px rgba(57,210,255,0.4);transform:translateY(-10px) scale(1.05);border-color:var(--accent-a)}
+    
+    .spin-btn{padding:14px 32px;border-radius:12px;background:linear-gradient(90deg,var(--accent-a),var(--accent-b));border:none;font-weight:900;cursor:pointer;box-shadow:0 18px 60px rgba(57,210,255,0.2);transition:all 0.3s ease;position:relative;overflow:hidden;font-size:14px;letter-spacing:0.5px}
+    .spin-btn:disabled{opacity:0.6;cursor:not-allowed;transform:none !important}
+    .spin-btn:not(:disabled):hover{transform:translateY(-3px);box-shadow:0 25px 80px rgba(57,210,255,0.3)}
+    .spin-btn::before{content:'';position:absolute;top:0;left:-100%;width:100%;height:100%;background:linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);transition:left 0.6s ease}
+    .spin-btn:hover::before{left:100%}
+
+    /* result popup dengan efek glow */
+    .result-overlay{position:fixed;inset:0;z-index:60;display:flex;align-items:center;justify-content:center;background:rgba(0,6,12,0.9);pointer-events:none;opacity:0;transition:opacity 0.4s ease;backdrop-filter:blur(8px)}
+    .result-overlay.open{pointer-events:auto;opacity:1}
+    .result-card{width:520px;background:linear-gradient(180deg, rgba(255,255,255,0.08), rgba(255,255,255,0.03));padding:32px;border-radius:18px;border:1px solid rgba(255,255,255,0.08);text-align:center;box-shadow:0 40px 140px rgba(2,6,20,0.9);position:relative;overflow:hidden;transform:scale(0.9) translateY(20px);transition:all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);opacity:0}
+    .result-overlay.open .result-card{transform:scale(1) translateY(0);opacity:1}
+    .result-card::before{content:'';position:absolute;top:-50%;left:-50%;width:200%;height:200%;background:conic-gradient(from 0deg, transparent, var(--result-glow, rgba(57,210,255,0.15)), transparent);animation:rotateAura 6s linear infinite}
+    .result-card h2{color:var(--gold);margin-bottom:12px;position:relative;z-index:1;font-size:26px;text-shadow:0 2px 20px rgba(243,212,143,0.3)}
+    .result-card p{color:var(--muted);position:relative;z-index:1;font-size:15px;line-height:1.5}
+    .result-actions{display:flex;gap:14px;justify-content:center;margin-top:24px;position:relative;z-index:1}
+
+    /* loading spinner */
+    .spinner{width:20px;height:20px;border:2px solid transparent;border-top:2px solid currentColor;border-radius:50%;animation:spin 1s linear infinite;display:inline-block}
+
+    @keyframes spin{
+      0%{transform:rotate(0deg)}
+      100%{transform:rotate(360deg)}
+    }
 
     /* Summon Limit Styles */
     .summon-limit {
@@ -62,30 +219,240 @@
     .cooldown-timer.show {
       display: flex;
     }
-    
-    .summon-disabled {
-      position: relative;
-    }
-    
-    .summon-disabled::after {
-      content: 'LIMIT REACHED';
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      background: rgba(255,0,0,0.1);
-      backdrop-filter: blur(5px);
-      border-radius: 12px;
+
+    /* Subscription Verification Modal */
+    .verification-modal {
+      position: fixed;
+      inset: 0;
+      z-index: 70;
       display: flex;
       align-items: center;
       justify-content: center;
-      color: #ff4444;
-      font-weight: 800;
-      font-size: 12px;
-      border: 2px solid rgba(255,0,0,0.3);
+      background: rgba(0,6,12,0.95);
+      backdrop-filter: blur(10px);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.4s ease;
     }
     
+    .verification-modal.active {
+      opacity: 1;
+      pointer-events: auto;
+    }
+    
+    .verification-content {
+      background: linear-gradient(180deg, rgba(255,255,255,0.08), rgba(255,255,255,0.03));
+      padding: 40px;
+      border-radius: 20px;
+      border: 1px solid rgba(255,255,255,0.08);
+      text-align: center;
+      max-width: 500px;
+      width: 90%;
+      box-shadow: 0 40px 140px rgba(2,6,20,0.9);
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .verification-content::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: conic-gradient(from 0deg, transparent, rgba(57,210,255,0.1), transparent);
+      animation: rotateAura 8s linear infinite;
+    }
+    
+    .verification-icon {
+      font-size: 48px;
+      margin-bottom: 20px;
+      position: relative;
+      z-index: 1;
+    }
+    
+    .verification-title {
+      color: var(--accent-a);
+      font-size: 24px;
+      margin-bottom: 12px;
+      position: relative;
+      z-index: 1;
+    }
+    
+    .verification-text {
+      color: var(--muted);
+      margin-bottom: 24px;
+      line-height: 1.6;
+      position: relative;
+      z-index: 1;
+    }
+    
+    .verification-steps {
+      background: rgba(255,255,255,0.02);
+      border-radius: 12px;
+      padding: 20px;
+      margin: 24px 0;
+      text-align: left;
+      position: relative;
+      z-index: 1;
+      border: 1px solid rgba(255,255,255,0.05);
+    }
+    
+    .verification-step {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 12px;
+      padding: 8px;
+      border-radius: 8px;
+      transition: background 0.3s ease;
+    }
+    
+    .verification-step:hover {
+      background: rgba(255,255,255,0.03);
+    }
+    
+    .step-number {
+      width: 24px;
+      height: 24px;
+      background: linear-gradient(45deg, var(--accent-a), var(--accent-b));
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      font-weight: 800;
+      color: #021226;
+    }
+    
+    .step-text {
+      color: var(--muted);
+      font-size: 14px;
+    }
+    
+    .verification-actions {
+      display: flex;
+      gap: 12px;
+      justify-content: center;
+      position: relative;
+      z-index: 1;
+    }
+    
+    .verification-btn {
+      padding: 12px 24px;
+      border-radius: 10px;
+      border: none;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+    
+    .verification-btn.primary {
+      background: linear-gradient(45deg, var(--accent-a), var(--accent-b));
+      color: #021226;
+    }
+    
+    .verification-btn.secondary {
+      background: rgba(255,255,255,0.05);
+      color: var(--muted);
+      border: 1px solid rgba(255,255,255,0.1);
+    }
+    
+    .verification-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 30px rgba(57,210,255,0.2);
+    }
+    
+    .subscription-badge {
+      background: linear-gradient(45deg, #FF0000, #CC0000);
+      color: white;
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 700;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      margin-left: 8px;
+      animation: pulse 2s infinite;
+    }
+    
+    .verification-success {
+      background: linear-gradient(45deg, #00C851, #007E33);
+      color: white;
+      padding: 12px 20px;
+      border-radius: 10px;
+      margin: 20px 0;
+      display: none;
+      align-items: center;
+      gap: 10px;
+      justify-content: center;
+      position: relative;
+      z-index: 1;
+    }
+    
+    .verification-success.show {
+      display: flex;
+    }
+    
+    .access-granted {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%) scale(0);
+      background: linear-gradient(45deg, #00C851, #007E33);
+      color: white;
+      padding: 20px 40px;
+      border-radius: 15px;
+      font-weight: 800;
+      font-size: 18px;
+      z-index: 80;
+      box-shadow: 0 20px 60px rgba(0,200,81,0.3);
+      transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    
+    .access-granted.show {
+      transform: translate(-50%, -50%) scale(1);
+    }
+
+    /* Enhanced security indicators */
+    .security-status {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 12px;
+      background: rgba(255,255,255,0.02);
+      border-radius: 8px;
+      margin: 10px 0;
+      position: relative;
+      z-index: 1;
+    }
+    
+    .status-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #ff4444;
+      animation: pulse 2s infinite;
+    }
+    
+    .status-dot.verified {
+      background: #00C851;
+    }
+    
+    .status-text {
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 600;
+    }
+
+    /* notification */
+    .notification{position:fixed;top:20px;right:20px;padding:12px 20px;background:linear-gradient(90deg, var(--accent-a), var(--accent-b));color:#021226;border-radius:8px;font-weight:600;z-index:100;transform:translateX(100%);transition:transform 0.3s ease;box-shadow:0 10px 30px rgba(57,210,255,0.3)}
+    .notification.show{transform:translateX(0)}
+
     .refresh-notification {
       position: fixed;
       bottom: 100px;
@@ -107,6 +474,37 @@
     .refresh-notification.show {
       transform: translateX(-50%) translateY(0);
     }
+
+    /* small screens */
+    @media (max-width:1100px){
+      .hero-spot{display:none}
+      .panel{width:240px;height:520px}
+      .gacha-board{gap:18px; padding:16px 20px}
+      .character-display{width:500px;top:-160px}
+      .character-half{width:75px;height:150px}
+    }
+    @media (max-width:900px){
+      .gacha-board{flex-direction:column; gap:16px; width:90%}
+      .gtiles{order:2}
+      .character-display{width:400px;top:-140px}
+      .character-half{width:60px;height:130px}
+    }
+    @media (max-width:720px){
+      aside.left{display:none}
+      .panel{width:200px;height:420px}
+      .showcase-wrap{padding:20px 16px}
+      .gacha-board{left:5%;transform:translateX(0);bottom:16px; width:90%}
+      .main{padding:10px}
+      .shine-effect{animation:shine 12s infinite}
+      .carousel{gap:20px}
+      .character-display{display:none}
+    }
+
+    /* utility */
+    .hide{display:none !important}
+    .flex{display:flex}
+    .center{align-items:center;justify-content:center}
+    .sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);border:0}
   </style>
 </head>
 <body>
@@ -172,11 +570,123 @@
 
         <!-- SHOWCASE MODE -->
         <div class="showcase-wrap" id="showcaseWrap">
-          <!-- ... (showcase content sama seperti sebelumnya) ... -->
+          <div class="showcase-title">
+            <div>
+              <h2>Character Showcase</h2>
+              <div class="muted">Manual slider • 6 characters • Click to preview</div>
+            </div>
+            <div class="slider-nav">
+              <button id="prevBtn" class="nav-btn" aria-label="Previous character">←</button>
+              <span class="muted" id="slideCounter">1/6</span>
+              <button id="nextBtn" class="nav-btn" aria-label="Next character">→</button>
+            </div>
+          </div>
+
+          <div class="showcase-view" id="showcaseView">
+            <div id="carousel" class="carousel">
+              <!-- 6 panels dengan ukuran medium dan aura FIXED -->
+              <div class="panel" data-name="Aurelia" data-rarity="Mythic" data-file="aurelia" data-description="Abyss Walker" data-aura-color="#ffd700">
+                <div class="aura-container">
+                  <div class="aura" style="--aura-color: #ffd700"></div>
+                  <div class="aura aura-2" style="--aura-color: #ffd700"></div>
+                </div>
+                <div class="panel-inner">
+                  <img src="assets/panels/panel1.jpg" alt="Karakter Aurelia - Mythic rarity" onerror="handleImageError(this)">
+                  <div class="meta">
+                    <div class="pname">Aurelia</div>
+                    <div class="prarity">Mythic</div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="panel" data-name="Korven" data-rarity="Legendary" data-file="korven" data-description="Dragon Knight" data-aura-color="#9b7bff">
+                <div class="aura-container">
+                  <div class="aura" style="--aura-color: #9b7bff"></div>
+                  <div class="aura aura-2" style="--aura-color: #9b7bff"></div>
+                </div>
+                <div class="panel-inner">
+                  <img src="assets/panels/panel2.jpg" alt="Karakter Korven - Legendary rarity" onerror="handleImageError(this)">
+                  <div class="meta">
+                    <div class="pname">Korven</div>
+                    <div class="prarity">Legend</div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="panel" data-name="Sibyl" data-rarity="Elite" data-file="sibyl" data-description="Oracle Seer" data-aura-color="#39d2ff">
+                <div class="aura-container">
+                  <div class="aura" style="--aura-color: #39d2ff"></div>
+                  <div class="aura aura-2" style="--aura-color: #39d2ff"></div>
+                </div>
+                <div class="panel-inner">
+                  <img src="assets/panels/panel3.jpg" alt="Karakter Sibyl - Elite rarity" onerror="handleImageError(this)">
+                  <div class="meta">
+                    <div class="pname">Sibyl</div>
+                    <div class="prarity">Elite</div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="panel" data-name="Truffle" data-rarity="Common" data-file="truffle" data-description="Forest Guardian" data-aura-color="#94a6bf">
+                <div class="aura-container">
+                  <div class="aura" style="--aura-color: #94a6bf"></div>
+                  <div class="aura aura-2" style="--aura-color: #94a6bf"></div>
+                </div>
+                <div class="panel-inner">
+                  <img src="assets/panels/panel4.jpg" alt="Karakter Truffle - Common rarity" onerror="handleImageError(this)">
+                  <div class="meta">
+                    <div class="pname">Truffle</div>
+                    <div class="prarity">Common</div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="panel" data-name="Rebecca" data-rarity="Elite" data-file="rebecca" data-description="Cyber Ninja" data-aura-color="#39d2ff">
+                <div class="aura-container">
+                  <div class="aura" style="--aura-color: #39d2ff"></div>
+                  <div class="aura aura-2" style="--aura-color: #39d2ff"></div>
+                </div>
+                <div class="panel-inner">
+                  <img src="assets/panels/panel5.jpg" alt="Karakter Rebecca - Elite rarity" onerror="handleImageError(this)">
+                  <div class="meta">
+                    <div class="pname">Rebecca</div>
+                    <div class="prarity">Elite</div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="panel" data-name="Fen" data-rarity="Legendary" data-file="fen" data-description="Phoenix Mage" data-aura-color="#9b7bff">
+                <div class="aura-container">
+                  <div class="aura" style="--aura-color: #9b7bff"></div>
+                  <div class="aura aura-2" style="--aura-color: #9b7bff"></div>
+                </div>
+                <div class="panel-inner">
+                  <img src="assets/panels/panel6.jpg" alt="Karakter Fen - Legendary rarity" onerror="handleImageError(this)">
+                  <div class="meta">
+                    <div class="pname">Fen</div>
+                    <div class="prarity">Legend</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
 
-        <!-- GACHA MODE -->
+        <!-- hero spotlight -->
+        <div class="hero-spot" id="heroSpot">
+          <div>
+            <h3 id="heroName">Aurelia</h3>
+            <p id="heroDesc" class="muted">Mythic • Abyss Walker</p>
+          </div>
+        </div>
+
+        <!-- GACHA MODE - FIXED VISIBILITY -->
         <div class="gacha-board hide" id="gachaBoard" aria-label="Portal summon gacha">
+          <!-- Half Character Display -->
+          <div class="character-display" id="characterDisplay">
+            <!-- Characters akan diisi oleh JavaScript -->
+          </div>
+
           <div style="display:flex;flex-direction:column;gap:8px;min-width:200px;position:relative;z-index:1">
             <div style="font-weight:800; font-size:16px">Summon Portal</div>
             <div class="muted" style="font-size:13px">
@@ -209,23 +719,203 @@
     Summon limits reset daily at midnight!
   </div>
 
-  <!-- ... (modal, result overlay, notification sama seperti sebelumnya) ... -->
-</body>
+  <!-- Verification Modal -->
+  <div class="verification-modal" id="verificationModal">
+    <div class="verification-content">
+      <div class="verification-icon">🔒</div>
+      <h2 class="verification-title">Subscription Required</h2>
+      <p class="verification-text">To access summon features, you need to be subscribed to our YouTube channel.</p>
+      
+      <div class="verification-steps">
+        <div class="verification-step">
+          <div class="step-number">1</div>
+          <div class="step-text">Click the button below to open our YouTube channel</div>
+        </div>
+        <div class="verification-step">
+          <div class="step-number">2</div>
+          <div class="step-text">Subscribe to the channel if you haven't already</div>
+        </div>
+        <div class="verification-step">
+          <div class="step-number">3</div>
+          <div class="step-text">Return to this page and click "I've Subscribed"</div>
+        </div>
+        <div class="verification-step">
+          <div class="step-number">4</div>
+          <div class="step-text">Complete verification to unlock summon features</div>
+        </div>
+      </div>
 
-<script>
+      <div class="verification-success" id="verificationSuccess">
+        <span>✓</span> Subscription verified successfully!
+      </div>
+
+      <div class="verification-actions">
+        <button class="verification-btn secondary" id="closeVerification">Cancel</button>
+        <button class="verification-btn primary" id="openYoutube">Open YouTube Channel</button>
+        <button class="verification-btn primary" id="confirmSubscription" style="display: none;">I've Subscribed ✓</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Access Granted Animation -->
+  <div class="access-granted" id="accessGranted">
+    <span>🎮</span> GACHA ACCESS GRANTED!
+  </div>
+
+  <!-- Result Overlay -->
+  <div class="result-overlay" id="resultOverlay" aria-hidden="true">
+    <div class="result-card">
+      <h2 id="resultTitle">Mythic • You Obtained Aurelia</h2>
+      <p id="resultText">Beautiful reveal animation — Download secured with single-use token.</p>
+      <div class="result-actions">
+        <button id="claimBtn" class="btn primary">Download File</button>
+        <button id="closeResult" class="btn">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Notification -->
+  <div class="notification" id="notification"></div>
+
+  <!-- Background Music -->
+  <audio id="bgMusic" src="music.mp3" loop></audio>
+
+  <script>
 /************************************************************************
- * ENHANCED GACHA SYSTEM WITH SUMMON LIMITS
- * - 5 summons per day limit
- * - 24-hour cooldown system
- * - Anti-spam protection
- * - Visual limit indicators
+ * COMPLETE FIXED GACHA SYSTEM WITH HALF CHARACTER DISPLAY
+ * - Fixed UI/UX bugs
+ * - Added half character images above summon portal
+ * - Working subscription system
+ * - Summon limits with cooldown
  ************************************************************************/
+
+/* ---------------------- CHARACTER DATA ---------------------- */
+const CHARACTERS = [
+  {
+    id: 'aurelia',
+    name: 'Aurelia',
+    rarity: 'Mythic',
+    image: 'assets/panels/panel1.jpg',
+    halfImage: 'assets/half-characters/aurelia-half.jpg',
+    description: 'Abyss Walker',
+    file: 'aurelia',
+    auraColor: '#ffd700'
+  },
+  {
+    id: 'korven',
+    name: 'Korven',
+    rarity: 'Legendary',
+    image: 'assets/panels/panel2.jpg',
+    halfImage: 'assets/half-characters/korven-half.jpg',
+    description: 'Dragon Knight',
+    file: 'korven',
+    auraColor: '#9b7bff'
+  },
+  {
+    id: 'sibyl',
+    name: 'Sibyl',
+    rarity: 'Elite',
+    image: 'assets/panels/panel3.jpg',
+    halfImage: 'assets/half-characters/sibyl-half.jpg',
+    description: 'Oracle Seer',
+    file: 'sibyl',
+    auraColor: '#39d2ff'
+  },
+  {
+    id: 'truffle',
+    name: 'Truffle',
+    rarity: 'Common',
+    image: 'assets/panels/panel4.jpg',
+    halfImage: 'assets/half-characters/truffle-half.jpg',
+    description: 'Forest Guardian',
+    file: 'truffle',
+    auraColor: '#94a6bf'
+  },
+  {
+    id: 'rebecca',
+    name: 'Rebecca',
+    rarity: 'Elite',
+    image: 'assets/panels/panel5.jpg',
+    halfImage: 'assets/half-characters/rebecca-half.jpg',
+    description: 'Cyber Ninja',
+    file: 'rebecca',
+    auraColor: '#39d2ff'
+  },
+  {
+    id: 'fen',
+    name: 'Fen',
+    rarity: 'Legendary',
+    image: 'assets/panels/panel6.jpg',
+    halfImage: 'assets/half-characters/fen-half.jpg',
+    description: 'Phoenix Mage',
+    file: 'fen',
+    auraColor: '#9b7bff'
+  }
+];
+
+/* ---------------------- HALF CHARACTER DISPLAY SYSTEM ---------------------- */
+class HalfCharacterDisplay {
+  constructor() {
+    this.container = document.getElementById('characterDisplay');
+    this.init();
+  }
+
+  init() {
+    this.createCharacterElements();
+  }
+
+  createCharacterElements() {
+    this.container.innerHTML = '';
+    
+    CHARACTERS.forEach(character => {
+      const characterElement = document.createElement('div');
+      characterElement.className = 'character-half';
+      characterElement.innerHTML = `
+        <img src="${character.halfImage}" alt="${character.name}" onerror="handleImageError(this)">
+        <div class="character-name">${character.name}</div>
+      `;
+      
+      // Add hover effect
+      characterElement.addEventListener('mouseenter', () => {
+        this.highlightCharacter(character.id);
+      });
+      
+      characterElement.addEventListener('mouseleave', () => {
+        this.removeHighlight();
+      });
+      
+      this.container.appendChild(characterElement);
+    });
+  }
+
+  highlightCharacter(characterId) {
+    // Remove previous highlights
+    this.removeHighlight();
+    
+    // Add highlight to current character
+    const characterElement = this.container.querySelector(`[alt="${characterId}"]`)?.parentElement;
+    if (characterElement) {
+      characterElement.style.opacity = '1';
+      characterElement.style.transform = 'translateY(-8px)';
+      characterElement.style.boxShadow = '0 15px 40px rgba(57,210,255,0.3)';
+    }
+  }
+
+  removeHighlight() {
+    const allCharacters = this.container.querySelectorAll('.character-half');
+    allCharacters.forEach(char => {
+      char.style.opacity = '0.7';
+      char.style.transform = 'translateY(0)';
+      char.style.boxShadow = 'none';
+    });
+  }
+}
 
 /* ---------------------- SUMMON LIMIT SYSTEM ---------------------- */
 class SummonLimitSystem {
   constructor() {
     this.MAX_SUMMONS = 5;
-    this.COOLDOWN_DURATION = 24 * 60 * 60 * 1000; // 24 jam
+    this.COOLDOWN_DURATION = 24 * 60 * 60 * 1000;
     this.STORAGE_KEYS = {
       SUMMON_COUNT: 'gacha_summon_count',
       LAST_SUMMON_DATE: 'gacha_last_summon_date',
@@ -244,17 +934,14 @@ class SummonLimitSystem {
   }
 
   loadSummonData() {
-    // Cek apakah sudah reset hari ini
     const today = new Date().toDateString();
     const lastSummonDate = localStorage.getItem(this.STORAGE_KEYS.LAST_SUMMON_DATE);
     
     if (lastSummonDate !== today) {
-      // Reset untuk hari baru
       this.resetDailyLimits();
       return;
     }
 
-    // Load data dari localStorage
     this.currentSummons = parseInt(localStorage.getItem(this.STORAGE_KEYS.SUMMON_COUNT)) || 0;
     const savedResetTime = localStorage.getItem(this.STORAGE_KEYS.RESET_TIMESTAMP);
     
@@ -277,7 +964,6 @@ class SummonLimitSystem {
   }
 
   setResetTime() {
-    // Set reset time untuk besok jam 00:00
     const now = new Date();
     const tomorrow = new Date(now);
     tomorrow.setDate(tomorrow.getDate() + 1);
@@ -334,7 +1020,6 @@ class SummonLimitSystem {
     const cooldownTimer = document.getElementById('cooldownTimer');
     const summonBtn = document.getElementById('summonBtn');
     const singleSummon = document.getElementById('singleSummon');
-    const gachaBoard = document.getElementById('gachaBoard');
 
     // Update counter dots
     limitCounter.innerHTML = '';
@@ -349,16 +1034,9 @@ class SummonLimitSystem {
     summonsLeft.textContent = remaining;
     
     // Update button states
-    const canSummon = this.canSummon() && window.securitySystem.isVerified;
+    const canSummon = this.canSummon() && window.securitySystem?.isVerified;
     summonBtn.disabled = !canSummon;
     singleSummon.disabled = !canSummon;
-
-    // Add/remove summon disabled class
-    if (!canSummon && window.securitySystem.isVerified) {
-      gachaBoard.classList.add('summon-disabled');
-    } else {
-      gachaBoard.classList.remove('summon-disabled');
-    }
 
     // Show cooldown timer jika limit habis
     if (!this.canSummon()) {
@@ -383,7 +1061,6 @@ class SummonLimitSystem {
     
     cooldownText.textContent = `Resets in: ${timeString}`;
     
-    // Auto reset ketika waktu habis
     if (timeUntilReset.hours === 0 && timeUntilReset.minutes === 0 && timeUntilReset.seconds === 0) {
       this.resetDailyLimits();
       this.updateUI();
@@ -420,25 +1097,16 @@ class SummonLimitSystem {
       refreshNotification.classList.remove('show');
     }, 5000);
   }
-
-  getSummonStatus() {
-    return {
-      current: this.currentSummons,
-      max: this.MAX_SUMMONS,
-      remaining: this.getRemainingSummons(),
-      canSummon: this.canSummon(),
-      resetTime: this.resetTime
-    };
-  }
 }
 
-/* ---------------------- MODIFIED GACHA SYSTEM ---------------------- */
+/* ---------------------- GACHA SYSTEM ---------------------- */
 class GachaSystem {
   constructor() {
     this.panels = Array.from(document.querySelectorAll('.panel'));
     this.currentSlide = 0;
     this.totalSlides = this.panels.length;
     this.summonLimitSystem = new SummonLimitSystem();
+    this.characterDisplay = new HalfCharacterDisplay();
     this.init();
   }
 
@@ -490,14 +1158,12 @@ class GachaSystem {
   }
 
   checkSummonConditions() {
-    // Cek subscription
-    if (!window.securitySystem.isVerified) {
+    if (!window.securitySystem?.isVerified) {
       window.securitySystem.showVerificationModal();
       showNotification('🔒 Subscription required for summoning');
       return false;
     }
 
-    // Cek summon limit
     if (!this.summonLimitSystem.canSummon()) {
       showNotification('🎯 Daily summon limit reached! Come back tomorrow.');
       return false;
@@ -511,7 +1177,6 @@ class GachaSystem {
     const singleSummon = document.getElementById('singleSummon');
     const originalText = summonBtn.innerHTML;
 
-    // Cek limit lagi sebelum memulai
     if (!this.summonLimitSystem.canSummon()) {
       showNotification('🎯 Daily summon limit reached!');
       return;
@@ -541,7 +1206,6 @@ class GachaSystem {
       
       await sleep(500);
       
-      // Increment summon count setelah summon berhasil
       const summonSuccess = this.summonLimitSystem.incrementSummon();
       if (!summonSuccess) {
         showNotification('❌ Summon failed: Limit reached');
@@ -555,16 +1219,14 @@ class GachaSystem {
       showNotification('❌ Summon failed. Please try again.');
     } finally {
       summonBtn.innerHTML = 'SUMMON';
-      summonBtn.disabled = !this.summonLimitSystem.canSummon() || !window.securitySystem.isVerified;
-      singleSummon.disabled = !this.summonLimitSystem.canSummon() || !window.securitySystem.isVerified;
+      summonBtn.disabled = !this.summonLimitSystem.canSummon() || !window.securitySystem?.isVerified;
+      singleSummon.disabled = !this.summonLimitSystem.canSummon() || !window.securitySystem?.isVerified;
     }
   }
 
   async secureDownload(filename) {
     try {
       showNotification('🔄 Generating secure download link...');
-      
-      // Simulate API call
       await sleep(1000);
       
       const downloadUrl = `mods/${filename}.zip`;
@@ -584,7 +1246,6 @@ class GachaSystem {
     }
   }
 
-  // ... (methods lainnya tetap sama seperti sebelumnya)
   setupCarousel() {
     const prevBtn = document.getElementById('prevBtn');
     const nextBtn = document.getElementById('nextBtn');
@@ -787,27 +1448,7 @@ function showNotification(message, duration = 3000) {
   }, duration);
 }
 
-/* ---------------------- INITIALIZATION ---------------------- */
-document.addEventListener('DOMContentLoaded', function() {
-  // Initialize systems
-  window.securitySystem = new SubscriptionSecurity();
-  window.gachaSystem = new GachaSystem();
-  
-  // Setup background music
-  const bgMusic = document.getElementById('bgMusic');
-  document.addEventListener('click', function() {
-    bgMusic.play().catch(() => {});
-  }, { once: true });
-
-  // Add error handlers to images
-  document.querySelectorAll('img').forEach(img => {
-    img.addEventListener('error', () => handleImageError(img));
-  });
-
-  console.log('🎮 Gacha System with Summon Limits Initialized');
-});
-
-// Subscription Security Class (tetap sama seperti sebelumnya)
+/* ---------------------- SUBSCRIPTION SECURITY ---------------------- */
 class SubscriptionSecurity {
   constructor() {
     this.attempts = 0;
@@ -818,10 +1459,10 @@ class SubscriptionSecurity {
   init() {
     this.checkVerification();
     this.updateUI();
+    this.setupEventListeners();
   }
 
   checkVerification() {
-    // Simplified verification check
     const verified = localStorage.getItem('gacha_sub_verified');
     const sessionStart = localStorage.getItem('gacha_session_start');
     
@@ -831,7 +1472,7 @@ class SubscriptionSecurity {
     }
     
     const sessionAge = Date.now() - parseInt(sessionStart);
-    const SESSION_DURATION = 2 * 60 * 60 * 1000; // 2 hours
+    const SESSION_DURATION = 2 * 60 * 60 * 1000;
     
     this.isVerified = sessionAge < SESSION_DURATION;
   }
@@ -855,11 +1496,95 @@ class SubscriptionSecurity {
     }
   }
 
-  // ... (methods lainnya untuk modal verification)
+  setupEventListeners() {
+    const openChannelBtn = document.getElementById('openChannel');
+    const enableBtn = document.getElementById('enableBtn');
+    const openYoutubeBtn = document.getElementById('openYoutube');
+    const confirmSubscriptionBtn = document.getElementById('confirmSubscription');
+    const closeVerificationBtn = document.getElementById('closeVerification');
+
+    openChannelBtn?.addEventListener('click', () => {
+      this.showVerificationModal();
+    });
+
+    enableBtn?.addEventListener('click', () => {
+      this.showVerificationModal();
+    });
+
+    openYoutubeBtn?.addEventListener('click', () => {
+      this.openYouTubeChannel();
+    });
+
+    confirmSubscriptionBtn?.addEventListener('click', () => {
+      this.verifySubscription();
+    });
+
+    closeVerificationBtn?.addEventListener('click', () => {
+      this.hideVerificationModal();
+    });
+  }
+
   showVerificationModal() {
     const modal = document.getElementById('verificationModal');
     if (modal) modal.classList.add('active');
   }
+
+  hideVerificationModal() {
+    const modal = document.getElementById('verificationModal');
+    if (modal) modal.classList.remove('active');
+  }
+
+  openYouTubeChannel() {
+    const YT_CHANNEL = 'https://youtube.com/@your-channel';
+    window.open(YT_CHANNEL, '_blank');
+    
+    setTimeout(() => {
+      const openYoutubeBtn = document.getElementById('openYoutube');
+      const confirmSubscriptionBtn = document.getElementById('confirmSubscription');
+      
+      if (openYoutubeBtn) openYoutubeBtn.style.display = 'none';
+      if (confirmSubscriptionBtn) confirmSubscriptionBtn.style.display = 'block';
+    }, 1000);
+  }
+
+  verifySubscription() {
+    localStorage.setItem('gacha_sub_verified', 'true');
+    localStorage.setItem('gacha_session_start', Date.now().toString());
+    
+    this.isVerified = true;
+    this.updateUI();
+    this.hideVerificationModal();
+    
+    showNotification('✅ Subscription verified! Gacha access granted.');
+    
+    // Update summon buttons
+    const summonBtn = document.getElementById('summonBtn');
+    const singleSummon = document.getElementById('singleSummon');
+    if (summonBtn && singleSummon && window.gachaSystem?.summonLimitSystem.canSummon()) {
+      summonBtn.disabled = false;
+      singleSummon.disabled = false;
+    }
+  }
 }
+
+/* ---------------------- INITIALIZATION ---------------------- */
+document.addEventListener('DOMContentLoaded', function() {
+  // Initialize systems
+  window.securitySystem = new SubscriptionSecurity();
+  window.gachaSystem = new GachaSystem();
+  
+  // Setup background music
+  const bgMusic = document.getElementById('bgMusic');
+  document.addEventListener('click', function() {
+    bgMusic.play().catch(() => {});
+  }, { once: true });
+
+  // Add error handlers to images
+  document.querySelectorAll('img').forEach(img => {
+    img.addEventListener('error', () => handleImageError(img));
+  });
+
+  console.log('🎮 Gacha System with Half Character Display Initialized');
+});
 </script>
 </html>
