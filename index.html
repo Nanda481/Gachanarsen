@@ -3,32 +3,36 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>Gacha Gallery — Ungu Neon</title>
+<title>Gacha Ultimate — Ungu Neon</title>
+<meta name="description" content="Gacha showcase — 3x3 UR center, 5 spins per subscribe, preview PNG, confetti & fireworks">
 <style>
   :root{
-    --bg:#06050b;
-    --card:rgba(18,8,30,0.62);
+    --bg:#06040a;
+    --panel: rgba(18,8,30,0.66);
     --accent:#a855f7;
     --neon:#caa7ff;
     --muted:#9aa4b2;
     --glass: rgba(255,255,255,0.03);
+    --ur: #b794f4; /* purple */
+    --ssr: #facc15; /* yellow */
+    --sr:  #3b82f6; /* blue */
+    --r:   #10b981; /* green */
   }
   *{box-sizing:border-box}
+  html,body{height:100%}
   body{
     margin:0;
-    font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,"Helvetica Neue",Arial;
-    background:var(--bg);
+    font-family:Inter,ui-sans-serif,system-ui,Segoe UI,Roboto,Helvetica,Arial;
     color:#eef2ff;
+    background: radial-gradient(1200px 500px at 10% 10%, rgba(168,85,247,0.06), transparent),
+                linear-gradient(180deg, #020204, #07030a);
     -webkit-font-smoothing:antialiased;
-    -moz-osx-font-smoothing:grayscale;
-    min-height:100vh;
   }
 
-  /* LAYOUT */
-  .wrap{max-width:1200px;margin:28px auto;padding:18px}
+  .wrap{max-width:1200px;margin:26px auto;padding:18px}
   header{display:flex;justify-content:space-between;align-items:center;gap:12px}
   .brand{display:flex;gap:12px;align-items:center}
-  #logo{width:64px;height:64px;border-radius:14px;background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));display:flex;align-items:center;justify-content:center;font-weight:800}
+  #logo{width:66px;height:66px;border-radius:14px;background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));display:flex;align-items:center;justify-content:center;font-weight:800}
   h1{margin:0;font-size:20px}
   .sub{color:var(--muted);font-size:13px}
 
@@ -38,41 +42,72 @@
   button.primary{background:linear-gradient(90deg,var(--accent),#6d28d9);color:white}
   button.ghost{background:transparent;border:1px solid rgba(255,255,255,0.04);color:var(--muted)}
 
-  /* GALLERY of banners */
-  .gallery{display:grid;grid-template-columns:repeat(10,1fr);gap:10px;margin-top:18px}
-  .banner{background:var(--card);border-radius:12px;padding:10px;display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;transition:transform .12s, box-shadow .12s}
-  .banner:hover{transform:translateY(-6px);box-shadow:0 10px 30px rgba(168,85,247,0.12)}
-  .banner img{width:100%;height:64px;object-fit:cover;border-radius:8px}
-  .banner .bname{margin-top:8px;font-size:12px;text-align:center;color:var(--neon);font-weight:700}
+  /* Banners gallery (top) */
+  .top-controls{display:flex;justify-content:space-between;align-items:center;margin-top:14px}
+  .banners{display:flex;gap:10px;overflow:auto;padding:8px 6px}
+  .banner{min-width:160px;max-width:180px;background:var(--panel);border-radius:12px;padding:8px;display:flex;flex-direction:column;align-items:center;gap:8px;cursor:pointer;border:1px solid rgba(255,255,255,0.02);transition:transform .12s,box-shadow .12s}
+  .banner:hover{transform:translateY(-6px);box-shadow:0 12px 40px rgba(168,85,247,0.08)}
+  .banner img{width:100%;height:72px;object-fit:cover;border-radius:8px}
+  .banner .bname{font-size:13px;color:var(--neon);font-weight:800;text-align:center}
 
-  /* VIEWPORT (slot/track) */
-  .arena{margin-top:26px;background:linear-gradient(180deg, rgba(255,255,255,0.01), rgba(255,255,255,0.00));padding:18px;border-radius:14px;border:1px solid rgba(255,255,255,0.02)}
-  .viewport{width:100%;height:170px;overflow:hidden;border-radius:12px;position:relative;background:linear-gradient(90deg, rgba(5,3,12,0.6), rgba(10,6,20,0.5));margin-top:8px}
-  .track{position:absolute;left:0;top:0;height:100%;display:flex;align-items:center;gap:14px;padding:0 40px;will-change:transform}
-  .card{width:160px;height:140px;border-radius:12px;background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));display:flex;flex-direction:column;align-items:center;justify-content:center;box-shadow:0 8px 30px rgba(0,0,0,0.6);border:1px solid rgba(255,255,255,0.02)}
-  .card img{max-width:86%;max-height:72%;border-radius:8px}
-  .card .name{margin-top:8px;font-size:13px;color:var(--neon);font-weight:800;text-align:center;padding:0 6px}
-  .center-marker{position:absolute;left:50%;transform:translateX(-50%);top:0;height:100%;width:6px;background:linear-gradient(180deg, rgba(200,150,255,0.14), rgba(200,150,255,0.22));box-shadow:0 0 30px rgba(168,85,247,0.12);pointer-events:none;border-radius:6px}
+  /* GRID 3x3 */
+  .grid-wrap{margin-top:18px;display:flex;gap:22px;align-items:flex-start;flex-wrap:wrap;justify-content:center}
+  .grid{
+    display:grid;
+    grid-template-columns: repeat(3, 210px);
+    grid-template-rows: repeat(3, 150px);
+    gap:14px;
+    background:linear-gradient(180deg, rgba(255,255,255,0.01), transparent);
+    padding:18px;border-radius:14px;border:1px solid rgba(255,255,255,0.02);
+    box-shadow:0 10px 40px rgba(2,6,23,0.6);
+  }
+  .slot{
+    border-radius:12px;background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+    display:flex;flex-direction:column;align-items:center;justify-content:center;position:relative;overflow:hidden;border:1px solid rgba(255,255,255,0.02);
+  }
 
-  /* controls & result */
-  .controls{display:flex;gap:12px;align-items:center;justify-content:center;margin-top:14px}
+  .slot .art{width:86%;height:68%;object-fit:cover;border-radius:8px}
+  .slot .title{margin-top:8px;font-weight:800;color:var(--neon);font-size:13px;text-align:center;padding:0 6px}
+
+  /* badge */
+  .badge{position:absolute;top:10px;left:10px;padding:6px 8px;border-radius:8px;font-weight:800;font-size:12px;color:#0b0b0b}
+  .badge.ur{background:linear-gradient(90deg,var(--ur),#8b5cf6);color:#fff;text-shadow:0 2px 6px rgba(0,0,0,0.4)}
+  .badge.ssr{background:linear-gradient(90deg,var(--ssr),#f59e0b);color:#111}
+  .badge.sr{background:linear-gradient(90deg,var(--sr),#60a5fa);color:#fff}
+  .badge.r{background:linear-gradient(90deg,var(--r),#34d399);color:#04251a}
+
+  /* center special UR slot highlight */
+  .slot.special{box-shadow:0 14px 50px rgba(168,85,247,0.12);border:1px solid rgba(168,85,247,0.12)}
+
+  /* controls under grid */
+  .controls{display:flex;gap:10px;align-items:center;justify-content:center;margin-top:16px}
   #spin{padding:12px 22px;border-radius:999px;background:linear-gradient(90deg,var(--accent),#6d28d9);border:none;color:white;font-weight:800;cursor:pointer}
-  #spin.disabled{opacity:.55;pointer-events:none}
-  #remaining{font-weight:700;color:var(--muted)}
-  #result{margin-top:12px;text-align:center;padding:12px;border-radius:10px;background:rgba(255,255,255,0.02);display:flex;gap:12px;align-items:center;justify-content:center}
-  .glow{padding:8px 12px;border-radius:8px;background:linear-gradient(90deg, rgba(168,85,247,0.12), rgba(168,85,247,0.06));box-shadow:0 12px 40px rgba(168,85,247,0.12);border:1px solid rgba(168,85,247,0.12)}
-  .muted{color:var(--muted);font-size:13px}
+  #spin.disabled{opacity:.6;pointer-events:none}
+  #result-panel{margin-top:14px;display:flex;justify-content:center}
+  .result-card{min-width:360px;background:linear-gradient(180deg, rgba(255,255,255,0.02), transparent);padding:14px;border-radius:12px;border:1px solid rgba(255,255,255,0.02);display:flex;flex-direction:column;align-items:center;gap:10px;box-shadow:0 12px 40px rgba(0,0,0,0.6)}
+  .result-card .big{font-size:18px;font-weight:900;color:var(--neon)}
+  .download-btn{padding:10px 14px;border-radius:10px;background:linear-gradient(90deg,#f97316,#f43f5e);border:none;color:#fff;font-weight:800;cursor:pointer}
 
-  /* overlay preview */
-  .overlay{position:fixed;left:0;top:0;width:100%;height:100%;display:flex;align-items:center;justify-content:center;background:rgba(3,2,6,0.7);z-index:9999;opacity:0;pointer-events:none;transition:opacity .22s}
+  /* overlay preview (click banner) */
+  .overlay{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;background:rgba(3,2,6,0.7);z-index:9999;opacity:0;pointer-events:none;transition:opacity .18s}
   .overlay.show{opacity:1;pointer-events:auto}
-  .preview-card{max-width:760px;padding:18px;border-radius:14px;background:linear-gradient(180deg, rgba(10,6,20,0.85), rgba(5,3,12,0.9));border:1px solid rgba(168,85,247,0.08);display:flex;flex-direction:column;align-items:center;gap:12px}
-  .preview-card img{max-width:420px;max-height:420px}
-  .close{padding:8px 12px;border-radius:10px;background:transparent;border:1px solid rgba(255,255,255,0.06);cursor:pointer;color:var(--muted)}
+  .preview{background:linear-gradient(180deg, rgba(10,6,20,0.95), rgba(5,3,12,0.98));padding:18px;border-radius:14px;border:1px solid rgba(255,255,255,0.04);display:flex;flex-direction:column;align-items:center;gap:10px;max-width:900px}
+  .preview img{max-width:420px;max-height:420px}
+  .preview .close{padding:8px 12px;border-radius:10px;background:transparent;border:1px solid rgba(255,255,255,0.06);cursor:pointer;color:var(--muted)}
+
+  /* confetti/fireworks canvas */
+  #fxCanvas{position:fixed;left:0;top:0;width:100%;height:100%;pointer-events:none;z-index:3000}
 
   /* responsive */
-  @media(max-width:1100){ .gallery{grid-template-columns:repeat(5,1fr)} .card{width:130px;height:110px} }
-  @media(max-width:720){ .gallery{grid-template-columns:repeat(2,1fr)} .card{width:120px;height:96px} .viewport{height:140px} }
+  @media(max-width:980px){
+    .grid{grid-template-columns:repeat(3, calc(30vw));grid-auto-rows: calc(30vw * 0.72);}
+    .banner{min-width:140px}
+  }
+  @media(max-width:640px){
+    .banner{min-width:120px}
+    .grid{gap:10px}
+    .slot .title{font-size:12px}
+  }
 </style>
 </head>
 <body>
@@ -81,189 +116,234 @@
     <div class="brand">
       <div id="logo">LOGO</div>
       <div>
-        <h1>Gacha Gallery</h1>
-        <div class="sub">Tema: Ungu Neon — 10 mod • Klik banner untuk preview • Subscribe dapat 5x gacha</div>
+        <h1>Gacha Ultimate</h1>
+        <div class="sub">3×3 Grid — UR center top • Klik banner untuk preview • Subscribe dapat 5x spin</div>
       </div>
     </div>
-
     <div class="actions">
       <a id="subscribeBtn" class="btn" target="_blank">Subscribe</a>
-      <div id="remaining" class="muted">Spins left: <span id="spinsCount">0</span></div>
-      <button id="enterBtn" class="btn primary disabled" disabled>GACHA</button>
+      <div style="display:flex;flex-direction:column;align-items:flex-end">
+        <div class="sub" id="spinsText">Spins left: <strong id="spinsCount">0</strong></div>
+        <div><button id="enterBtn" class="btn primary disabled" disabled>Enter Gacha</button></div>
+      </div>
     </div>
   </header>
 
-  <!-- Gallery banners (10 items) -->
-  <div class="gallery" id="gallery"></div>
-
-  <!-- Arena: track/slot machine -->
-  <div class="arena">
-    <div style="display:flex;justify-content:space-between;align-items:center">
-      <div class="muted">Klik enter lalu SPIN untuk mula-ikan gacha. Musik & background diubah lewat repo.</div>
-      <div class="muted">Logo & BG: edit di CONFIG pada script</div>
+  <div class="top-controls">
+    <div class="banners" id="banners"></div>
+    <div style="display:flex;flex-direction:column;align-items:flex-end;gap:8px">
+      <div class="sub">Logo / Background / Music → edit CONFIG at top of file</div>
+      <div><input id="logoFile" type="file" accept="image/*" style="display:none"><button id="logoBtn" class="btn ghost">Upload Logo</button></div>
     </div>
-
-    <div class="viewport" id="viewport">
-      <div class="track" id="track"></div>
-      <div class="center-marker"></div>
-    </div>
-
-    <div class="controls">
-      <button id="spin" class="disabled">SPIN</button>
-    </div>
-
-    <div id="result" class="hidden"></div>
   </div>
+
+  <div class="grid-wrap">
+    <div class="grid" id="grid">
+      <!-- 3x3 grid slots injected by JS -->
+    </div>
+  </div>
+
+  <div class="controls">
+    <button id="spin" class="disabled">SPIN</button>
+  </div>
+
+  <div id="result-panel"></div>
 </div>
 
-<!-- overlay preview for PNG transparent character -->
-<div id="overlay" class="overlay" role="dialog" aria-hidden="true">
-  <div class="preview-card">
+<!-- preview overlay (click banner) - NO DOWNLOAD BUTTON to fix bug -->
+<div id="overlay" class="overlay" aria-hidden="true">
+  <div class="preview" role="dialog" aria-modal="true">
     <img id="previewImg" src="" alt="Preview">
-    <div style="display:flex;gap:8px">
-      <button id="downloadPreview" class="close">Download (from preview)</button>
-      <button id="closePreview" class="close">Close</button>
-    </div>
+    <div id="previewName" style="font-weight:800;color:var(--neon)"></div>
+    <button id="closePreview" class="preview-close close">Close</button>
   </div>
 </div>
 
-<audio id="bgm" autoplay loop></audio>
+<canvas id="fxCanvas"></canvas>
+
+<!-- audio (configurable) -->
+<audio id="bgm" loop crossorigin="anonymous"></audio>
+<audio id="sfxSpin"></audio>
+<audio id="sfxR"></audio>
+<audio id="sfxSR"></audio>
+<audio id="sfxSSR"></audio>
+<audio id="sfxUR"></audio>
 
 <script>
-/* ==========================
-   CONFIG - edit in your repo
-   ==========================
-   - Change logoImage, backgroundImage, music URL
-   - Change MODS array (image, preview png, file link, name)
-*/
+/* =========================
+   CONFIG - Customize in repo
+   ========================= */
 const CONFIG = {
+  // Visuals
   LOGO_TEXT: 'YOUR LOGO',
-  LOGO_IMAGE: '', // if you want to use logo image, put URL here (leave empty to use text)
-  BACKGROUND_IMAGE: '', // if you want a default background image (leave blank for solid bg)
-  MUSIC_URL: 'https://music.youtube.com/watch?v=iisOyaFF58g&list=RDAMVMevTxdgbAF1Q', // replace with direct mp3 for reliable autoplay
-  START_SPINS: 5, // spins given after clicking subscribe
+  LOGO_IMAGE: '', // url or leave empty to use text
+  BACKGROUND_IMAGE: '', // url or empty
+  MUSIC_URL: '', // use direct mp3 for reliable autoplay
+  // Spin allocation on Subscribe
+  START_SPINS: 5,
+  // Sounds (replace with actual hosted assets in repo)
+  SFX: {
+    spin: '', // e.g. '/assets/spin.mp3'
+    r: '',    // small sound for R
+    sr: '',   // mid sound for SR (blue)
+    ssr: '',  // bright for SSR (yellow)
+    ur: ''    // epic for UR (purple)
+  },
+  /* Grid layout: 9 slots. We'll mark one slot as 'special' UR at position index 1 (top middle)
+     Order mapping:
+     0 1 2
+     3 4 5
+     6 7 8
+     We'll set index 1 as special UR slot visually; but rarity still decided randomly.
+  */
   MODS: [
-    // 10 mod entries (change image, preview PNG transparant, file link, name)
-    {id:'m01', name:'Mod Alpha (SSR)', img:'https://via.placeholder.com/320x180?text=Alpha', preview:'https://via.placeholder.com/420x420.png?text=Alpha+PNG', file:'https://example.com/mod1.zip'},
-    {id:'m02', name:'Mod Beta (SR)', img:'https://via.placeholder.com/320x180?text=Beta', preview:'https://via.placeholder.com/420x420.png?text=Beta+PNG', file:'https://example.com/mod2.zip'},
-    {id:'m03', name:'Mod Gamma (R)', img:'https://via.placeholder.com/320x180?text=Gamma', preview:'https://via.placeholder.com/420x420.png?text=Gamma+PNG', file:'https://example.com/mod3.zip'},
-    {id:'m04', name:'Mod Delta (R)', img:'https://via.placeholder.com/320x180?text=Delta', preview:'https://via.placeholder.com/420x420.png?text=Delta+PNG', file:'https://example.com/mod4.zip'},
-    {id:'m05', name:'Mod Epsilon (SR)', img:'https://via.placeholder.com/320x180?text=Epsilon', preview:'https://via.placeholder.com/420x420.png?text=Epsilon+PNG', file:'https://example.com/mod5.zip'},
-    {id:'m06', name:'Mod Zeta (SSR)', img:'https://via.placeholder.com/320x180?text=Zeta', preview:'https://via.placeholder.com/420x420.png?text=Zeta+PNG', file:'https://example.com/mod6.zip'},
-    {id:'m07', name:'Mod Eta (R)', img:'https://via.placeholder.com/320x180?text=Eta', preview:'https://via.placeholder.com/420x420.png?text=Eta+PNG', file:'https://example.com/mod7.zip'},
-    {id:'m08', name:'Mod Theta (SR)', img:'https://via.placeholder.com/320x180?text=Theta', preview:'https://via.placeholder.com/420x420.png?text=Theta+PNG', file:'https://example.com/mod8.zip'},
-    {id:'m09', name:'Mod Iota (R)', img:'https://via.placeholder.com/320x180?text=Iota', preview:'https://via.placeholder.com/420x420.png?text=Iota+PNG', file:'https://example.com/mod9.zip'},
-    {id:'m10', name:'Mod Kappa (SSR)', img:'https://via.placeholder.com/320x180?text=Kappa', preview:'https://via.placeholder.com/420x420.png?text=Kappa+PNG', file:'https://example.com/mod10.zip'}
-  ]
+    // provide 9 mods - replace img & preview & file with your own in repo
+    {id:'m01', name:'Mod Alpha', img:'https://via.placeholder.com/360x200?text=Alpha', preview:'https://via.placeholder.com/420x420.png?text=Alpha+PNG', file:'https://example.com/mod1.zip', rarity:'SSR'},
+    {id:'m02', name:'Mod UR - Celestia', img:'https://via.placeholder.com/360x200?text=UR', preview:'https://via.placeholder.com/420x420.png?text=UR+PNG', file:'https://example.com/mod2.zip', rarity:'UR'},
+    {id:'m03', name:'Mod Beta', img:'https://via.placeholder.com/360x200?text=Beta', preview:'https://via.placeholder.com/420x420.png?text=Beta+PNG', file:'https://example.com/mod3.zip', rarity:'R'},
+    {id:'m04', name:'Mod Gamma', img:'https://via.placeholder.com/360x200?text=Gamma', preview:'https://via.placeholder.com/420x420.png?text=Gamma+PNG', file:'https://example.com/mod4.zip', rarity:'SR'},
+    {id:'m05', name:'Mod Delta', img:'https://via.placeholder.com/360x200?text=Delta', preview:'https://via.placeholder.com/420x420.png?text=Delta+PNG', file:'https://example.com/mod5.zip', rarity:'R'},
+    {id:'m06', name:'Mod Epsilon', img:'https://via.placeholder.com/360x200?text=Epsilon', preview:'https://via.placeholder.com/420x420.png?text=Epsilon+PNG', file:'https://example.com/mod6.zip', rarity:'SR'},
+    {id:'m07', name:'Mod Zeta', img:'https://via.placeholder.com/360x200?text=Zeta', preview:'https://via.placeholder.com/420x420.png?text=Zeta+PNG', file:'https://example.com/mod7.zip', rarity:'R'},
+    {id:'m08', name:'Mod Theta', img:'https://via.placeholder.com/360x200?text=Theta', preview:'https://via.placeholder.com/420x420.png?text=Theta+PNG', file:'https://example.com/mod8.zip', rarity:'SSR'},
+    {id:'m09', name:'Mod Kappa', img:'https://via.placeholder.com/360x200?text=Kappa', preview:'https://via.placeholder.com/420x420.png?text=Kappa+PNG', file:'https://example.com/mod9.zip', rarity:'R'}
+  ],
+  // Rarity weights used when randomly determining the prize (higher => more common)
+  RARITY_WEIGHTS: {
+    UR: 1,   // very rare
+    SSR: 8,
+    SR: 20,
+    R: 71
+  }
 };
+/* ========================= */
 
-/* ==========================
-   End CONFIG
-   ==========================*/
-
-const galleryEl = document.getElementById('gallery');
-const track = document.getElementById('track');
-const viewport = document.getElementById('viewport');
+/* Elements */
+const bannersEl = document.getElementById('banners');
+const gridEl = document.getElementById('grid');
 const subscribeBtn = document.getElementById('subscribeBtn');
 const enterBtn = document.getElementById('enterBtn');
 const spinBtn = document.getElementById('spin');
-const result = document.getElementById('result');
 const spinsCountEl = document.getElementById('spinsCount');
+const resultPanel = document.getElementById('result-panel');
 const overlay = document.getElementById('overlay');
 const previewImg = document.getElementById('previewImg');
-const downloadPreview = document.getElementById('downloadPreview');
+const previewName = document.getElementById('previewName');
 const closePreview = document.getElementById('closePreview');
+const fxCanvas = document.getElementById('fxCanvas');
 const bgm = document.getElementById('bgm');
+const sfxSpin = document.getElementById('sfxSpin');
+const sfxR = document.getElementById('sfxR');
+const sfxSR = document.getElementById('sfxSR');
+const sfxSSR = document.getElementById('sfxSSR');
+const sfxUR = document.getElementById('sfxUR');
 const logoEl = document.getElementById('logo');
+const logoBtn = document.getElementById('logoBtn');
+const logoFile = document.getElementById('logoFile');
 
 let spinsLeft = 0;
-const STORAGE_KEY = 'gacha_spins_v1';
-const SUB_CLICK_KEY = 'gacha_sub_clicked_v1';
+const STORAGE_KEY = 'gacha_spins_v2';
+const SUB_CLICK_KEY = 'gacha_sub_v2';
 
-// init UI from CONFIG
-function initUI(){
-  // set logo
+/* Initialize UI & assets */
+function init(){
+  // logo
   if(CONFIG.LOGO_IMAGE){
     logoEl.style.backgroundImage = `url(${CONFIG.LOGO_IMAGE})`;
-    logoEl.textContent = '';
     logoEl.style.backgroundSize = 'cover';
-    logoEl.style.backgroundPosition = 'center';
+    logoEl.textContent = '';
   } else {
     logoEl.textContent = CONFIG.LOGO_TEXT || 'LOGO';
   }
-  // background
   if(CONFIG.BACKGROUND_IMAGE){
     document.body.style.backgroundImage = `url(${CONFIG.BACKGROUND_IMAGE})`;
     document.body.style.backgroundSize = 'cover';
     document.body.style.backgroundPosition = 'center';
   }
-
-  // music
-  if(CONFIG.MUSIC_URL){
-    bgm.src = CONFIG.MUSIC_URL; // NOTE: direct MP3 preferred
-    bgm.volume = 0.7;
-    bgm.play().catch(()=>{ /* autoplay may be blocked until user interaction */ });
+  // audio
+  if(CONFIG.MUSIC_URL) {
+    bgm.src = CONFIG.MUSIC_URL;
+    bgm.volume = 0.65;
+    bgm.play().catch(()=>{/* may be blocked until interaction */});
   }
+  sfxSpin.src = CONFIG.SFX.spin || '';
+  sfxR.src = CONFIG.SFX.r || '';
+  sfxSR.src = CONFIG.SFX.sr || '';
+  sfxSSR.src = CONFIG.SFX.ssr || '';
+  sfxUR.src = CONFIG.SFX.ur || '';
 
-  // build gallery banners
-  galleryEl.innerHTML = '';
+  // build banners
+  bannersEl.innerHTML = '';
   CONFIG.MODS.forEach((m, idx)=>{
     const d = document.createElement('div');
     d.className = 'banner';
     d.dataset.idx = idx;
     d.innerHTML = `<img src="${m.img}" alt="${m.name}"><div class="bname">${m.name}</div>`;
     d.addEventListener('click', ()=>{ openPreview(idx); });
-    galleryEl.appendChild(d);
+    bannersEl.appendChild(d);
   });
 
-  // build track (duplicate array for smooth looping)
-  buildTrack();
-  // load spins left from storage
+  // build grid (3x3)
+  gridEl.innerHTML = '';
+  for(let i=0;i<9;i++){
+    const slot = document.createElement('div');
+    slot.className = 'slot';
+    // placeholder content: assign mod cyclically to slots
+    const mod = CONFIG.MODS[i % CONFIG.MODS.length];
+    const img = document.createElement('img');
+    img.className = 'art';
+    img.src = mod.img;
+    img.alt = mod.name;
+    const title = document.createElement('div');
+    title.className = 'title';
+    title.textContent = mod.name;
+    slot.appendChild(img);
+    slot.appendChild(title);
+    // badge: show rarity from MODS mapping
+    const badge = document.createElement('div');
+    badge.className = 'badge';
+    const r = (mod.rarity||'R').toUpperCase();
+    badge.textContent = r;
+    if(r==='UR') badge.classList.add('ur');
+    else if(r==='SSR') badge.classList.add('ssr');
+    else if(r==='SR') badge.classList.add('sr');
+    else badge.classList.add('r');
+    slot.appendChild(badge);
+    // special highlight for index 1 (top middle) as requested
+    if(i===1) slot.classList.add('special');
+
+    gridEl.appendChild(slot);
+  }
+
+  // load spins
   const s = parseInt(localStorage.getItem(STORAGE_KEY) || '0', 10);
   spinsLeft = isNaN(s) ? 0 : s;
-  updateSpinsUI();
+  spinsCountEl.textContent = spinsLeft;
   if(localStorage.getItem(SUB_CLICK_KEY)) enableEnter();
+  resizeCanvas();
 }
-initUI();
+init();
 
-/* Build duplicated track with two copies (so left-right movement can loop visually) */
-function buildTrack(){
-  track.innerHTML = '';
-  const arr = CONFIG.MODS.concat(CONFIG.MODS); // duplicate once
-  arr.forEach(m=>{
-    const c = document.createElement('div');
-    c.className = 'card';
-    c.dataset.id = m.id;
-    c.dataset.file = m.file;
-    c.innerHTML = `<img src="${m.img}" alt="${m.name}"><div class="name">${m.name}</div>`;
-    track.appendChild(c);
-  });
-}
-
-/* Preview overlay when banner clicked */
+/* Preview overlay - NO DOWNLOAD button here (fixing bug) */
 function openPreview(idx){
   const mod = CONFIG.MODS[idx];
-  if(!mod) return;
-  previewImg.src = mod.preview || mod.img || '';
-  previewImg.alt = mod.name;
-  // show overlay
+  previewImg.src = mod.preview || mod.img;
+  previewName.textContent = mod.name;
   overlay.classList.add('show');
-  overlay.setAttribute('aria-hidden', 'false');
-  // set download preview click
-  downloadPreview.onclick = ()=>{ window.open(mod.file, '_blank'); };
+  overlay.setAttribute('aria-hidden','false');
 }
-closePreview.onclick = ()=>{ overlay.classList.remove('show'); overlay.setAttribute('aria-hidden','true'); };
+closePreview.addEventListener('click', ()=>{ overlay.classList.remove('show'); overlay.setAttribute('aria-hidden','true'); });
 overlay.addEventListener('click', e=>{ if(e.target === overlay) { overlay.classList.remove('show'); overlay.setAttribute('aria-hidden','true'); } });
 
-/* Subscribe click: set spins to START_SPINS and enable gacha */
+/* Subscribe */
 subscribeBtn.addEventListener('click', ()=>{
+  // mark clicked and give spins
   localStorage.setItem(SUB_CLICK_KEY, Date.now());
   spinsLeft = CONFIG.START_SPINS;
   localStorage.setItem(STORAGE_KEY, spinsLeft);
-  updateSpinsUI();
+  spinsCountEl.textContent = spinsLeft;
   enableEnter();
-  // open channel in separate tab (subscribe link)
-  // NOTE: user should replace subscribe URL in anchor if desired
+  // open channel in separate tab (for user to subscribe)
   setTimeout(()=>{ try{ window.open(subscribeBtn.href || '#', '_blank'); }catch(e){} }, 50);
 });
 
@@ -273,106 +353,295 @@ function enableEnter(){
   spinBtn.disabled = false;
   spinBtn.classList.remove('disabled');
 }
-enterBtn.addEventListener('click', ()=>{ viewport.scrollIntoView({behavior:'smooth', block:'center'}); bgm.play().catch(()=>{}); });
 
-/* SPIN: left-right slot movement, slows and stops on chosen index */
-let isSpinning = false;
-spinBtn.addEventListener('click', ()=>{ if(isSpinning) return; if(spinsLeft <= 0){ alert('Tidak ada spin tersisa. Klik Subscribe untuk mendapatkan 5 spin.'); return; } startSpin(); });
+/* Logo upload quick preview */
+document.getElementById('logoBtn').addEventListener('click', ()=> logoFile.click());
+logoFile.addEventListener('change', e=>{
+  const f = e.target.files[0];
+  if(!f) return;
+  const url = URL.createObjectURL(f);
+  logoEl.style.backgroundImage = `url(${url})`;
+  logoEl.textContent = '';
+});
 
-function updateSpinsUI(){
-  spinsCountEl.textContent = spinsLeft;
-}
+/* Spin mechanics:
+   - Weighted random select rarity
+   - Map rarity to one of the mods that have that rarity
+   - Animate highlight moving across 9 slots repeatedly but choose final slot that corresponds to chosen mod index (first occurrence in grid)
+   - Show confetti/fireworks & sound according to rarity
+*/
+const spinBtnEl = spinBtn;
+spinBtnEl.addEventListener('click', ()=>{ if(spinBtnEl.classList.contains('disabled')) return; if(spinsLeft<=0){ alert('No spins left. Click Subscribe to get more spins.'); return; } doSpin(); });
 
-/* Spin mechanics */
-function startSpin(){
-  isSpinning = true;
-  result.classList.add('hidden');
-
-  // choose final index among first 10 mods
-  const finalIdx = Math.floor(Math.random() * CONFIG.MODS.length);
-  const chosenMod = CONFIG.MODS[finalIdx];
-
-  // find the DOM card corresponding to the first copy (index = finalIdx)
-  const cards = Array.from(track.children);
-  const chosenCard = cards[finalIdx]; // since first copy is 0..9
-  // calculate measurements
-  const viewportRect = viewport.getBoundingClientRect();
-  const cardRect = chosenCard.getBoundingClientRect();
-  const cardWidthWithGap = cardRect.width + 14; // approximate gap
-  // target translate so chosenCard centers under center-marker
-  const chosenOffset = chosenCard.offsetLeft;
-  const viewportCenter = viewport.clientWidth / 2;
-  const targetTranslate = -(chosenOffset - (viewportCenter - (cardRect.width/2)));
-
-  // animate movement: start fast to left (negative), then slow down and ease to target
-  let currentX = 0;
-  let velocity = 260 + Math.random()*120; // pixel/sec approx
-  const frictionBase = 0.993; // per frame multiplier approximation
-  let friction = frictionBase - Math.random()*0.003;
-  let rafId;
-
-  function frame(){
-    // update position (normalize to 60fps)
-    currentX -= velocity * (1/60);
-    // loop-around visual: keep currentX bounded to avoid huge numbers
-    // apply transform
-    track.style.transform = `translateX(${currentX}px)`;
-    // slow velocity
-    velocity *= friction;
-
-    // when slow enough begin precise easing to target
-    if(velocity < 30){
-      // ease to targetTranslate
-      const dx = targetTranslate - currentX;
-      currentX += dx * 0.12;
-      track.style.transform = `translateX(${currentX}px)`;
-      if(Math.abs(dx) < 1){
-        cancelAnimationFrame(rafId);
-        finishSpin(chosenMod);
-        return;
-      }
-    } else {
-      rafId = requestAnimationFrame(frame);
-    }
+function weightedPick(rarityWeights){
+  const entries = Object.entries(rarityWeights);
+  let total = 0;
+  entries.forEach(([k,v])=> total += v);
+  let r = Math.random() * total;
+  for(const [k,v] of entries){
+    if(r < v) return k;
+    r -= v;
   }
-  rafId = requestAnimationFrame(frame);
+  return entries[entries.length-1][0];
 }
 
-/* After spin finishes */
-function finishSpin(mod){
+// Find a mod id index in CONFIG.MODS that matches rarity (pick random among them)
+function pickModByRarity(rarity){
+  const arr = CONFIG.MODS.filter(m => (m.rarity||'R').toUpperCase() === rarity.toUpperCase());
+  if(arr.length===0) {
+    // fallback: any mod
+    return CONFIG.MODS[Math.floor(Math.random()*CONFIG.MODS.length)];
+  }
+  return arr[Math.floor(Math.random()*arr.length)];
+}
+
+let isSpinning = false;
+async function doSpin(){
+  if(isSpinning) return;
+  isSpinning = true;
+  // play spin sfx
+  if(sfxSpin.src) { try{ sfxSpin.currentTime = 0; sfxSpin.play(); }catch(e){} }
+  // choose rarity -> mod -> find index in grid to land on
+  const rarity = weightedPick(CONFIG.RARITY_WEIGHTS); // e.g. 'UR', 'SSR'...
+  const selectedMod = pickModByRarity(rarity);
+  // determine target slot index: find first slot whose mod id equals selected mod id (we assigned mods cyclically)
+  // Because grid slots used mod cyclically, find slot index where mod id matches
+  const slotNodes = Array.from(gridEl.children);
+  let targetIndex = slotNodes.findIndex((slot, idx) => {
+    // mod assigned to this slot was CONFIG.MODS[idx % len]
+    const modAtSlot = CONFIG.MODS[idx % CONFIG.MODS.length];
+    return modAtSlot.id === selectedMod.id;
+  });
+  if(targetIndex < 0) {
+    // if not found, pick random slot
+    targetIndex = Math.floor(Math.random() * 9);
+  }
+
+  // Spin animation: highlight moves around the 9 slots many times and decelerates to targetIndex
+  const rounds = 4 + Math.floor(Math.random()*3); // full loops
+  const totalSteps = rounds * 9 + targetIndex;
+  let currentStep = 0;
+  let interval = 80; // ms initial
+  // Add visual highlight class by inline style to each slot
+  for(const s of slotNodes) s.style.transition = 'box-shadow 120ms, transform 120ms';
+  const highlightClass = (el)=>{
+    // set glow for current
+    el.style.transform = 'scale(1.06)';
+    el.style.boxShadow = '0 20px 60px rgba(168,85,247,0.18)';
+  };
+  const unhighlight = (el)=>{
+    el.style.transform = '';
+    el.style.boxShadow = '';
+  };
+
+  // loop with setTimeout sequence to allow deceleration
+  const stepFunc = ()=>{
+    const idx = currentStep % 9;
+    // clear previous
+    slotNodes.forEach(unhighlight);
+    // highlight current
+    highlightClass(slotNodes[idx]);
+    currentStep++;
+    if(currentStep <= totalSteps){
+      // increase interval gradually for deceleration
+      interval = interval * 1.06;
+      setTimeout(stepFunc, Math.min(interval, 500));
+    } else {
+      // finish
+      setTimeout(()=>{ unhighlight(slotNodes[idx]); onSpinFinish(selectedMod, idx, rarity); }, 160);
+    }
+  };
+  stepFunc();
+}
+
+function onSpinFinish(mod, slotIndex, rarity){
   isSpinning = false;
-  // decrement spins and store
+  // decrement spins and save
   spinsLeft = Math.max(0, spinsLeft - 1);
   localStorage.setItem(STORAGE_KEY, spinsLeft);
-  updateSpinsUI();
+  spinsCountEl.textContent = spinsLeft;
 
-  // show result + download button
-  result.innerHTML = `
-    <div style="display:flex;flex-direction:column;align-items:center;gap:10px">
-      <div class="glow">Selamat — Anda mendapatkan <strong>${mod.name}</strong></div>
-      <div><a id="dlBtn" class="btn" href="${mod.file}" target="_blank">Download Mod</a></div>
-      <div class="muted">Spins tersisa: ${spinsLeft}</div>
-    </div>`;
-  result.classList.remove('hidden');
+  // show result panel with upgraded GUI
+  resultPanel.innerHTML = '';
+  const rc = document.createElement('div'); rc.className = 'result-card';
+  const big = document.createElement('div'); big.className = 'big'; big.textContent = `Selamat! Anda mendapatkan: ${mod.name}`;
+  rc.appendChild(big);
 
-  // optional: show the preview overlay automatically for flair
-  previewImg.src = mod.preview || mod.img || '';
-  overlay.classList.add('show');
-  overlay.setAttribute('aria-hidden','false');
+  // rarity label with style
+  const rlbl = document.createElement('div');
+  rlbl.style.padding='6px 10px'; rlbl.style.borderRadius='10px'; rlbl.style.fontWeight='800';
+  if(rarity==='UR'){ rlbl.textContent='UR - Ultra Rare'; rlbl.style.background='linear-gradient(90deg,var(--ur),#8b5cf6)'; rlbl.style.color='#fff'; }
+  else if(rarity==='SSR'){ rlbl.textContent='SSR - Super Super Rare'; rlbl.style.background='linear-gradient(90deg,var(--ssr),#fbbf24)'; rlbl.style.color='#111'; }
+  else if(rarity==='SR'){ rlbl.textContent='SR - Super Rare'; rlbl.style.background='linear-gradient(90deg,var(--sr),#60a5fa)'; rlbl.style.color='#fff'; }
+  else { rlbl.textContent='R - Rare'; rlbl.style.background='linear-gradient(90deg,var(--r),#34d399)'; rlbl.style.color='#04251a'; }
+  rc.appendChild(rlbl);
+
+  // big art preview
+  const art = document.createElement('img'); art.src = mod.preview || mod.img; art.style.maxWidth='320px'; art.style.borderRadius='12px'; art.style.boxShadow='0 18px 60px rgba(0,0,0,0.6)';
+  rc.appendChild(art);
+
+  // Download button (only here)
+  const dl = document.createElement('button');
+  dl.className = 'download-btn';
+  dl.textContent = 'Download Mod';
+  dl.onclick = ()=> { window.open(mod.file, '_blank'); };
+  rc.appendChild(dl);
+
+  // spins left
+  const left = document.createElement('div'); left.className='muted'; left.textContent = `Spins tersisa: ${spinsLeft}`;
+  rc.appendChild(left);
+
+  resultPanel.appendChild(rc);
+
+  // Effects: sound + confetti/fireworks based on rarity
+  playRaritySfx(rarity);
+  triggerEffectsForRarity(rarity);
+
+  // small glow animation on the slot
+  const slotNodes = Array.from(gridEl.children);
+  const targetSlot = slotNodes[slotIndex];
+  if(targetSlot){
+    targetSlot.animate([{transform:'scale(1.08)', boxShadow:'0 30px 80px rgba(168,85,247,0.18)'},
+                         {transform:'scale(1)', boxShadow:''}], {duration:900, easing:'cubic-bezier(.2,.9,.2,1)'});
+  }
 }
 
-/* allow pressing center of viewport to quick spin on mobile */
-viewport.addEventListener('click', ()=>{ if(!isSpinning && spinsLeft > 0) startSpin(); });
+/* play sfx according to rarity */
+function playRaritySfx(rarity){
+  try{
+    if(rarity==='UR' && sfxUR.src){ sfxUR.currentTime=0; sfxUR.play(); }
+    else if(rarity==='SSR' && sfxSSR.src){ sfxSSR.currentTime=0; sfxSSR.play(); }
+    else if(rarity==='SR' && sfxSR.src){ sfxSR.currentTime=0; sfxSR.play(); }
+    else if(sfxR.src){ sfxR.currentTime=0; sfxR.play(); }
+  }catch(e){}
+}
 
-/* initial subscribe link href (change in repo if needed) */
+/* FX: confetti & fireworks */
+const canvas = fxCanvas;
+const ctx = canvas.getContext('2d');
+let w, h, particles = [], fireworks = [];
+function resizeCanvas(){ w = canvas.width = innerWidth; h = canvas.height = innerHeight; }
+window.addEventListener('resize', resizeCanvas); resizeCanvas();
+
+function random(min,max){ return Math.random()*(max-min)+min; }
+
+/* confetti particles */
+function spawnConfetti(x,y,count,colors){
+  for(let i=0;i<count;i++){
+    particles.push({
+      x, y,
+      vx: random(-6,6),
+      vy: random(-12,-4),
+      size: random(6,12),
+      color: colors[Math.floor(Math.random()*colors.length)],
+      life: 80 + Math.floor(random(0,40))
+    });
+  }
+}
+
+/* simple fireworks: launch then explode into sparks */
+function launchFirework(x,y,colors,intensity){
+  // create one rocket
+  fireworks.push({
+    x, y: h+10,
+    tx: x, ty: y,
+    vx: 0, vy: random(-10,-14),
+    life: 0,
+    maxLife: 40,
+    colors, intensity, exploded:false
+  });
+}
+
+/* global animate */
+function fxLoop(){
+  requestAnimationFrame(fxLoop);
+  ctx.clearRect(0,0,w,h);
+  // fireworks rockets
+  for(let i=fireworks.length-1;i>=0;i--){
+    const f = fireworks[i];
+    if(!f.exploded){
+      // move towards target
+      // simple linear movement
+      const dx = f.tx - f.x;
+      const dy = f.ty - f.y;
+      f.x += dx*0.06;
+      f.y += dy*0.06;
+      // draw rocket
+      ctx.beginPath(); ctx.arc(f.x,f.y,3,0,Math.PI*2); ctx.fillStyle = '#fff'; ctx.fill();
+      // if near target explode
+      if(Math.abs(dx) < 10 && Math.abs(dy) < 10){
+        f.exploded = true;
+        // spawn sparks
+        const n = 24 * (f.intensity || 1);
+        for(let j=0;j<n;j++){
+          particles.push({
+            x: f.x, y: f.y,
+            vx: Math.cos(j/n*2*Math.PI) * random(2,8) * (0.7 + Math.random()),
+            vy: Math.sin(j/n*2*Math.PI) * random(2,8) * (0.7 + Math.random()),
+            size: random(2,4),
+            color: f.colors[Math.floor(Math.random()*f.colors.length)],
+            life: 60 + Math.floor(random(0,40))
+          });
+        }
+        fireworks.splice(i,1);
+      }
+    }
+  }
+
+  // particles movement
+  for(let i=particles.length-1;i>=0;i--){
+    const p = particles[i];
+    p.x += p.vx;
+    p.y += p.vy;
+    p.vy += 0.18; // gravity
+    p.vx *= 0.99;
+    p.life--;
+    // draw
+    ctx.beginPath();
+    ctx.fillStyle = p.color;
+    ctx.fillRect(p.x, p.y, p.size, p.size*0.6);
+    if(p.life <= 0 || p.y > h+50) particles.splice(i,1);
+  }
+}
+fxLoop();
+
+/* trigger effects based on rarity */
+function triggerEffectsForRarity(rarity){
+  if(rarity==='UR'){
+    // big fireworks + confetti in purple & gold
+    launchFirework(w*0.5, h*0.25, ['#caa7ff','#fff7d6'], 3);
+    launchFirework(w*0.35, h*0.3, ['#caa7ff','#ffd86b'], 2);
+    spawnConfetti(w*0.5, h*0.2, 80, ['#caa7ff','#ffd86b','#ffffff']);
+  } else if(rarity==='SSR'){
+    launchFirework(w*0.5, h*0.28, ['#fff7d6','#ffd86b'], 2);
+    spawnConfetti(w*0.5, h*0.3, 60, ['#ffd86b','#ffffff','#facc15']);
+  } else if(rarity==='SR'){
+    launchFirework(w*0.45, h*0.3, ['#60a5fa','#cfe9ff'], 1);
+    spawnConfetti(w*0.5, h*0.3, 40, ['#60a5fa','#cfe9ff']);
+  } else { // R
+    spawnConfetti(w*0.5, h*0.25, 24, ['#34d399','#e6fffa']);
+  }
+}
+
+/* canvas click to test fireworks (dev) */
+canvas.addEventListener('click', (e)=>{ launchFirework(e.clientX, e.clientY, ['#caa7ff','#ffd86b','#60a5fa'], 2); });
+
+/* Resize canvas initially */
+function setupCanvas(){ resizeCanvas(); }
+setupCanvas();
+
+/* Utility: set subscribe link default (user change in repo) */
 subscribeBtn.href = 'https://www.youtube.com/'; // change to your channel in repo
 
-/* keyboard support: space to spin if enabled */
-window.addEventListener('keydown', (e)=>{ if(e.code === 'Space'){ e.preventDefault(); if(!isSpinning && spinsLeft>0) startSpin(); } });
+/* keyboard support: space to spin if available */
+window.addEventListener('keydown', e => { if(e.code === 'Space'){ e.preventDefault(); if(!isSpinning && spinsLeft>0) doSpin(); } });
 
-/* Prevent overlay image dragging */
-previewImg.ondragstart = ()=>false;
+/* allow clicking 'Enter Gacha' to scroll to grid */
+document.getElementById('enterBtn').addEventListener('click', ()=>{ gridEl.scrollIntoView({behavior:'smooth', block:'center'}); bgm.play().catch(()=>{}); });
 
+/* small UX: clicking on banner won't allow download (bug fix). Good. */
+
+/* END OF SCRIPT */
 </script>
 </body>
 </html>
