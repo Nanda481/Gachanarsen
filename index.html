@@ -3,631 +3,520 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>High-Tier Gacha Showcase • Duet-Style</title>
-  <meta name="description" content="High-end cinematic gacha showcase — dual mode: Showcase & Gacha. Customize assets and rarity rates in the JS."/>
+  <title>High-Tier Gacha Showcase — Portrait Cards</title>
+  <meta name="description" content="Cinematic gacha showcase - 6 portrait cards, infinite auto-loop, shine-sweep effect, dual mode (Showcase/Gacha). Customize assets & rarity in the script."/>
   <style>
-    /* ---------- THEME COLORS ---------- */
     :root{
-      --bg-1:#041022; --bg-2:#07142a;
-      --panel:#081829; --glass:rgba(255,255,255,0.03);
+      --bg-1:#031021; --bg-2:#071429;
+      --panel:#07182a; --glass:rgba(255,255,255,0.03);
       --accent-a:#39d2ff; --accent-b:#9b7bff;
-      --muted:#94a6bf; --gold:#f3d48f;
+      --muted:#90a6bf; --gold:#f3d48f;
+      --card-w:260px; --card-h:420px; /* portrait card size */
     }
-
-    /* ---------- RESET & BASE ---------- */
     *{box-sizing:border-box;margin:0;padding:0}
-    html,body{height:100%;width:100%;font-family:Inter, ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial;color:#e6f3ff;background:linear-gradient(180deg,var(--bg-1),var(--bg-2));-webkit-font-smoothing:antialiased;overflow:hidden}
+    html,body{height:100%;width:100%;font-family:Inter,ui-sans-serif,system-ui,-apple-system,'Segoe UI',Roboto,Arial;color:#e8f6ff;background:linear-gradient(180deg,var(--bg-1),var(--bg-2));-webkit-font-smoothing:antialiased;overflow:hidden}
     a{color:inherit}
-    button{font-family:inherit}
+    button{font-family:inherit;cursor:pointer}
 
-    /* ---------- LAYOUT ---------- */
-    .app{display:flex;flex-direction:column;height:100vh;width:100vw}
-    header.top{height:72px;display:flex;align-items:center;justify-content:space-between;padding:0 28px;background:linear-gradient(180deg, rgba(255,255,255,0.01), transparent);backdrop-filter:blur(6px);border-bottom:1px solid rgba(255,255,255,0.02)}
+    /* Header */
+    .top{height:72px;display:flex;align-items:center;justify-content:space-between;padding:12px 28px;background:linear-gradient(180deg, rgba(255,255,255,0.01), transparent);border-bottom:1px solid rgba(255,255,255,0.02);z-index:50}
     .brand{display:flex;gap:14px;align-items:center}
-    .logo{width:50px;height:50px;border-radius:12px;background:linear-gradient(135deg,var(--accent-a),var(--accent-b));display:flex;align-items:center;justify-content:center;color:#021226;font-weight:800;box-shadow:0 10px 40px rgba(57,210,255,0.08)}
-    .title{font-weight:800;letter-spacing:0.6px}
+    .logo{width:48px;height:48px;border-radius:10px;background:linear-gradient(135deg,var(--accent-a),var(--accent-b));display:flex;align-items:center;justify-content:center;color:#021226;font-weight:800;box-shadow:0 12px 48px rgba(57,210,255,0.06)}
+    .title{font-weight:800}
     .subtitle{font-size:12px;color:var(--muted);margin-top:2px}
 
-    nav.controls{display:flex;gap:10px;align-items:center}
-    .btn{padding:10px 14px;border-radius:10px;border:1px solid rgba(255,255,255,0.06);background:transparent;color:inherit;cursor:pointer;font-weight:700}
-    .btn.ghost{background:transparent}
-    .btn.primary{background:linear-gradient(90deg,var(--accent-a),var(--accent-b));color:#021226;border:none;box-shadow:0 8px 30px rgba(57,210,255,0.08)}
+    .controls{display:flex;gap:10px;align-items:center}
+    .btn{padding:10px 14px;border-radius:10px;border:1px solid rgba(255,255,255,0.06);background:transparent;color:inherit;font-weight:700}
+    .btn.primary{background:linear-gradient(90deg,var(--accent-a),var(--accent-b));color:#021226;border:none;box-shadow:0 12px 50px rgba(57,210,255,0.06)}
     .btn.small{padding:8px 10px;font-size:13px}
 
-    main.main{flex:1;display:flex;gap:28px;padding:26px 36px;position:relative;overflow:hidden}
-
-    /* left column */
-    aside.left{width:260px;display:flex;flex-direction:column;gap:18px}
-    .card{background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));border-radius:12px;padding:18px;border:1px solid rgba(255,255,255,0.03);box-shadow:0 16px 60px rgba(2,6,20,0.55)}
-    .card h4{color:var(--accent-a);margin-bottom:10px}
+    /* Main layout */
+    .main{display:flex;gap:24px;padding:22px 32px;height:calc(100vh - 72px);position:relative}
+    aside.left{width:280px;display:flex;flex-direction:column;gap:18px}
+    .card{background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));border-radius:12px;padding:18px;border:1px solid rgba(255,255,255,0.03);box-shadow:0 20px 80px rgba(2,8,20,0.6)}
+    .card h4{color:var(--accent-a);margin-bottom:8px}
     .muted{color:var(--muted);font-size:13px}
 
-    /* center area */
-    .center{flex:1;position:relative;display:flex;align-items:center;justify-content:center;overflow:hidden}
-
-    /* background slideshow container */
-    .bg-container{position:absolute;inset:0;z-index:0;overflow:hidden}
-    .bg-slide{position:absolute;inset:0;background-size:cover;background-position:center;opacity:0;transform:scale(1.03);transition:opacity 1200ms ease, transform 1000ms ease}
+    /* center */
+    .center{flex:1;position:relative;overflow:hidden;border-radius:12px;display:flex;align-items:center;justify-content:center}
+    .bg-wrap{position:absolute;inset:0;z-index:0;overflow:hidden}
+    .bg-slide{position:absolute;inset:0;background-size:cover;background-position:center;opacity:0;transform:scale(1.03);transition:opacity 1000ms ease, transform 1000ms ease}
     .bg-slide.active{opacity:1;transform:scale(1)}
     .bg-overlay{position:absolute;inset:0;background:linear-gradient(180deg, rgba(2,6,20,0.25), rgba(2,6,30,0.6));z-index:1}
 
-    /* showcase carousel container */
-    .showcase-wrap{position:relative;z-index:2;width:100%;max-width:1400px;padding:48px 32px;display:flex;flex-direction:column;gap:18px;align-items:center;justify-content:center}
-    .showcase-title{display:flex;align-items:center;gap:12px}
-    .showcase-title h2{font-size:20px;letter-spacing:1px}
-    .showcase-view{width:100%;overflow:hidden;padding:20px 0 28px 0}
-    .carousel{display:flex;gap:28px;align-items:center;will-change:transform;transition:transform 500ms cubic-bezier(.2,.9,.2,1)}
-    /* panel - slanted tile */
-    .panel{width:220px;height:520px;border-radius:14px;overflow:hidden;background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(0,0,0,0.08));backdrop-filter:blur(6px);position:relative;box-shadow:0 40px 120px rgba(2,8,20,0.6);transform:skewX(-14deg);transition:transform 350ms, box-shadow 350ms, filter 300ms}
-    .panel-inner{transform:skewX(14deg);width:100%;height:100%;position:relative;display:flex;flex-direction:column;align-items:center}
-    .panel img{width:100%;height:86%;object-fit:cover;display:block;border-bottom:1px solid rgba(255,255,255,0.03)}
-    .panel .meta{padding:12px;width:100%;display:flex;align-items:center;justify-content:space-between}
+    /* showcase container */
+    .showcase-area{position:relative;z-index:3;width:100%;max-width:1400px;padding:42px 28px;display:flex;flex-direction:column;gap:18px;align-items:center}
+    .showcase-header{width:100%;display:flex;align-items:center;justify-content:space-between}
+    .showcase-header h2{font-size:20px;letter-spacing:0.8px}
+    .showcase-view{width:100%;overflow:hidden;padding:18px;border-radius:12px;background:linear-gradient(180deg, rgba(255,255,255,0.01), rgba(255,255,255,0.005));border:1px solid rgba(255,255,255,0.02);backdrop-filter:blur(6px);box-shadow:inset 0 0 0 1px rgba(255,255,255,0.01)}
+    .carousel{display:flex;gap:20px;align-items:center;padding:24px 12px;will-change:transform;transition:transform 400ms cubic-bezier(.2,.9,.2,1)}
+    /* portrait card */
+    .card-portrait{width:var(--card-w);height:var(--card-h);border-radius:14px;overflow:hidden;position:relative;background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(0,0,0,0.06));box-shadow:0 30px 110px rgba(2,8,20,0.6);border:1px solid rgba(255,255,255,0.03);display:flex;flex-direction:column;align-items:stretch;transform:translateZ(0);transition:transform 350ms, box-shadow 350ms, filter 280ms}
+    .card-portrait .imgwrap{flex:1;background:#071427;position:relative;overflow:hidden}
+    .card-portrait img{width:100%;height:100%;object-fit:cover;display:block;transform:translateZ(0)}
+    .card-portrait .meta{padding:12px;display:flex;align-items:center;justify-content:space-between}
     .pname{font-weight:800;color:var(--accent-a);font-size:16px}
     .prarity{font-weight:700;font-size:12px;padding:6px 10px;border-radius:999px;background:linear-gradient(90deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));border:1px solid rgba(255,255,255,0.03);color:var(--muted)}
 
-    /* hover focus */
-    .panel:hover{transform:translateY(-18px) skewX(-14deg) scale(1.06);box-shadow:0 60px 140px rgba(3,12,30,0.75);filter:brightness(1.04)}
+    .card-portrait:hover{transform:translateY(-12px) scale(1.04);box-shadow:0 60px 150px rgba(3,12,30,0.8);filter:brightness(1.02)}
 
-    /* hero spotlight (optional on bigger screens) */
-    .hero-spot{position:absolute;right:4%;bottom:6%;z-index:3;width:420px;height:640px;border-radius:16px;padding:22px;display:flex;align-items:flex-end;justify-content:center;box-shadow:0 60px 160px rgba(3,10,20,0.6);background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(0,0,0,0.15));border:1px solid rgba(255,255,255,0.03)}
-    .hero-spot h3{font-size:28px;color:var(--accent-b);margin-bottom:6px}
-    .hero-spot p{color:var(--muted);font-size:14px}
+    /* shine sweep effect */
+    .shine {position:absolute;inset:0;pointer-events:none;mix-blend-mode:screen}
+    .shine::before{
+      content:'';position:absolute;top:-50%;left:-30%;width:60%;height:200%;transform:rotate(-25deg);background:linear-gradient(90deg, rgba(255,255,255,0), rgba(255,255,255,0.55), rgba(255,255,255,0));opacity:0.0;
+    }
+    /* animate sweep when class .sweep is added */
+    .sweep .shine::before{
+      animation: sweep 1.3s ease-in-out 0s 1;
+      opacity:1;
+    }
+    @keyframes sweep{
+      0%{left:-60%;opacity:0}
+      10%{opacity:0.9}
+      60%{left:120%;opacity:0.9}
+      100%{left:140%;opacity:0}
+    }
 
-    /* gacha board (hidden in showcase mode, shown in Gacha mode) */
-    .gacha-board{position:absolute;left:50%;transform:translateX(-50%);bottom:28px;z-index:4;background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));padding:14px 18px;border-radius:12px;border:1px solid rgba(255,255,255,0.03);display:flex;gap:18px;align-items:center;backdrop-filter:blur(8px)}
+    /* gacha board */
+    .gacha-board{position:absolute;left:50%;transform:translateX(-50%);bottom:28px;z-index:6;background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));padding:12px 18px;border-radius:12px;border:1px solid rgba(255,255,255,0.03);display:flex;gap:18px;align-items:center;backdrop-filter:blur(8px)}
     .gtiles{display:flex;gap:12px}
     .gtile{width:88px;height:116px;border-radius:10px;overflow:hidden;background:rgba(255,255,255,0.02);display:flex;align-items:center;justify-content:center;border:1px solid rgba(255,255,255,0.03);transition:transform 300ms, box-shadow 300ms}
     .gtile.sel{box-shadow:0 20px 60px rgba(57,210,255,0.12);transform:translateY(-10px)}
-    .spin-btn{padding:12px 28px;border-radius:12px;background:linear-gradient(90deg,var(--accent-a),var(--accent-b));border:none;font-weight:900;cursor:pointer;box-shadow:0 18px 60px rgba(57,210,255,0.08)}
+    .spin-btn{padding:12px 26px;border-radius:12px;background:linear-gradient(90deg,var(--accent-a),var(--accent-b));border:none;font-weight:900;cursor:pointer;box-shadow:0 18px 60px rgba(57,210,255,0.08)}
 
-    /* result popup */
-    .result-overlay{position:fixed;inset:0;z-index:60;display:flex;align-items:center;justify-content:center;background:rgba(0,6,12,0.6);pointer-events:none;opacity:0;transition:opacity 260ms}
+    /* result overlay */
+    .result-overlay{position:fixed;inset:0;z-index:80;display:flex;align-items:center;justify-content:center;background:rgba(0,6,12,0.6);pointer-events:none;opacity:0;transition:opacity 260ms}
     .result-overlay.open{pointer-events:auto;opacity:1}
-    .result-card{width:520px;background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));padding:26px;border-radius:14px;border:1px solid rgba(255,255,255,0.03);text-align:center;box-shadow:0 40px 140px rgba(2,6,20,0.7)}
+    .result-card{width:520px;background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));padding:28px;border-radius:14px;border:1px solid rgba(255,255,255,0.03);text-align:center;box-shadow:0 40px 140px rgba(2,6,20,0.7)}
     .result-card h2{color:var(--gold);margin-bottom:8px}
     .result-card p{color:var(--muted)}
-    .result-actions{display:flex;gap:12px;justify-content:center;margin-top:16px}
 
-    /* small screens */
-    @media (max-width:1100px){
+    /* responsiveness */
+    @media (max-width:1200px){
+      :root{--card-w:220px;--card-h:360px}
       .hero-spot{display:none}
-      .panel{width:180px;height:420px}
     }
-    @media (max-width:720px){
+    @media (max-width:900px){
       aside.left{display:none}
-      .panel{width:140px;height:340px}
-      .showcase-wrap{padding:20px}
-      .gacha-board{left:8%;transform:none;bottom:18px}
+      .main{padding:12px}
+      :root{--card-w:180px;--card-h:320px}
+      .gacha-board{left:8%;transform:none}
     }
 
-    /* utility */
     .hide{display:none}
-    .flex{display:flex}
-    .center{align-items:center;justify-content:center}
   </style>
 </head>
 <body>
-  <div class="app">
-    <header class="top">
-      <div class="brand">
-        <div class="logo">G</div>
-        <div>
-          <div class="title">Gacha • Event Showcase</div>
-          <div class="subtitle">Limited Summon • Cinematic Visual</div>
+  <header class="top">
+    <div class="brand">
+      <div class="logo">G</div>
+      <div>
+        <div class="title">Gacha • Event Showcase</div>
+        <div class="subtitle">Portrait • Cinematic • Shine Sweep</div>
+      </div>
+    </div>
+    <div class="controls">
+      <button id="modeBtn" class="btn small">Mode: Showcase</button>
+      <button id="openChannel" class="btn small">Open Channel</button>
+      <button id="enableBtn" class="btn primary" disabled>Enable Gacha</button>
+    </div>
+  </header>
+
+  <main class="main">
+    <aside class="left">
+      <div class="card">
+        <h4>How it works</h4>
+        <p class="muted">Open channel → Enable Gacha → Switch to Gacha Mode → Summon (visual demo). Edit images in <code>/assets/</code> and file links on panels.</p>
+      </div>
+
+      <div class="card">
+        <h4>Rarity Rates</h4>
+        <p class="muted" id="ratesSummary">Edit rates in script</p>
+      </div>
+
+      <div class="card">
+        <h4>Customization</h4>
+        <p class="muted">Replace <code>assets/panel1.jpg</code>..`panel6.jpg`, thumbs, and <code>music.mp3</code>. Background slides are empty by default.</p>
+      </div>
+    </aside>
+
+    <section class="center">
+      <div class="bg-wrap" id="bgWrap"><!-- slides added by JS if provided --></div>
+      <div class="bg-overlay"></div>
+
+      <div class="showcase-area" id="showcaseArea">
+        <div class="showcase-header">
+          <div>
+            <h2>Character Showcase</h2>
+            <div class="muted">Auto-loop horizontal • 6 portrait cards • shine-sweep effect</div>
+          </div>
+          <div>
+            <button id="previewGacha" class="btn small">Preview Gacha</button>
+          </div>
+        </div>
+
+        <div class="showcase-view" id="showcaseView">
+          <div class="carousel" id="carousel">
+            <!-- Portrait cards (6) -->
+            <div class="card-portrait" data-name="Aurelia" data-rarity="Mythic" data-file="/mods/aurelia.zip">
+              <div class="imgwrap"><img src="assets/panel1.jpg" alt="Aurelia"></div>
+              <div class="meta"><div class="pname">Aurelia</div><div class="prarity">Mythic</div></div>
+              <div class="shine"></div>
+            </div>
+
+            <div class="card-portrait" data-name="Korven" data-rarity="Legendary" data-file="/mods/korven.zip">
+              <div class="imgwrap"><img src="assets/panel2.jpg" alt="Korven"></div>
+              <div class="meta"><div class="pname">Korven</div><div class="prarity">Legend</div></div>
+              <div class="shine"></div>
+            </div>
+
+            <div class="card-portrait" data-name="Sibyl" data-rarity="Elite" data-file="/mods/sibyl.zip">
+              <div class="imgwrap"><img src="assets/panel3.jpg" alt="Sibyl"></div>
+              <div class="meta"><div class="pname">Sibyl</div><div class="prarity">Elite</div></div>
+              <div class="shine"></div>
+            </div>
+
+            <div class="card-portrait" data-name="Truffle" data-rarity="Common" data-file="/mods/truffle.zip">
+              <div class="imgwrap"><img src="assets/panel4.jpg" alt="Truffle"></div>
+              <div class="meta"><div class="pname">Truffle</div><div class="prarity">Common</div></div>
+              <div class="shine"></div>
+            </div>
+
+            <div class="card-portrait" data-name="Rebecca" data-rarity="Elite" data-file="/mods/rebecca.zip">
+              <div class="imgwrap"><img src="assets/panel5.jpg" alt="Rebecca"></div>
+              <div class="meta"><div class="pname">Rebecca</div><div class="prarity">Elite</div></div>
+              <div class="shine"></div>
+            </div>
+
+            <div class="card-portrait" data-name="Fen" data-rarity="Legendary" data-file="/mods/fen.zip">
+              <div class="imgwrap"><img src="assets/panel6.jpg" alt="Fen"></div>
+              <div class="meta"><div class="pname">Fen</div><div class="prarity">Legend</div></div>
+              <div class="shine"></div>
+            </div>
+
+            <!-- clones for seamless loop created by JS -->
+          </div>
         </div>
       </div>
 
-      <nav class="controls">
-        <button id="modeBtn" class="btn ghost small">Mode: Showcase</button>
-        <button id="openChannel" class="btn small">Open Channel</button>
-        <button id="enableBtn" class="btn primary" disabled>Enable Gacha</button>
-      </nav>
-    </header>
+      <!-- hero spotlight -->
+      <div style="position:absolute;right:5%;bottom:6%;z-index:6" class="hero-spot" id="heroSpot">
+        <div style="width:360px;height:260px;border-radius:12px;padding:16px;display:flex;flex-direction:column;align-items:flex-start;justify-content:center;background:linear-gradient(180deg, rgba(255,255,255,0.01), rgba(0,0,0,0.06));border:1px solid rgba(255,255,255,0.02);box-shadow:0 30px 120px rgba(3,10,20,0.6)">
+          <h3 id="heroName" style="font-size:22px;color:var(--accent-b);margin-bottom:6px">Aurelia</h3>
+          <p id="heroDesc" class="muted">Mythic • Abyss Walker</p>
+        </div>
+      </div>
 
-    <main class="main">
-      <!-- LEFT: info -->
-      <aside class="left">
-        <div class="card">
-          <h4>How it works</h4>
-          <p class="muted">Open your channel, enable gacha, then switch to <strong>Gacha Mode</strong>. This template is client-side demo; edit assets & rarity in JS.</p>
+      <!-- gacha board (starts hidden) -->
+      <div class="gacha-board hide" id="gachaBoard">
+        <div style="display:flex;flex-direction:column;gap:8px;min-width:240px">
+          <div style="font-weight:900">Summon Portal</div>
+          <div class="muted" style="font-size:13px">Visual summon demo — client-side only</div>
         </div>
 
-        <div class="card">
-          <h4>Rarity Rates</h4>
-          <p class="muted" id="ratesSummary">Edit rates in script</p>
+        <div class="gtiles" id="gtiles">
+          <div class="gtile"><img src="assets/thumb1.jpg" style="width:100%;height:100%;object-fit:cover" alt=""></div>
+          <div class="gtile"><img src="assets/thumb2.jpg" style="width:100%;height:100%;object-fit:cover" alt=""></div>
+          <div class="gtile"><img src="assets/thumb3.jpg" style="width:100%;height:100%;object-fit:cover" alt=""></div>
+          <div class="gtile"><img src="assets/thumb4.jpg" style="width:100%;height:100%;object-fit:cover" alt=""></div>
+          <div class="gtile"><img src="assets/thumb5.jpg" style="width:100%;height:100%;object-fit:cover" alt=""></div>
         </div>
 
-        <div class="card">
-          <h4>Customization</h4>
-          <p class="muted">Replace images in <code>/assets/</code>. Fill background slides in the script (SLIDES array). Music file: <code>/music.mp3</code>.</p>
-        </div>
-      </aside>
-
-      <!-- CENTER: showcase & gacha -->
-      <section class="center">
-        <div class="bg-container" id="bgContainer"><!-- slides added by JS --></div>
-        <div class="bg-overlay"></div>
-
-        <div class="showcase-wrap" id="showcaseWrap">
-          <div class="showcase-title" style="width:100%;justify-content:space-between">
-            <div>
-              <h2>Character Showcase</h2>
-              <div class="muted">Auto-loop horizontal showcase • 6 characters</div>
-            </div>
-            <div style="display:flex;gap:10px;align-items:center">
-              <button id="previewGachaBtn" class="btn small">Preview Gacha</button>
-            </div>
-          </div>
-
-          <div class="showcase-view" id="showcaseView">
-            <div id="carousel" class="carousel">
-              <!-- 6 panels — replace images / data in JS or HTML below -->
-              <div class="panel" data-name="Aurelia" data-rarity="Mythic" data-file="/mods/aurelia.zip">
-                <div class="panel-inner">
-                  <img src="assets/panel1.jpg" alt="Aurelia">
-                  <div class="meta">
-                    <div class="pname">Aurelia</div>
-                    <div class="prarity">Mythic</div>
-                  </div>
-                </div>
-              </div>
-
-              <div class="panel" data-name="Korven" data-rarity="Legendary" data-file="/mods/korven.zip">
-                <div class="panel-inner">
-                  <img src="assets/panel2.jpg" alt="Korven">
-                  <div class="meta">
-                    <div class="pname">Korven</div>
-                    <div class="prarity">Legend</div>
-                  </div>
-                </div>
-              </div>
-
-              <div class="panel" data-name="Sibyl" data-rarity="Elite" data-file="/mods/sibyl.zip">
-                <div class="panel-inner">
-                  <img src="assets/panel3.jpg" alt="Sibyl">
-                  <div class="meta">
-                    <div class="pname">Sibyl</div>
-                    <div class="prarity">Elite</div>
-                  </div>
-                </div>
-              </div>
-
-              <div class="panel" data-name="Truffle" data-rarity="Common" data-file="/mods/truffle.zip">
-                <div class="panel-inner">
-                  <img src="assets/panel4.jpg" alt="Truffle">
-                  <div class="meta">
-                    <div class="pname">Truffle</div>
-                    <div class="prarity">Common</div>
-                  </div>
-                </div>
-              </div>
-
-              <div class="panel" data-name="Rebecca" data-rarity="Elite" data-file="/mods/rebecca.zip">
-                <div class="panel-inner">
-                  <img src="assets/panel5.jpg" alt="Rebecca">
-                  <div class="meta">
-                    <div class="pname">Rebecca</div>
-                    <div class="prarity">Elite</div>
-                  </div>
-                </div>
-              </div>
-
-              <div class="panel" data-name="Fen" data-rarity="Legendary" data-file="/mods/fen.zip">
-                <div class="panel-inner">
-                  <img src="assets/panel6.jpg" alt="Fen">
-                  <div class="meta">
-                    <div class="pname">Fen</div>
-                    <div class="prarity">Legend</div>
-                  </div>
-                </div>
-              </div>
-
-              <!-- duplicated items for smooth infinite loop (cloned by JS as well) -->
-            </div>
-          </div>
-        </div>
-
-        <!-- hero spotlight -->
-        <div class="hero-spot" id="heroSpot">
-          <div>
-            <h3 id="heroName">Aurelia</h3>
-            <p id="heroDesc" class="muted">Mythic • Abyss Walker</p>
-          </div>
-        </div>
-
-        <!-- gacha board (hidden initially) -->
-        <div class="gacha-board hide" id="gachaBoard">
-          <div style="display:flex;flex-direction:column;gap:8px;min-width:220px">
-            <div style="font-weight:800">Summon Portal</div>
-            <div class="muted" style="font-size:13px">Click SUMMON to perform a visual summon (client-side demo)</div>
-          </div>
-
-          <div class="gtiles" id="gtiles">
-            <div class="gtile"><img src="assets/thumb1.jpg" style="width:100%;height:100%;object-fit:cover" alt=""></div>
-            <div class="gtile"><img src="assets/thumb2.jpg" style="width:100%;height:100%;object-fit:cover" alt=""></div>
-            <div class="gtile"><img src="assets/thumb3.jpg" style="width:100%;height:100%;object-fit:cover" alt=""></div>
-            <div class="gtile"><img src="assets/thumb4.jpg" style="width:100%;height:100%;object-fit:cover" alt=""></div>
-            <div class="gtile"><img src="assets/thumb5.jpg" style="width:100%;height:100%;object-fit:cover" alt=""></div>
-          </div>
-
-          <div style="display:flex;flex-direction:column;gap:10px;align-items:center">
-            <button id="summonBtn" class="spin-btn" disabled>SUMMON</button>
-            <button id="singleSummon" class="btn small" disabled>Single</button>
-          </div>
+        <div style="display:flex;flex-direction:column;gap:10px;align-items:center">
+          <button id="summonBtn" class="spin-btn" disabled>SUMMON</button>
+          <button id="singleBtn" class="btn small" disabled>Single</button>
         </div>
       </section>
     </main>
-  </div>
 
   <!-- result overlay -->
   <div class="result-overlay" id="resultOverlay">
     <div class="result-card">
       <h2 id="resultTitle">Mythic • You Obtained Aurelia</h2>
-      <p id="resultText">Beautiful reveal animation — replace file logic later.</p>
-      <div class="result-actions">
+      <p id="resultText">Demo reveal animation. Replace the claim action with a secure server implementation later.</p>
+      <div style="display:flex;gap:12px;justify-content:center;margin-top:16px">
         <button id="claimBtn" class="btn primary">Claim (open file)</button>
         <button id="closeResult" class="btn">Close</button>
       </div>
     </div>
   </div>
 
-  <!-- background music (put music.mp3 in repo) -->
+  <!-- music -->
   <audio id="bgMusic" src="music.mp3" loop></audio>
 
   <script>
-    /************************************************************************
-     * FINAL TEMPLATE SCRIPT
-     * - Infinite horizontal auto-looping showcase with 6 panels
-     * - Dual mode: Showcase (default) and Gacha (portal)
-     * - Configurable rarityRates (custom names & probabilities)
-     * - Simple client-side summon logic (no payments)
-     * - Replace assets in /assets/ folder and adjust file links in data-file attributes
-     ************************************************************************/
+    /* ---------- CONFIG ---------- */
+    const SLIDES = []; // leave empty; fill 'assets/bg1.jpg' etc if you want slideshow
+    const YT_CHANNEL = 'https://youtube.com/'; // replace with your channel url
+    // Custom rarity rates (must sum to 1; will normalize if not)
+    const rarityRates = { Mythic: 0.02, Legendary: 0.08, Elite: 0.2, Common: 0.7 };
+    const rarityColors = { Mythic:'#f3d48f', Legendary:'#9b7bff', Elite:'#39d2ff', Common:'#90a6bf' };
 
-    /* ---------------------- CONFIG (edit these) ---------------------- */
-
-    // Background slides: leave empty and fill with your local '/assets/bgX.jpg' later.
-    const SLIDES = []; // example: ['assets/bg1.jpg','assets/bg2.jpg']
-
-    // Rarity names & probabilities (must sum to 1)
-    // Edit names & rates as you like. Example below is default: Mythic rarest.
-    const rarityRates = {
-      Mythic: 0.02,
-      Legendary: 0.08,
-      Elite: 0.2,
-      Common: 0.7
-    };
-
-    // Optional mapping for rarity -> visual color
-    const rarityColors = {
-      Mythic: '#f3d48f',
-      Legendary: '#9b7bff',
-      Elite: '#39d2ff',
-      Common: '#94a6bf'
-    };
-
-    // YouTube channel URL (update to your channel)
-    const YT_CHANNEL = 'https://youtube.com/'; // edit after deploy
-
-    /* ---------------------- END CONFIG ---------------------- */
-
-    // utilities
-    function clamp(v, a=0, b=1){ return Math.max(a, Math.min(b, v)); }
-    function rand(){ return Math.random(); }
-
-    // validate rarityRates sum and prepare cumulative distribution
-    const rarityKeys = Object.keys(rarityRates);
-    const rates = rarityKeys.map(k => rarityRates[k]);
-    const totalRate = rates.reduce((s,x)=>s+x,0);
-    if(Math.abs(totalRate - 1) > 1e-6){
-      // normalize if not exactly 1
-      for(const k of rarityKeys) rarityRates[k] = rarityRates[k] / totalRate;
-    }
-    // build CDF
-    let cdf = [];
-    (function buildCDF(){
-      let sum = 0;
-      for(const k of rarityKeys){ sum += rarityRates[k]; cdf.push({key:k, at:sum}); }
-    })();
-
-    // DOM refs
+    /* ---------- INIT & UTIL ---------- */
     const modeBtn = document.getElementById('modeBtn');
-    const openChannelBtn = document.getElementById('openChannel');
+    const openChannel = document.getElementById('openChannel');
     const enableBtn = document.getElementById('enableBtn');
+    const previewGacha = document.getElementById('previewGacha');
     const carousel = document.getElementById('carousel');
     const showcaseView = document.getElementById('showcaseView');
+    const panels = Array.from(document.querySelectorAll('.card-portrait'));
     const heroName = document.getElementById('heroName');
     const heroDesc = document.getElementById('heroDesc');
     const heroSpot = document.getElementById('heroSpot');
     const gachaBoard = document.getElementById('gachaBoard');
     const summonBtn = document.getElementById('summonBtn');
-    const singleSummon = document.getElementById('singleSummon');
+    const singleBtn = document.getElementById('singleBtn');
+    const gtiles = Array.from(document.querySelectorAll('.gtiles .gtile'));
     const resultOverlay = document.getElementById('resultOverlay');
     const resultTitle = document.getElementById('resultTitle');
     const resultText = document.getElementById('resultText');
     const claimBtn = document.getElementById('claimBtn');
     const closeResult = document.getElementById('closeResult');
-    const bgContainer = document.getElementById('bgContainer');
+    const bgWrap = document.getElementById('bgWrap');
     const ratesSummary = document.getElementById('ratesSummary');
-    const modeLabelBtn = document.getElementById('modeBtn');
-    const previewGachaBtn = document.getElementById('previewGachaBtn');
-    const enableButton = enableBtn;
+    const previewGachaBtn = document.getElementById('previewGacha');
 
-    // showcase panels (live NodeList)
-    let panels = Array.from(document.querySelectorAll('.panel'));
-
-    // update left panel rates summary
-    function updateRatesSummary(){
-      ratesSummary.textContent = rarityKeys.map(k => `${k}: ${(rarityRates[k]*100).toFixed(2)}%`).join(' • ');
-    }
-    updateRatesSummary();
-
-    /* ------------------ Background slideshow (empty placeholder) ------------------ */
-    (function setupBackgroundSlides(){
-      if(SLIDES.length === 0) return;
-      SLIDES.forEach((src,i)=>{
-        const s = document.createElement('div');
-        s.className = 'bg-slide';
-        s.style.backgroundImage = `url(${src})`;
-        if(i===0) s.classList.add('active');
-        bgContainer.appendChild(s);
-      });
-      let idx = 0;
-      setInterval(()=>{
-        const slides = bgContainer.querySelectorAll('.bg-slide');
-        if(!slides || slides.length===0) return;
-        slides[idx].classList.remove('active');
-        idx = (idx+1)%slides.length;
-        slides[idx].classList.add('active');
-      }, 6000);
+    // Normalize rates and build CDF
+    (function normalizeRates(){
+      let keys = Object.keys(rarityRates);
+      let sum = keys.reduce((s,k)=>s + (rarityRates[k]||0), 0) || 1;
+      keys.forEach(k => rarityRates[k] = (rarityRates[k]||0)/sum);
+      // build cdf
+      window.CDF = []; let s=0; keys.forEach(k => { s+=rarityRates[k]; window.CDF.push({key:k, at:s}); });
+      ratesSummary.textContent = keys.map(k=>`${k}: ${(rarityRates[k]*100).toFixed(2)}%`).join(' • ');
     })();
 
-    /* ------------------ Infinite auto-loop carousel ------------------ */
-    // Implementation idea:
-    // - Duplicate panel nodes (clone) to left/right so scrolling can be seamless.
-    // - Use transformX animation using requestAnimationFrame.
-    // - Pause on hover or when user drags.
-    (function initCarousel(){
-      // clone panels to double the length for seamless loop
+    // build background slides if any
+    (function initBackground(){
+      if(!SLIDES || SLIDES.length===0) return;
+      SLIDES.forEach((src,i)=>{
+        const d = document.createElement('div'); d.className='bg-slide'; d.style.backgroundImage=`url(${src})`;
+        if(i===0) d.classList.add('active');
+        bgWrap.appendChild(d);
+      });
+      let idx=0;
+      setInterval(()=>{
+        const slides = bgWrap.querySelectorAll('.bg-slide'); if(!slides.length) return;
+        slides[idx].classList.remove('active'); idx=(idx+1)%slides.length; slides[idx].classList.add('active');
+      },6000);
+    })();
+
+    /* ---------- Carousel infinite auto-loop (portrait cards, larger, with clones) ---------- */
+    (function setupCarousel(){
+      // clone nodes to create smooth loop
       const original = Array.from(carousel.children);
-      original.forEach(node => carousel.appendChild(node.cloneNode(true)));
-      original.forEach(node => carousel.appendChild(node.cloneNode(true))); // extra buffer
-
-      // recompute panels array
-      panels = Array.from(carousel.querySelectorAll('.panel'));
-
-      let speed = 0.25; // px per ms base speed
+      // append clones (duplicate twice)
+      original.forEach(n => carousel.appendChild(n.cloneNode(true)));
+      original.forEach(n => carousel.appendChild(n.cloneNode(true)));
+      // recompute panels
+      // animation variables
       let offset = 0;
+      const speed = 0.24; // px/ms
       let last = performance.now();
       let paused = false;
-      let manualDrag = false;
-      let dragStartX = 0;
-      let startOffset = 0;
+      let dragging = false;
+      let startX = 0, startOffset = 0;
 
-      // auto-play
       function tick(now){
-        const dt = Math.min(40, now - last);
-        last = now;
-        if(!paused && !manualDrag){
+        const dt = Math.min(40, now - last); last = now;
+        if(!paused && !dragging){
           offset += speed * dt;
         }
-        // loop: when offset exceeds half width, wrap
-        const totalWidth = carousel.scrollWidth;
-        if(offset >= totalWidth/3) offset = offset - totalWidth/3;
-        carousel.style.transform = `translate3d(calc(-${offset}px), 0, 0)`;
+        // wrap offset modulo block width (we duplicated 3x length)
+        const totalW = carousel.scrollWidth / 3; // original block width
+        if(offset >= totalW) offset -= totalW;
+        carousel.style.transform = `translate3d(calc(-${offset}px),0,0)`;
         requestAnimationFrame(tick);
       }
       requestAnimationFrame(tick);
 
       // pause on hover
-      showcaseView.addEventListener('mouseenter', ()=>{ paused = true; });
-      showcaseView.addEventListener('mouseleave', ()=>{ paused = false; });
+      showcaseView.addEventListener('mouseenter', ()=>{ paused=true; });
+      showcaseView.addEventListener('mouseleave', ()=>{ paused=false; });
 
-      // drag to scroll
+      // drag support
       showcaseView.addEventListener('pointerdown', (e)=>{
-        manualDrag = true;
-        dragStartX = e.clientX;
-        startOffset = offset;
+        dragging=true; startX = e.clientX; startOffset = offset;
         showcaseView.setPointerCapture(e.pointerId);
       });
       showcaseView.addEventListener('pointermove', (e)=>{
-        if(!manualDrag) return;
-        const dx = e.clientX - dragStartX;
-        offset = clamp(startOffset - dx, 0, carousel.scrollWidth);
+        if(!dragging) return;
+        const dx = e.clientX - startX;
+        offset = Math.max(0, startOffset - dx);
       });
-      showcaseView.addEventListener('pointerup', (e)=>{
-        manualDrag = false;
-      });
-      showcaseView.addEventListener('pointercancel', ()=>{ manualDrag=false; });
+      showcaseView.addEventListener('pointerup', ()=>{ dragging=false; });
+      showcaseView.addEventListener('pointercancel', ()=>{ dragging=false; });
 
-      // spotlight first visible panel
-      function refreshHeroFromCenter(){
-        // Determine mid point of view and pick nearest panel center
+      // periodically set hero from nearest center panel
+      setInterval(()=>{
+        // pick middle of view and find closest panel center
         const rect = showcaseView.getBoundingClientRect();
-        const centerX = rect.left + rect.width / 2;
-        let best = null; let bestDist = Infinity;
-        panels.forEach(p=>{
+        const centerX = rect.left + rect.width/2;
+        const list = Array.from(carousel.querySelectorAll('.card-portrait'));
+        let best=null, bestD=Infinity;
+        list.forEach(p=>{
           const r = p.getBoundingClientRect();
           const px = r.left + r.width/2;
           const d = Math.abs(px - centerX);
-          if(d < bestDist){ bestDist = d; best = p; }
+          if(d < bestD){ bestD=d; best=p; }
         });
         if(best){
-          const name = best.dataset.name || 'Unknown';
-          const rarity = best.dataset.rarity || '';
-          heroName.textContent = name;
-          heroDesc.textContent = rarity;
+          heroName.textContent = best.dataset.name || 'Unknown';
+          heroDesc.textContent = best.dataset.rarity || '';
         }
-      }
-      setInterval(refreshHeroFromCenter, 400);
+      }, 300);
     })();
 
-    /* ------------------ Showcase interactions ------------------ */
-    panels.forEach(p=>{
-      p.addEventListener('mouseenter', ()=>{
-        panels.forEach(x=>x.style.filter='brightness(0.65)');
-        p.style.filter='brightness(1)';
-      });
-      p.addEventListener('mouseleave', ()=>{ panels.forEach(x=>x.style.filter=''); });
-      p.addEventListener('click', ()=> {
-        const name = p.dataset.name || 'Unknown';
-        const rarity = p.dataset.rarity || '';
-        heroName.textContent = name;
-        heroDesc.textContent = rarity;
-        // small preview effect
-        p.classList.add('active');
-        setTimeout(()=>p.classList.remove('active'), 700);
-      });
-    });
+    /* ---------- Shine sweep automation ---------- */
+    // periodically trigger sweep on visible cards to create lively feel
+    (function autoShine(){
+      const allCards = Array.from(document.querySelectorAll('.card-portrait'));
+      setInterval(()=>{
+        // pick a visible card near center
+        const viewRect = showcaseView.getBoundingClientRect();
+        const visible = allCards.filter(c=>{
+          const r = c.getBoundingClientRect();
+          return (r.right > viewRect.left + 60 && r.left < viewRect.right - 60);
+        });
+        if(visible.length===0) return;
+        const pick = visible[Math.floor(Math.random()*visible.length)];
+        pick.classList.add('sweep');
+        // remove after animation
+        setTimeout(()=>pick.classList.remove('sweep'), 1500);
+      }, 1300);
+    })();
 
-    /* ------------------ Mode switching (Showcase / Gacha) ------------------ */
-    let currentMode = 'showcase'; // default
-    function setMode(mode){
-      currentMode = mode;
-      modeLabelBtn.textContent = `Mode: ${mode.charAt(0).toUpperCase()+mode.slice(1)}`;
-      if(mode === 'showcase'){
-        document.getElementById('showcaseWrap').style.opacity = 1;
-        gachaBoard.classList.add('hide');
-      } else {
-        document.getElementById('showcaseWrap').style.opacity = 0.14;
-        gachaBoard.classList.remove('hide');
-      }
+    /* ---------- Showcase interactions (hover preview) ---------- */
+    (function panelInteractions(){
+      const list = Array.from(document.querySelectorAll('.card-portrait'));
+      list.forEach(p=>{
+        p.addEventListener('mouseenter', ()=>{
+          list.forEach(x=>x.style.filter='brightness(0.65)');
+          p.style.filter='brightness(1)';
+        });
+        p.addEventListener('mouseleave', ()=>{ list.forEach(x=>x.style.filter=''); });
+        p.addEventListener('click', ()=>{
+          // quick preview effect and set hero
+          heroName.textContent = p.dataset.name || 'Unknown';
+          heroDesc.textContent = p.dataset.rarity || '';
+          p.classList.add('sweep');
+          setTimeout(()=>p.classList.remove('sweep'), 900);
+        });
+      });
+    })();
+
+    /* ---------- Mode switching ---------- */
+    let mode = 'showcase';
+    function setMode(m){
+      mode = m;
+      modeBtn.textContent = `Mode: ${m.charAt(0).toUpperCase()+m.slice(1)}`;
+      if(m === 'showcase'){ document.getElementById('showcaseArea').style.opacity = 1; gachaBoard.classList.add('hide'); }
+      else { document.getElementById('showcaseArea').style.opacity = 0.12; gachaBoard.classList.remove('hide'); }
     }
-    modeBtn.addEventListener('click', ()=>{ setMode(currentMode==='showcase' ? 'gacha' : 'showcase'); });
+    modeBtn.addEventListener('click', ()=> setMode(mode==='showcase' ? 'gacha' : 'showcase') );
+    previewGacha.addEventListener('click', ()=> setMode('gacha'));
 
-    /* ------------------ Subscribe button & enable gacha ------------------ */
-    openChannelBtn.addEventListener('click', ()=>{
+    /* ---------- Subscribe flow to enable gacha ---------- */
+    openChannel.addEventListener('click', ()=>{
       window.open(YT_CHANNEL, '_blank');
       localStorage.setItem('subClicked', Date.now());
       enableBtn.disabled = false;
       enableBtn.classList.add('primary');
     });
-    // enable button simulates permission to use gacha (client-side)
-    enableBtn.addEventListener('click', ()=>{
-      setMode('gacha');
-      summonBtn.disabled = false;
-      singleSummon.disabled = false;
-    });
-    if(localStorage.getItem('subClicked')){ enableBtn.disabled = false; }
+    enableBtn.addEventListener('click', ()=>{ setMode('gacha'); summonBtn.disabled=false; singleBtn.disabled=false; });
+    if(localStorage.getItem('subClicked')){ enableBtn.disabled=false; }
 
-    /* ------------------ Gacha logic (client-side probabilities) ------------------ */
-    // choose rarity from CDF
+    /* ---------- Rarity & Gacha logic (client-side) ---------- */
+    // build CDF
+    let cdf = window.CDF || [];
     function chooseRarity(){
       const r = Math.random();
-      for(const node of cdf){ if(r <= node.at) return node.key; }
+      for(const n of cdf) if(r <= n.at) return n.key;
       return cdf[cdf.length-1].key;
     }
-
-    // pick a random panel that matches rarity if possible, otherwise fallback
-    function pickPanelByRarity(rarity){
-      const matches = panels.filter(p => (p.dataset.rarity || '').toLowerCase() === rarity.toLowerCase());
-      if(matches.length > 0) return matches[Math.floor(Math.random()*matches.length)];
-      // fallback: random panel
-      return panels[Math.floor(Math.random()*panels.length)];
+    function pickPanelByRarity(r){
+      const list = Array.from(document.querySelectorAll('.card-portrait'));
+      const matches = list.filter(x => (x.dataset.rarity||'').toLowerCase() === r.toLowerCase());
+      if(matches.length) return matches[Math.floor(Math.random()*matches.length)];
+      return list[Math.floor(Math.random()*list.length)];
     }
 
-    // cinematic visual reveal for a given panel (no server)
-    async function revealPanel(panel){
-      // visual: highlight panel, show popup
-      panels.forEach(x=>x.classList.remove('sel')); panel.classList.add('sel');
+    // reveal sequence
+    async function reveal(panel){
+      // apply selection highlight
+      panel.classList.add('sel');
       const name = panel.dataset.name || 'Unknown';
       const rarity = panel.dataset.rarity || 'Unknown';
-      // result overlay content
       resultTitle.textContent = `${rarity} • You Obtained ${name}`;
-      resultText.textContent = `Demo reveal — replace client-side claim with secure server API when ready.`;
-      claimBtn.dataset.file = panel.dataset.file || '';
-      // style popup by rarity color
+      resultText.textContent = `Visual reveal demo. Replace claim with real server flow when ready.`;
+      // color glow
       const color = rarityColors[rarity] || '#39d2ff';
       document.querySelector('.result-card').style.boxShadow = `0 40px 140px ${hexToRgba(color,0.18)}`;
-      // show overlay
       resultOverlay.classList.add('open');
     }
 
-    // hex to rgba helper
     function hexToRgba(hex, a=1){
       try{
         const h = hex.replace('#','');
-        const bigint = parseInt(h,16);
-        const r = (bigint >> 16) & 255;
-        const g = (bigint >> 8) & 255;
-        const b = bigint & 255;
+        const bi = parseInt(h,16);
+        const r = (bi>>16)&255, g = (bi>>8)&255, b = bi&255;
         return `rgba(${r},${g},${b},${a})`;
       }catch(e){ return `rgba(57,210,255,${a})`; }
     }
 
-    // Summon animation sequence
+    // Summon animations
     async function performSummon(full=true){
-      // disable buttons
-      summonBtn.disabled = true; singleSummon.disabled = true;
-      // animate gtiles selection
-      const gtiles = Array.from(document.querySelectorAll('.gtiles .gtile'));
-      // cycling highlight
-      let cycles = full ? 30 + Math.floor(Math.random()*20) : 12 + Math.floor(Math.random()*8);
+      summonBtn.disabled = true; singleBtn.disabled = true;
+      const tiles = Array.from(document.querySelectorAll('.gtiles .gtile'));
+      let cycles = full ? 32 + Math.floor(Math.random()*20) : 10 + Math.floor(Math.random()*10);
       for(let i=0;i<cycles;i++){
-        gtiles.forEach(t=>t.classList.remove('sel'));
-        const sel = gtiles[i % gtiles.length];
-        sel.classList.add('sel');
-        await sleep(40 + Math.floor(i*i/30));
+        tiles.forEach(t=>t.classList.remove('sel'));
+        tiles[i % tiles.length].classList.add('sel');
+        await sleep(40 + Math.floor(i*i/48));
       }
-      // choose rarity
-      const chosenRarity = chooseRarity();
-      // pick panel of that rarity
-      const winnerPanel = pickPanelByRarity(chosenRarity);
-      // small delay then reveal panel
-      await sleep(350);
-      await revealPanel(winnerPanel);
-      // re-enable
-      summonBtn.disabled = false; singleSummon.disabled = false;
+      const rarity = chooseRarity();
+      const winner = pickPanelByRarity(rarity);
+      await sleep(260);
+      await reveal(winner);
+      summonBtn.disabled = false; singleBtn.disabled = false;
     }
 
-    // bind summon buttons
     summonBtn.addEventListener('click', ()=>performSummon(true));
-    singleSummon.addEventListener('click', ()=>performSummon(false));
+    singleBtn.addEventListener('click', ()=>performSummon(false));
 
-    // helper sleep
-    function sleep(ms){ return new Promise(r=>setTimeout(r, ms)); }
-
-    // claim & close handlers
+    // claim/close handlers
     claimBtn.addEventListener('click', ()=>{
       const f = claimBtn.dataset.file || '';
-      if(!f){ alert('No file linked. Implement server-side claim to enable single-use downloads.'); return; }
-      window.open(f, '_blank');
+      if(!f){ alert('No file linked. Add server-side logic to enable secure single-use downloads.'); return; }
+      window.open(f,'_blank');
     });
-    closeResult.addEventListener('click', ()=>{ resultOverlay.classList.remove('open'); panels.forEach(x=>x.classList.remove('sel')); });
+    closeResult.addEventListener('click', ()=>{ resultOverlay.classList.remove('open'); const sels = document.querySelectorAll('.card-portrait.sel'); sels.forEach(s=>s.classList.remove('sel')); });
 
-    // preview gacha button simply switches to gacha mode
-    previewGachaBtn.addEventListener('click', ()=>{ setMode('gacha'); });
+    // show result by clicking a panel
+    document.querySelectorAll('.card-portrait').forEach(p => p.addEventListener('click', ()=>{ if(mode==='gacha'){ reveal(p); } }));
 
-    // background music best-effort autoplay
+    // helper
+    function sleep(ms){ return new Promise(res=>setTimeout(res, ms)); }
+
+    // autoplay music best-effort
     const bgMusic = document.getElementById('bgMusic');
     document.addEventListener('click', ()=>{ bgMusic.play().catch(()=>{}); }, {once:true});
 
-    /* ------------------ Accessibility / finalize ------------------ */
-    // Prevent accidental text selection dragging
-    document.addEventListener('selectstart', e => { if(e.target.closest('.carousel')) e.preventDefault(); });
-
-    // Expose a small API to update rates runtime (developer convenience)
+    // expose API for runtime customization
     window.GACHA = {
       setRates(newRates){
-        // set and rebuild cdf
         for(const k in newRates) if(newRates.hasOwnProperty(k)) rarityRates[k] = newRates[k];
-        // normalize
-        const sum = Object.values(rarityRates).reduce((s,x)=>s+x,0);
-        for(const k in rarityRates) rarityRates[k] = rarityRates[k]/sum;
-        // rebuild cdf
-        cdf = []; let s=0; for(const k of Object.keys(rarityRates)){ s+=rarityRates[k]; cdf.push({key:k,at:s}); }
-        updateRatesSummary();
+        // normalize & rebuild cdf
+        const keys = Object.keys(rarityRates); let s=0; keys.forEach(k=>s+=rarityRates[k]||0);
+        keys.forEach(k=>rarityRates[k]=(rarityRates[k]||0)/s);
+        cdf = []; let acc=0; keys.forEach(k=>{ acc+=rarityRates[k]; cdf.push({key:k, at:acc}); });
+        ratesSummary.textContent = keys.map(k=>`${k}: ${(rarityRates[k]*100).toFixed(2)}%`).join(' • ');
       },
       getRates(){ return Object.assign({}, rarityRates); }
     };
 
-    // initial small hero refresh
-    (function initHero(){
-      const first = panels[0];
-      if(first){ heroName.textContent = first.dataset.name || 'Unknown'; heroDesc.textContent = first.dataset.rarity || ''; }
-    })();
-
-    // End of script
+    // init hero text
+    (function initHero(){ const f = document.querySelector('.card-portrait'); if(f){ heroName.textContent=f.dataset.name||'Unknown'; heroDesc.textContent=f.dataset.rarity||''; } })();
   </script>
 </body>
 </html>
