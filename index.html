@@ -673,12 +673,15 @@
         </div>
 
         <!-- hero spotlight -->
-        <div class="hero-spot" id="heroSpot">
-          <div>
-            <h3 id="heroName">Sasuke</h3>
-            <p id="heroDesc" class="muted">Mythic • Abyss Walker</p>
-          </div>
-        </div>
+<div class="hero-spot" id="heroSpot">
+  <!-- 🔥 Tambahan: gambar karakter aktif -->
+  <img id="heroImage" src="assets/panels/panel1.png" alt="Sasuke Uchiha" 
+       style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0.8;z-index:0;transition:opacity 0.5s ease;">
+  <div style="position:relative;z-index:1;">
+    <h3 id="heroName">Sasuke</h3>
+    <p id="heroDesc" class="muted">Mythic • Abyss Walker</p>
+  </div>
+</div>
 
         <!-- GACHA MODE - FIXED VISIBILITY -->
         <div class="gacha-board hide" id="gachaBoard" aria-label="Portal summon gacha">
@@ -1316,7 +1319,11 @@ class GachaSystem {
         const description = panel.dataset.description || '';
         
         document.getElementById('heroName').textContent = name;
-        document.getElementById('heroDesc').textContent = `${rarity} • ${description}`;
+        document.getElementById(\'heroDesc\').textContent = `${rarity} • ${description}`;
+      // 🔥 Update hero image saat karakter berubah
+      const heroImage = document.getElementById(\'heroImage\');
+      const panelImg = panel.querySelector(\'img\');
+      if (heroImage && panelImg) heroImage.src = panelImg.src;
         
         const rarityGlow = {
           Mythic: 'rgba(243, 212, 143, 0.4)',
