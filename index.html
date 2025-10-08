@@ -81,8 +81,7 @@
     .showcase-wrap{position:relative;z-index:2;width:100%;max-width:1400px;padding:48px 32px;display:flex;flex-direction:column;gap:18px;align-items:center;justify-content:center}
     .showcase-title{display:flex;align-items:center;gap:12px;width:100%;justify-content:space-between}
     .showcase-title h2{font-size:20px;letter-spacing:1px;background:linear-gradient(45deg, var(--accent-a), var(--accent-b));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
-    .showcase-view{width:100%;overflow:hidden;padding:20px 0 28px 0;position:relative;cursor:grab;user-select:none;touch-action:pan-y}
-    .showcase-view:active{cursor:grabbing}
+    .showcase-view{width:100%;overflow:hidden;padding:20px 0 28px 0;position:relative}
     
     /* slider navigation */
     .slider-nav{display:flex;gap:10px;align-items:center}
@@ -91,24 +90,6 @@
     .nav-btn:disabled{opacity:0.4;cursor:not-allowed}
 
     .carousel{display:flex;gap:28px;align-items:center;will-change:transform;transition:transform 500ms cubic-bezier(.2,.9,.2,1)}
-    
-    /* Smooth bounce effect */
-    .carousel.bounce-left{animation:bounceLeft 0.6s ease}
-    .carousel.bounce-right{animation:bounceRight 0.6s ease}
-
-    @keyframes bounceLeft{
-      0%, 100%{transform:translate3d(0,0,0)}
-      25%{transform:translate3d(10px,0,0)}
-      50%{transform:translate3d(-5px,0,0)}
-      75%{transform:translate3d(2px,0,0)}
-    }
-
-    @keyframes bounceRight{
-      0%, 100%{transform:translate3d(0,0,0)}
-      25%{transform:translate3d(-10px,0,0)}
-      50%{transform:translate3d(5px,0,0)}
-      75%{transform:translate3d(-2px,0,0)}
-    }
     
     /* panel - medium size dengan aura FIXED */
     .panel{width:280px;height:620px;border-radius:14px;overflow:visible;background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(0,0,0,0.08));backdrop-filter:blur(6px);position:relative;box-shadow:0 40px 120px rgba(2,8,20,0.6);transform:skewX(-8deg) scale(0.95);transition:all 350ms cubic-bezier(0.25, 0.46, 0.45, 0.94)}
@@ -265,64 +246,6 @@
 
     .portal-character.active img {
       transform: scale(1.15);
-    }
-
-    /* PORTAL PREVIEW ENHANCEMENT */
-    .portal-preview {
-      position: absolute;
-      top: -120px;
-      left: 50%;
-      transform: translateX(-50%) scale(0.8);
-      width: 180px;
-      height: 150px;
-      background: linear-gradient(180deg, rgba(255,255,255,0.1), rgba(255,255,255,0.05));
-      border-radius: 12px;
-      border: 2px solid var(--accent-a);
-      box-shadow: 0 20px 60px rgba(57,210,255,0.3);
-      opacity: 0;
-      pointer-events: none;
-      transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-      z-index: 10;
-      overflow: hidden;
-      backdrop-filter: blur(10px);
-    }
-
-    .portal-preview::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: -100%;
-      width: 100%;
-      height: 100%;
-      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
-      animation: shine 3s infinite;
-    }
-
-    .portal-preview img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      border-radius: 10px;
-    }
-
-    .portal-character:hover .portal-preview,
-    .portal-character.active .portal-preview {
-      opacity: 1;
-      transform: translateX(-50%) scale(1);
-      top: -140px;
-    }
-
-    .portal-preview::after {
-      content: '';
-      position: absolute;
-      bottom: -10px;
-      left: 50%;
-      transform: translateX(-50%);
-      width: 0;
-      height: 0;
-      border-left: 10px solid transparent;
-      border-right: 10px solid transparent;
-      border-top: 10px solid var(--accent-a);
     }
 
     .portal-controls {
@@ -797,15 +720,6 @@
       .portal-grid {
         height: 250px;
       }
-      .portal-preview {
-        width: 150px;
-        height: 120px;
-        top: -100px;
-      }
-      .portal-character:hover .portal-preview,
-      .portal-character.active .portal-preview {
-        top: -120px;
-      }
       .music-player {
         bottom: 80px;
         right: 10px;
@@ -821,15 +735,6 @@
       .portal-grid {
         height: 200px;
         gap: 10px;
-      }
-      .portal-preview {
-        width: 120px;
-        height: 100px;
-        top: -90px;
-      }
-      .portal-character:hover .portal-preview,
-      .portal-character.active .portal-preview {
-        top: -100px;
       }
     }
     @media (max-width:720px){
@@ -847,9 +752,6 @@
       .portal-grid {
         height: 160px;
         gap: 8px;
-      }
-      .portal-preview {
-        display: none; /* Hide preview on mobile for better UX */
       }
       .music-player {
         position: relative;
@@ -934,7 +836,7 @@
           <div class="showcase-title">
             <div>
               <h2>Character Showcase</h2>
-              <div class="muted">Swipe or use arrows • 6 characters • Click to preview</div>
+              <div class="muted">Manual slider • 6 characters • Click to preview</div>
             </div>
             <div class="slider-nav">
               <button id="prevBtn" class="nav-btn" aria-label="Previous character">←</button>
@@ -946,7 +848,7 @@
           <div class="showcase-view" id="showcaseView">
             <div id="carousel" class="carousel">
               <!-- 6 panels dengan ukuran medium dan aura FIXED -->
-              <div class="panel" data-name="Sasuke Uchiha" data-rarity="Mythic" data-file="SasukeRinnegan" data-description="Uchiha" data-aura-color="#ffd700" data-voice="sasuke_voice.mp3">
+              <div class="panel" data-name="Sasuke Uchiha" data-rarity="Mythic" data-file="SasukeRinnegan" data-description="Uchiha" data-aura-color="#ffd700">
                 <div class="aura-container">
                   <div class="aura" style="--aura-color: #ffd700"></div>
                   <div class="aura aura-2" style="--aura-color: #ffd700"></div>
@@ -960,7 +862,7 @@
                 </div>
               </div>
 
-              <div class="panel" data-name="Obito Uchiha" data-rarity="Legendary" data-file="ObitoUnmasked" data-description="Uchiha" data-aura-color="#9b7bff" data-voice="obito_voice.mp3">
+              <div class="panel" data-name="Obito Uchiha" data-rarity="Legendary" data-file="ObitoUnmasked" data-description="Uchiha" data-aura-color="#9b7bff">
                 <div class="aura-container">
                   <div class="aura" style="--aura-color: #9b7bff"></div>
                   <div class="aura aura-2" style="--aura-color: #9b7bff"></div>
@@ -974,7 +876,7 @@
                 </div>
               </div>
 
-              <div class="panel" data-name="Madara Uchiha" data-rarity="Supreme" data-file="Madara" data-description="Uchiha" data-aura-color="#39d2ff" data-voice="madara_voice.mp3">
+              <div class="panel" data-name="Madara Uchiha" data-rarity="Supreme" data-file="Madara" data-description="Uchiha" data-aura-color="#39d2ff">
                 <div class="aura-container">
                   <div class="aura" style="--aura-color: #39d2ff"></div>
                   <div class="aura aura-2" style="--aura-color: #39d2ff"></div>
@@ -988,7 +890,7 @@
                 </div>
               </div>
 
-              <div class="panel" data-name="Naruto" data-rarity="Common" data-file="Naruto" data-description="Uzumaki" data-aura-color="#94a6bf" data-voice="naruto_voice.mp3">
+              <div class="panel" data-name="Naruto" data-rarity="Common" data-file="Naruto" data-description="Uzumaki" data-aura-color="#94a6bf">
                 <div class="aura-container">
                   <div class="aura" style="--aura-color: #94a6bf"></div>
                   <div class="aura aura-2" style="--aura-color: #94a6bf"></div>
@@ -1002,7 +904,7 @@
                 </div>
               </div>
 
-              <div class="panel" data-name="SasukeHebi" data-rarity="Elite" data-file="SasukeHebi" data-description="Uchiha" data-aura-color="#39d2ff" data-voice="sasukehebi_voice.mp3">
+              <div class="panel" data-name="SasukeHebi" data-rarity="Elite" data-file="SasukeHebi" data-description="Uchiha" data-aura-color="#39d2ff">
                 <div class="aura-container">
                   <div class="aura" style="--aura-color: #39d2ff"></div>
                   <div class="aura aura-2" style="--aura-color: #39d2ff"></div>
@@ -1016,7 +918,7 @@
                 </div>
               </div>
 
-              <div class="panel" data-name="BorutoUzumaki" data-rarity="Legendary" data-file="BorutoUzumaki" data-description="Uzumaki" data-aura-color="#9b7bff" data-voice="boruto_voice.mp3">
+              <div class="panel" data-name="BorutoUzumaki" data-rarity="Legendary" data-file="BorutoUzumaki" data-description="Uzumaki" data-aura-color="#9b7bff">
                 <div class="aura-container">
                   <div class="aura" style="--aura-color: #9b7bff"></div>
                   <div class="aura aura-2" style="--aura-color: #9b7bff"></div>
@@ -1044,10 +946,10 @@
           </div>
         </div>
 
-        <!-- SUMMON PORTAL BESAR DI TENGAH - DENGAN PREVIEW -->
+        <!-- SUMMON PORTAL BESAR DI TENGAH - REVISI -->
         <div class="summon-portal hide" id="summonPortal">
           <div class="portal-grid" id="portalGrid">
-            <!-- Portal characters akan diisi oleh JavaScript dengan preview -->
+            <!-- Portal characters akan diisi oleh JavaScript -->
           </div>
           <div class="portal-controls">
             <div style="display:flex;flex-direction:column;gap:8px;align-items:center;">
@@ -1158,17 +1060,18 @@
 
   <script>
 /************************************************************************
- * ENHANCED GACHA SYSTEM WITH SWIPE & PREVIEW FEATURES:
- * 1. Swipeable carousel dengan boundary dan bounce effect
- * 2. Preview karakter di summon portal tanpa gambar tambahan
- * 3. Enhanced user experience dengan visual feedback
+ * ENHANCED GACHA SYSTEM WITH ALL FIXES FOR VOICE SYSTEM
+ * - Fixed voice playback for all characters in showcase
+ * - Multiple background music with player
+ * - Enhanced result with character images & fireworks
+ * - Animated starfield background
  ************************************************************************/
 
-/* ---------------------- CHARACTER DATA DENGAN VOICE ---------------------- */
+/* ---------------------- CHARACTER DATA DENGAN VOICE - DIPERBAIKI ---------------------- */
 const CHARACTERS = [
   {
     id: 'Sasuke',
-    name: 'Sasuke',
+    name: 'Sasuke Uchiha', // SESUAIKAN DENGAN data-name DI HTML
     rarity: 'Mythic',
     image: 'assets/panels/panel1.png',
     description: 'Abyss Walker',
@@ -1178,7 +1081,7 @@ const CHARACTERS = [
   },
   {
     id: 'Obito',
-    name: 'Obito',
+    name: 'Obito Uchiha', // SESUAIKAN DENGAN data-name DI HTML
     rarity: 'Legendary',
     image: 'assets/panels/panel2.png',
     description: 'Dragon Knight',
@@ -1188,7 +1091,7 @@ const CHARACTERS = [
   },
   {
     id: 'Madara',
-    name: 'Madara',
+    name: 'Madara Uchiha', // SESUAIKAN DENGAN data-name DI HTML
     rarity: 'Elite',
     image: 'assets/panels/panel3.png',
     description: 'Oracle Seer',
@@ -1198,7 +1101,7 @@ const CHARACTERS = [
   },
   {
     id: 'Naruto',
-    name: 'Naruto',
+    name: 'Naruto', // SESUAIKAN DENGAN data-name DI HTML
     rarity: 'Common',
     image: 'assets/panels/panel4.png',
     description: 'Forest Guardian',
@@ -1208,7 +1111,7 @@ const CHARACTERS = [
   },
   {
     id: 'SasukeHebi',
-    name: 'SasukeHebi',
+    name: 'SasukeHebi', // SESUAIKAN DENGAN data-name DI HTML
     rarity: 'Elite',
     image: 'assets/panels/panel5.png',
     description: 'Cyber Ninja',
@@ -1218,7 +1121,7 @@ const CHARACTERS = [
   },
   {
     id: 'BorutoUzumaki',
-    name: 'BorutoUzumaki',
+    name: 'BorutoUzumaki', // SESUAIKAN DENGAN data-name DI HTML
     rarity: 'Legendary',
     image: 'assets/panels/panel6.png',
     description: 'Phoenix Mage',
@@ -1329,17 +1232,26 @@ class MusicPlayerSystem {
   }
 }
 
-/* ---------------------- VOICE SYSTEM ---------------------- */
+/* ---------------------- VOICE SYSTEM - DIPERBAIKI ---------------------- */
 class VoiceSystem {
   constructor() {
     this.currentVoice = null;
   }
 
   playVoice(voicePath) {
+    // Debug: log voice path
+    console.log('🎵 Attempting to play voice:', voicePath);
+    
     // Stop current voice jika sedang bermain
     if (this.currentVoice) {
       this.currentVoice.pause();
       this.currentVoice.currentTime = 0;
+    }
+
+    // Check jika voice path valid
+    if (!voicePath || voicePath === 'undefined') {
+      console.warn('❌ Invalid voice path:', voicePath);
+      return;
     }
 
     // Play voice baru
@@ -1347,7 +1259,18 @@ class VoiceSystem {
     this.currentVoice.volume = 0.7;
     
     this.currentVoice.play().catch(error => {
-      console.log('Voice play failed:', error);
+      console.log('❌ Voice play failed:', error);
+      console.log('Voice path:', voicePath);
+    });
+    
+    // Event handlers untuk debugging
+    this.currentVoice.addEventListener('loadeddata', () => {
+      console.log('✅ Voice loaded successfully:', voicePath);
+    });
+    
+    this.currentVoice.addEventListener('error', (e) => {
+      console.error('❌ Voice loading error:', e);
+      console.error('Voice path:', voicePath);
     });
   }
 
@@ -1457,7 +1380,7 @@ class StarfieldSystem {
   }
 }
 
-/* ---------------------- SUMMON PORTAL SYSTEM DENGAN PREVIEW ---------------------- */
+/* ---------------------- SUMMON PORTAL SYSTEM ---------------------- */
 class SummonPortalSystem {
   constructor() {
     this.container = document.getElementById('portalGrid');
@@ -1478,11 +1401,7 @@ class SummonPortalSystem {
       characterElement.dataset.characterId = character.id;
       characterElement.dataset.index = index;
       
-      // TAMBAH PREVIEW ELEMENT
       characterElement.innerHTML = `
-        <div class="portal-preview">
-          <img src="${character.image}" alt="${character.name}" onerror="handleImageError(this)">
-        </div>
         <img src="${character.image}" alt="${character.name}" onerror="handleImageError(this)">
       `;
       
@@ -1491,30 +1410,8 @@ class SummonPortalSystem {
         this.activateCharacter(characterElement, character);
       });
       
-      // Hover events untuk smooth preview
-      characterElement.addEventListener('mouseenter', () => {
-        this.showPreview(characterElement, character);
-      });
-      
-      characterElement.addEventListener('mouseleave', () => {
-        this.hidePreview(characterElement);
-      });
-      
       this.container.appendChild(characterElement);
     });
-  }
-
-  showPreview(element, character) {
-    // Play brief voice preview (optional)
-    if (character.voice) {
-      const previewVoice = new Audio(character.voice);
-      previewVoice.volume = 0.3;
-      previewVoice.play().catch(() => {});
-    }
-  }
-
-  hidePreview(element) {
-    // Stop voice preview jika perlu
   }
 
   activateCharacter(element, character) {
@@ -1768,7 +1665,7 @@ class SummonLimitSystem {
   }
 }
 
-/* ---------------------- GACHA SYSTEM DENGAN SWIPE & PREVIEW ---------------------- */
+/* ---------------------- GACHA SYSTEM DENGAN VOICE FIXES ---------------------- */
 class GachaSystem {
   constructor() {
     this.panels = Array.from(document.querySelectorAll('.panel'));
@@ -1779,12 +1676,6 @@ class GachaSystem {
     this.voiceSystem = new VoiceSystem();
     this.fireworksSystem = new FireworksSystem();
     this.starfieldSystem = new StarfieldSystem();
-    
-    // Swipe variables
-    this.startX = 0;
-    this.currentX = 0;
-    this.isDragging = false;
-    
     this.init();
   }
 
@@ -1794,6 +1685,7 @@ class GachaSystem {
     this.setupBackground();
     this.preloadHeroImages();
     this.updateSlider();
+    this.debugVoiceSystem(); // DEBUG VOICE SYSTEM
   }
 
   setupGacha() {
@@ -1946,46 +1838,10 @@ class GachaSystem {
   setupCarousel() {
     const prevBtn = document.getElementById('prevBtn');
     const nextBtn = document.getElementById('nextBtn');
-    const showcaseView = document.getElementById('showcaseView');
-    const carousel = document.getElementById('carousel');
 
     prevBtn.addEventListener('click', () => this.prevSlide());
     nextBtn.addEventListener('click', () => this.nextSlide());
 
-    // SWIPE FUNCTIONALITY - MOUSE
-    showcaseView.addEventListener('mousedown', (e) => {
-      this.startDrag(e.clientX);
-    });
-
-    showcaseView.addEventListener('touchstart', (e) => {
-      this.startDrag(e.touches[0].clientX);
-    });
-
-    document.addEventListener('mousemove', (e) => {
-      if (!this.isDragging) return;
-      this.drag(e.clientX);
-    });
-
-    document.addEventListener('touchmove', (e) => {
-      if (!this.isDragging) return;
-      this.drag(e.touches[0].clientX);
-    });
-
-    document.addEventListener('mouseup', () => {
-      this.endDrag();
-    });
-
-    document.addEventListener('touchend', () => {
-      this.endDrag();
-    });
-
-    // Prevent context menu on swipe area
-    showcaseView.addEventListener('contextmenu', (e) => {
-      e.preventDefault();
-      return false;
-    });
-
-    // Keyboard navigation
     document.addEventListener('keydown', (e) => {
       if (e.key === 'ArrowLeft') this.prevSlide();
       if (e.key === 'ArrowRight') this.nextSlide();
@@ -1994,53 +1850,62 @@ class GachaSystem {
     this.panels.forEach((panel, index) => {
       panel.addEventListener('click', () => {
         this.goToSlide(index);
-        const character = CHARACTERS.find(char => char.name === panel.dataset.name);
-        if (character && character.voice) {
-          this.voiceSystem.playVoice(character.voice);
-        }
+        // Play character voice ketika panel diklik - DIPERBAIKI
+        this.playPanelVoice(panel);
       });
     });
   }
 
-  startDrag(clientX) {
-    this.startX = clientX;
-    this.currentX = clientX;
-    this.isDragging = true;
-    document.getElementById('carousel').style.transition = 'none';
-  }
-
-  drag(clientX) {
-    if (!this.isDragging) return;
+  /* ---------------------- METHOD BARU UNTUK VOICE PANEL - DIPERBAIKI ---------------------- */
+  playPanelVoice(panel) {
+    const characterName = panel.dataset.name;
+    console.log('🔍 Looking for character:', characterName);
     
-    this.currentX = clientX;
-    const diff = this.currentX - this.startX;
-    const panelWidth = 280;
-    const gap = 28;
-    const baseOffset = -this.currentSlide * (panelWidth + gap);
-    const dragOffset = diff * 0.5; // Reduced sensitivity
+    // Cari character berdasarkan name yang match persis
+    const character = CHARACTERS.find(char => char.name === characterName);
     
-    document.getElementById('carousel').style.transform = `translate3d(${baseOffset + dragOffset}px, 0, 0)`;
-  }
-
-  endDrag() {
-    if (!this.isDragging) return;
-    
-    this.isDragging = false;
-    document.getElementById('carousel').style.transition = 'transform 500ms cubic-bezier(0.25, 0.46, 0.45, 0.94)';
-    
-    const diff = this.currentX - this.startX;
-    const swipeThreshold = 50;
-    
-    if (Math.abs(diff) > swipeThreshold) {
-      if (diff > 0) {
-        this.prevSlide();
-      } else {
-        this.nextSlide();
-      }
+    if (character && character.voice) {
+      console.log('✅ Found character voice:', character.name, character.voice);
+      this.voiceSystem.playVoice(character.voice);
     } else {
-      // Return to current position
-      this.updateSlider();
+      console.warn('❌ Character not found or no voice:', characterName);
+      console.log('Available characters:', CHARACTERS.map(c => c.name));
+      
+      // Fallback: coba cari dengan partial match
+      const fallbackCharacter = CHARACTERS.find(char => 
+        characterName.includes(char.name) || char.name.includes(characterName)
+      );
+      
+      if (fallbackCharacter && fallbackCharacter.voice) {
+        console.log('🔄 Using fallback voice:', fallbackCharacter.name);
+        this.voiceSystem.playVoice(fallbackCharacter.voice);
+      } else {
+        console.error('❌ No fallback character found for:', characterName);
+      }
     }
+  }
+
+  /* ---------------------- DEBUG VOICE SYSTEM ---------------------- */
+  debugVoiceSystem() {
+    console.log('=== VOICE SYSTEM DEBUG ===');
+    
+    // Check semua panels
+    this.panels.forEach((panel, index) => {
+      const name = panel.dataset.name;
+      const character = CHARACTERS.find(char => char.name === name);
+      console.log(`Panel ${index + 1}:`, {
+        'data-name': name,
+        'found': !!character,
+        'characterName': character?.name,
+        'voice': character?.voice || 'MISSING'
+      });
+    });
+    
+    // Check semua characters
+    console.log('=== CHARACTERS DATA ===');
+    CHARACTERS.forEach(char => {
+      console.log(char.name, '- Voice:', char.voice);
+    });
   }
 
   setupBackground() {
@@ -2129,16 +1994,7 @@ class GachaSystem {
   }
 
   goToSlide(index) {
-    const oldIndex = this.currentSlide;
-    this.currentSlide = this.clamp(index, 0, this.totalSlides - 1);
-    
-    // Add bounce effect jika mencapai boundary
-    if (this.currentSlide === 0 && index < 0) {
-      this.addBounceEffect('left');
-    } else if (this.currentSlide === this.totalSlides - 1 && index > this.totalSlides - 1) {
-      this.addBounceEffect('right');
-    }
-    
+    this.currentSlide = clamp(index, 0, this.totalSlides - 1);
     this.updateSlider();
   }
 
@@ -2146,8 +2002,6 @@ class GachaSystem {
     if (this.currentSlide < this.totalSlides - 1) {
       this.currentSlide++;
       this.updateSlider();
-    } else {
-      this.addBounceEffect('right');
     }
   }
 
@@ -2155,26 +2009,7 @@ class GachaSystem {
     if (this.currentSlide > 0) {
       this.currentSlide--;
       this.updateSlider();
-    } else {
-      this.addBounceEffect('left');
     }
-  }
-
-  addBounceEffect(direction) {
-    const carousel = document.getElementById('carousel');
-    carousel.classList.remove('bounce-left', 'bounce-right');
-    
-    setTimeout(() => {
-      carousel.classList.add(`bounce-${direction}`);
-      
-      setTimeout(() => {
-        carousel.classList.remove(`bounce-${direction}`);
-      }, 600);
-    }, 10);
-  }
-
-  clamp(v, a = 0, b = 1) { 
-    return Math.max(a, Math.min(b, v)); 
   }
 
   chooseRarity() {
@@ -2231,7 +2066,8 @@ class GachaSystem {
     const resultCard = document.querySelector('.result-card');
     resultCard.style.setProperty('--result-glow', rarityGlow[character.rarity] || 'rgba(57,210,255,0.2)');
     
-    // Play character voice
+    // Play character voice - DIPERBAIKI
+    console.log('🎵 Playing summon voice for:', character.name, character.voice);
     this.voiceSystem.playVoice(character.voice);
     
     // Show fireworks
@@ -2435,7 +2271,7 @@ document.addEventListener('DOMContentLoaded', function() {
     img.addEventListener('error', () => handleImageError(img));
   });
 
-  console.log('🎮 Enhanced Gacha System with Swipe & Preview Initialized');
+  console.log('🎮 Enhanced Gacha System with Voice Fixes Initialized');
 });
 </script>
 </html>
