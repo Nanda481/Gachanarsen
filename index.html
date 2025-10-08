@@ -118,11 +118,69 @@
     .panel:hover .aura-container{opacity:0.6}
     .panel.active{transform:translateY(-12px) skewX(-8deg) scale(1);box-shadow:0 50px 130px var(--aura-glow, rgba(57,210,255,0.3))}
 
-    /* hero spotlight */
-    .hero-spot{position:absolute;right:4%;bottom:6%;z-index:3;width:420px;height:640px;border-radius:16px;padding:22px;display:flex;align-items:flex-end;justify-content:center;box-shadow:0 60px 160px rgba(3,10,20,0.6);background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(0,0,0,0.15));border:1px solid rgba(255,255,255,0.03);position:relative;overflow:hidden}
-    .hero-spot::before{content:'';position:absolute;top:0;left:-100%;width:100%;height:100%;background:linear-gradient(90deg, transparent, rgba(255,255,255,0.05), transparent);animation:cardShine 8s infinite}
-    .hero-spot h3{font-size:28px;color:var(--accent-b);margin-bottom:6px;position:relative;z-index:1}
-    .hero-spot p{color:var(--muted);font-size:14px;position:relative;z-index:1}
+    /* HERO SPOT DIPERBAIKI DENGAN GAMBAR */
+    .hero-spot {
+      position: absolute;
+      right: 4%;
+      bottom: 6%;
+      z-index: 3;
+      width: 420px;
+      height: 640px;
+      border-radius: 16px;
+      overflow: hidden;
+      box-shadow: 0 60px 160px rgba(3,10,20,0.6);
+      background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(0,0,0,0.15));
+      border: 1px solid rgba(255,255,255,0.03);
+      position: relative;
+    }
+
+    .hero-image-container {
+      width: 100%;
+      height: 100%;
+      position: relative;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .hero-image-container img {
+      width: 100%;
+      height: 85%;
+      object-fit: cover;
+      object-position: top center;
+      border-bottom: 1px solid rgba(255,255,255,0.05);
+      transition: opacity 0.5s ease-in-out;
+    }
+
+    /* Loading state untuk hero image */
+    .hero-image-container img[src=""] {
+      opacity: 0;
+    }
+
+    .hero-image-container img:not([src=""]) {
+      opacity: 1;
+    }
+
+    .hero-content {
+      padding: 20px;
+      background: linear-gradient(180deg, transparent, rgba(8,24,41,0.95));
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      z-index: 2;
+    }
+
+    .hero-spot::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.05), transparent);
+      animation: cardShine 8s infinite;
+      z-index: 1;
+    }
 
     /* gacha board dengan efek shine - FIXED VISIBILITY */
     .gacha-board{position:absolute;left:50%;transform:translateX(-50%);bottom:28px;z-index:4;background:linear-gradient(180deg, rgba(255,255,255,0.05), rgba(255,255,255,0.02));padding:18px 24px;border-radius:14px;border:1px solid rgba(255,255,255,0.05);display:flex;gap:24px;align-items:center;backdrop-filter:blur(12px);box-shadow:0 20px 80px rgba(2,6,20,0.8);min-width:max-content}
@@ -672,16 +730,16 @@
           </div>
         </div>
 
-        <!-- hero spotlight -->
-<div class="hero-spot" id="heroSpot">
-  <!-- 🔥 Tambahan: gambar karakter aktif -->
-  <img id="heroImage" src="assets/panels/panel1.png" alt="Sasuke Uchiha" 
-       style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0.8;z-index:0;transition:opacity 0.5s ease;">
-  <div style="position:relative;z-index:1;">
-    <h3 id="heroName">Sasuke</h3>
-    <p id="heroDesc" class="muted">Mythic • Abyss Walker</p>
-  </div>
-</div>
+        <!-- HERO SPOT DIPERBAIKI DENGAN GAMBAR -->
+        <div class="hero-spot" id="heroSpot">
+          <div class="hero-image-container">
+            <img id="heroImage" src="" alt="Character Preview" onerror="handleImageError(this)">
+            <div class="hero-content">
+              <h3 id="heroName">Sasuke</h3>
+              <p id="heroDesc" class="muted">Mythic • Abyss Walker</p>
+            </div>
+          </div>
+        </div>
 
         <!-- GACHA MODE - FIXED VISIBILITY -->
         <div class="gacha-board hide" id="gachaBoard" aria-label="Portal summon gacha">
@@ -785,11 +843,11 @@
 
   <script>
 /************************************************************************
- * COMPLETE FIXED GACHA SYSTEM WITH HALF CHARACTER DISPLAY
- * - Fixed UI/UX bugs
- * - Added half character images above summon portal
+ * COMPLETE FIXED GACHA SYSTEM WITH HERO SPOT IMAGES
+ * - Fixed Hero Spot dengan gambar karakter
+ * - Auto-update ketika slider berpindah
+ * - Smooth transitions
  * - Working subscription system
- * - Summon limits with cooldown
  ************************************************************************/
 
 /* ---------------------- CHARACTER DATA ---------------------- */
@@ -798,7 +856,7 @@ const CHARACTERS = [
     id: 'Sasuke',
     name: 'Sasuke',
     rarity: 'Mythic',
-    image: 'assets/panels/panel1.jpg',
+    image: 'assets/panels/panel1.png',
     halfImage: 'assets/half-characters/Sasuke-half.jpg',
     description: 'Abyss Walker',
     file: 'Sasuke',
@@ -808,7 +866,7 @@ const CHARACTERS = [
     id: 'Obito',
     name: 'Obito',
     rarity: 'Legendary',
-    image: 'assets/panels/panel2.jpg',
+    image: 'assets/panels/panel2.png',
     halfImage: 'assets/half-characters/Obito-half.jpg',
     description: 'Dragon Knight',
     file: 'Obito',
@@ -818,7 +876,7 @@ const CHARACTERS = [
     id: 'Madara',
     name: 'Madara',
     rarity: 'Elite',
-    image: 'assets/panels/panel3.jpg',
+    image: 'assets/panels/panel3.png',
     halfImage: 'assets/half-characters/Madara-half.jpg',
     description: 'Oracle Seer',
     file: 'Madara',
@@ -828,7 +886,7 @@ const CHARACTERS = [
     id: 'Naruto',
     name: 'Naruto',
     rarity: 'Common',
-    image: 'assets/panels/panel4.jpg',
+    image: 'assets/panels/panel4.png',
     halfImage: 'assets/half-characters/Naruto-half.jpg',
     description: 'Forest Guardian',
     file: 'Naruto',
@@ -838,7 +896,7 @@ const CHARACTERS = [
     id: 'SasukeHebi',
     name: 'SasukeHebi',
     rarity: 'Elite',
-    image: 'assets/panels/panel5.jpg',
+    image: 'assets/panels/panel5.png',
     halfImage: 'assets/half-characters/SasukeHebi-half.jpg',
     description: 'Cyber Ninja',
     file: 'SasukeHebi',
@@ -848,7 +906,7 @@ const CHARACTERS = [
     id: 'BorutoUzumaki',
     name: 'BorutoUzumaki',
     rarity: 'Legendary',
-    image: 'assets/panels/panel6.jpg',
+    image: 'assets/panels/panel6.png',
     halfImage: 'assets/half-characters/BorutoUzumaki-half.jpg',
     description: 'Phoenix Mage',
     file: 'BorutoUzumaki',
@@ -1102,7 +1160,7 @@ class SummonLimitSystem {
   }
 }
 
-/* ---------------------- GACHA SYSTEM ---------------------- */
+/* ---------------------- GACHA SYSTEM DENGAN HERO SPOT FIXED ---------------------- */
 class GachaSystem {
   constructor() {
     this.panels = Array.from(document.querySelectorAll('.panel'));
@@ -1117,6 +1175,7 @@ class GachaSystem {
     this.setupCarousel();
     this.setupGacha();
     this.setupBackground();
+    this.preloadHeroImages(); // Preload images untuk smooth transition
     this.updateSlider();
   }
 
@@ -1297,6 +1356,17 @@ class GachaSystem {
     }, 6000);
   }
 
+  /* PRELOAD HERO IMAGES UNTUK SMOOTH TRANSITION */
+  preloadHeroImages() {
+    this.panels.forEach(panel => {
+      const img = panel.querySelector('img');
+      if (img && img.src) {
+        const preloadImg = new Image();
+        preloadImg.src = img.src;
+      }
+    });
+  }
+
   updateSlider() {
     const panelWidth = 280;
     const gap = 28;
@@ -1310,6 +1380,7 @@ class GachaSystem {
     this.updateActivePanel();
   }
 
+  /* UPDATE ACTIVE PANEL DENGAN HERO SPOT FIXED */
   updateActivePanel() {
     this.panels.forEach((panel, index) => {
       if (index === this.currentSlide) {
@@ -1317,13 +1388,18 @@ class GachaSystem {
         const name = panel.dataset.name || 'Unknown';
         const rarity = panel.dataset.rarity || '';
         const description = panel.dataset.description || '';
+        const imageSrc = panel.querySelector('img')?.src || '';
         
+        // Update hero spot dengan gambar
         document.getElementById('heroName').textContent = name;
-        document.getElementById(\'heroDesc\').textContent = `${rarity} • ${description}`;
-      // 🔥 Update hero image saat karakter berubah
-      const heroImage = document.getElementById(\'heroImage\');
-      const panelImg = panel.querySelector(\'img\');
-      if (heroImage && panelImg) heroImage.src = panelImg.src;
+        document.getElementById('heroDesc').textContent = `${rarity} • ${description}`;
+        
+        // Update hero image - FIXED: Gunakan image dari panel
+        const heroImage = document.getElementById('heroImage');
+        if (heroImage && imageSrc) {
+          heroImage.src = imageSrc;
+          heroImage.alt = `${name} - ${rarity} rarity`;
+        }
         
         const rarityGlow = {
           Mythic: 'rgba(243, 212, 143, 0.4)',
@@ -1439,8 +1515,14 @@ function clamp(v, a=0, b=1){ return Math.max(a, Math.min(b, v)); }
 function sleep(ms){ return new Promise(r=>setTimeout(r, ms)); }
 
 function handleImageError(img) {
-  img.src = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjMDgxODI5Ii8+PHRleHQgeD0iNTAlIiB5PSI1MCUiIGZvbnQtZmFtaWx5PSJzYW5zLXNlcmlmIiBmb250LXNpemU9IjE0IiBmaWxsPSIjMzlkMmZmIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBkeT0iLjNlbSI+SW1hZ2UgTm90IEZvdW5kPC90ZXh0Pjwvc3ZnPg==';
-  img.alt = 'Gambar tidak tersedia';
+  console.log('Image failed to load:', img.src);
+  img.src = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAwIiBoZWlnaHQ9IjUwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjMDgxODI5Ii8+PHRleHQgeD0iNTAlIiB5PSI1MCUiIGZvbnQtZmFtaWx5PSJzYW5zLXNlcmlmIiBmb250LXNpemU9IjE2IiBmaWxsPSIjMzlkMmZmIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBkeT0iLjNlbSI+Q2hhcmFjdGVyIEltYWdlIE5vdCBGb3VuZDwvdGV4dD48L3N2Zz4=';
+  img.alt = 'Character image not available';
+  
+  // Jika ini hero image, tambahkan class untuk styling
+  if (img.id === 'heroImage') {
+    img.style.filter = 'grayscale(0.5) brightness(0.7)';
+  }
 }
 
 function showNotification(message, duration = 3000) {
@@ -1591,7 +1673,7 @@ document.addEventListener('DOMContentLoaded', function() {
     img.addEventListener('error', () => handleImageError(img));
   });
 
-  console.log('🎮 Gacha System with Half Character Display Initialized');
+  console.log('🎮 Gacha System with Hero Spot Images Initialized');
 });
 </script>
 </html>
