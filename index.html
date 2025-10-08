@@ -3,8 +3,8 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>High-Tier Gacha Showcase • Duet-Style</title>
-  <meta name="description" content="High-end cinematic gacha showcase — dual mode: Showcase & Gacha. Customize assets and rarity rates in the JS."/>
+  <title>High-Tier Gacha Showcase • Shining Aura</title>
+  <meta name="description" content="High-end cinematic gacha showcase with shining effects and character auras — dual mode: Showcase & Gacha."/>
   <style>
     /* ---------- THEME COLORS ---------- */
     :root{
@@ -12,6 +12,8 @@
       --panel:#081829; --glass:rgba(255,255,255,0.03);
       --accent-a:#39d2ff; --accent-b:#9b7bff;
       --muted:#94a6bf; --gold:#f3d48f;
+      --mythic-glow:#ffd700; --legend-glow:#9b7bff;
+      --elite-glow:#39d2ff; --common-glow:#94a6bf;
     }
 
     /* ---------- RESET & BASE ---------- */
@@ -22,26 +24,49 @@
 
     /* ---------- LAYOUT ---------- */
     .app{display:flex;flex-direction:column;height:100vh;width:100vw}
-    header.top{height:72px;display:flex;align-items:center;justify-content:space-between;padding:0 28px;background:linear-gradient(180deg, rgba(255,255,255,0.01), transparent);backdrop-filter:blur(6px);border-bottom:1px solid rgba(255,255,255,0.02)}
-    .brand{display:flex;gap:14px;align-items:center}
-    .logo{width:50px;height:50px;border-radius:12px;background:linear-gradient(135deg,var(--accent-a),var(--accent-b));display:flex;align-items:center;justify-content:center;color:#021226;font-weight:800;box-shadow:0 10px 40px rgba(57,210,255,0.08)}
-    .title{font-weight:800;letter-spacing:0.6px}
+    
+    /* Header dengan efek shine */
+    header.top{height:72px;display:flex;align-items:center;justify-content:space-between;padding:0 28px;background:linear-gradient(180deg, rgba(255,255,255,0.05), transparent);backdrop-filter:blur(6px);border-bottom:1px solid rgba(255,255,255,0.02);position:relative;overflow:hidden}
+    .shine-effect{position:absolute;top:0;left:-100%;width:100%;height:100%;background:linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);animation:shine 8s infinite}
+    
+    @keyframes shine{
+      0%{left:-100%}
+      20%{left:100%}
+      100%{left:100%}
+    }
+
+    .brand{display:flex;gap:14px;align-items:center;position:relative;z-index:2}
+    .logo{width:50px;height:50px;border-radius:12px;background:linear-gradient(135deg,var(--accent-a),var(--accent-b));display:flex;align-items:center;justify-content:center;color:#021226;font-weight:800;box-shadow:0 10px 40px rgba(57,210,255,0.15);animation:pulse 4s ease-in-out infinite}
+    .title{font-weight:800;letter-spacing:0.6px;background:linear-gradient(45deg, var(--accent-a), var(--accent-b));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
     .subtitle{font-size:12px;color:var(--muted);margin-top:2px}
 
-    nav.controls{display:flex;gap:10px;align-items:center}
-    .btn{padding:10px 14px;border-radius:10px;border:1px solid rgba(255,255,255,0.06);background:transparent;color:inherit;cursor:pointer;font-weight:700;transition:all 0.3s ease}
+    @keyframes pulse{
+      0%, 100%{transform:scale(1);box-shadow:0 10px 40px rgba(57,210,255,0.15)}
+      50%{transform:scale(1.05);box-shadow:0 15px 50px rgba(57,210,255,0.25)}
+    }
+
+    nav.controls{display:flex;gap:10px;align-items:center;position:relative;z-index:2}
+    .btn{padding:10px 14px;border-radius:10px;border:1px solid rgba(255,255,255,0.06);background:transparent;color:inherit;cursor:pointer;font-weight:700;transition:all 0.3s ease;position:relative;overflow:hidden}
     .btn.ghost{background:transparent}
-    .btn.primary{background:linear-gradient(90deg,var(--accent-a),var(--accent-b));color:#021226;border:none;box-shadow:0 8px 30px rgba(57,210,255,0.08)}
+    .btn.primary{background:linear-gradient(90deg,var(--accent-a),var(--accent-b));color:#021226;border:none;box-shadow:0 8px 30px rgba(57,210,255,0.15)}
     .btn.small{padding:8px 10px;font-size:13px}
     .btn:disabled{opacity:0.6;cursor:not-allowed}
+    .btn:not(:disabled):hover{transform:translateY(-2px);box-shadow:0 12px 40px rgba(57,210,255,0.2)}
 
     main.main{flex:1;display:flex;gap:28px;padding:26px 36px;position:relative;overflow:hidden}
 
     /* left column */
     aside.left{width:260px;display:flex;flex-direction:column;gap:18px}
-    .card{background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));border-radius:12px;padding:18px;border:1px solid rgba(255,255,255,0.03);box-shadow:0 16px 60px rgba(2,6,20,0.55)}
-    .card h4{color:var(--accent-a);margin-bottom:10px}
-    .muted{color:var(--muted);font-size:13px}
+    .card{background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));border-radius:12px;padding:18px;border:1px solid rgba(255,255,255,0.03);box-shadow:0 16px 60px rgba(2,6,20,0.55);position:relative;overflow:hidden}
+    .card::before{content:'';position:absolute;top:0;left:-100%;width:100%;height:100%;background:linear-gradient(90deg, transparent, rgba(255,255,255,0.03), transparent);animation:cardShine 6s infinite}
+    .card h4{color:var(--accent-a);margin-bottom:10px;position:relative;z-index:1}
+    .muted{color:var(--muted);font-size:13px;position:relative;z-index:1}
+
+    @keyframes cardShine{
+      0%{left:-100%}
+      20%{left:100%}
+      100%{left:100%}
+    }
 
     /* center area */
     .center{flex:1;position:relative;display:flex;align-items:center;justify-content:center;overflow:hidden}
@@ -55,49 +80,75 @@
     /* showcase carousel container */
     .showcase-wrap{position:relative;z-index:2;width:100%;max-width:1400px;padding:48px 32px;display:flex;flex-direction:column;gap:18px;align-items:center;justify-content:center}
     .showcase-title{display:flex;align-items:center;gap:12px}
-    .showcase-title h2{font-size:20px;letter-spacing:1px}
+    .showcase-title h2{font-size:20px;letter-spacing:1px;background:linear-gradient(45deg, var(--accent-a), var(--accent-b));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
     .showcase-view{width:100%;overflow:hidden;padding:20px 0 28px 0;position:relative}
     
     /* slider navigation */
     .slider-nav{display:flex;gap:10px;align-items:center}
-    .nav-btn{width:40px;height:40px;border-radius:50%;border:1px solid rgba(255,255,255,0.1);background:rgba(255,255,255,0.05);color:var(--accent-a);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:18px;transition:all 0.3s ease}
-    .nav-btn:hover{background:rgba(255,255,255,0.1);transform:scale(1.1)}
+    .nav-btn{width:40px;height:40px;border-radius:50%;border:1px solid rgba(255,255,255,0.1);background:rgba(255,255,255,0.05);color:var(--accent-a);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:18px;transition:all 0.3s ease;position:relative;overflow:hidden}
+    .nav-btn:hover{background:rgba(255,255,255,0.1);transform:scale(1.1);box-shadow:0 0 20px rgba(57,210,255,0.3)}
     .nav-btn:disabled{opacity:0.4;cursor:not-allowed}
 
     .carousel{display:flex;gap:28px;align-items:center;will-change:transform;transition:transform 500ms cubic-bezier(.2,.9,.2,1)}
     
-    /* panel - medium size */
-    .panel{width:280px;height:620px;border-radius:14px;overflow:hidden;background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(0,0,0,0.08));backdrop-filter:blur(6px);position:relative;box-shadow:0 40px 120px rgba(2,8,20,0.6);transform:skewX(-8deg);transition:transform 350ms, box-shadow 350ms, filter 300ms}
-    .panel-inner{transform:skewX(8deg);width:100%;height:100%;position:relative;display:flex;flex-direction:column;align-items:center}
-    .panel img{width:100%;height:82%;object-fit:cover;display:block;border-bottom:1px solid rgba(255,255,255,0.03)}
-    .panel .meta{padding:16px;width:100%;display:flex;align-items:center;justify-content:space-between}
-    .pname{font-weight:800;color:var(--accent-a);font-size:18px}
+    /* panel - medium size dengan aura */
+    .panel{width:280px;height:620px;border-radius:14px;overflow:visible;background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(0,0,0,0.08));backdrop-filter:blur(6px);position:relative;box-shadow:0 40px 120px rgba(2,8,20,0.6);transform:skewX(-8deg);transition:transform 350ms, box-shadow 350ms, filter 300ms}
+    .panel-inner{transform:skewX(8deg);width:100%;height:100%;position:relative;display:flex;flex-direction:column;align-items:center;border-radius:14px;overflow:hidden}
+    
+    /* Aura effect container */
+    .aura-container{position:absolute;top:-10px;left:-10px;right:-10px;bottom:-10px;border-radius:20px;z-index:0;opacity:0;transition:opacity 0.5s ease;pointer-events:none}
+    .panel.active .aura-container{opacity:1}
+    .aura{position:absolute;top:0;left:0;right:0;bottom:0;border-radius:20px;background:conic-gradient(from 0deg, transparent, var(--aura-color), transparent);animation:rotateAura 3s linear infinite;filter:blur(20px)}
+    .aura-2{animation-delay:-1.5s;filter:blur(15px)}
+    
+    @keyframes rotateAura{
+      0%{transform:rotate(0deg)}
+      100%{transform:rotate(360deg)}
+    }
+
+    .panel img{width:100%;height:82%;object-fit:cover;display:block;border-bottom:1px solid rgba(255,255,255,0.03);position:relative;z-index:1;transition:all 0.3s ease}
+    .panel.active img{filter:brightness(1.1) contrast(1.1)}
+    
+    .panel .meta{padding:16px;width:100%;display:flex;align-items:center;justify-content:space-between;position:relative;z-index:1;background:linear-gradient(180deg, transparent, rgba(8,24,41,0.9))}
+    .pname{font-weight:800;color:var(--accent-a);font-size:18px;text-shadow:0 2px 10px rgba(0,0,0,0.5)}
     .prarity{font-weight:700;font-size:12px;padding:6px 10px;border-radius:999px;background:linear-gradient(90deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));border:1px solid rgba(255,255,255,0.03);color:var(--muted)}
 
-    /* hover focus */
+    /* hover focus dengan efek glow */
     .panel:hover{transform:translateY(-18px) skewX(-8deg) scale(1.06);box-shadow:0 60px 140px rgba(3,12,30,0.75);filter:brightness(1.04)}
-    .panel.active{transform:translateY(-12px) skewX(-8deg) scale(1.03);box-shadow:0 50px 130px rgba(57,210,255,0.15)}
+    .panel:hover .aura-container{opacity:0.7}
+    .panel.active{transform:translateY(-12px) skewX(-8deg) scale(1.03);box-shadow:0 50px 130px var(--aura-glow)}
 
     /* hero spotlight */
-    .hero-spot{position:absolute;right:4%;bottom:6%;z-index:3;width:420px;height:640px;border-radius:16px;padding:22px;display:flex;align-items:flex-end;justify-content:center;box-shadow:0 60px 160px rgba(3,10,20,0.6);background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(0,0,0,0.15));border:1px solid rgba(255,255,255,0.03)}
-    .hero-spot h3{font-size:28px;color:var(--accent-b);margin-bottom:6px}
-    .hero-spot p{color:var(--muted);font-size:14px}
+    .hero-spot{position:absolute;right:4%;bottom:6%;z-index:3;width:420px;height:640px;border-radius:16px;padding:22px;display:flex;align-items:flex-end;justify-content:center;box-shadow:0 60px 160px rgba(3,10,20,0.6);background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(0,0,0,0.15));border:1px solid rgba(255,255,255,0.03);position:relative;overflow:hidden}
+    .hero-spot::before{content:'';position:absolute;top:0;left:-100%;width:100%;height:100%;background:linear-gradient(90deg, transparent, rgba(255,255,255,0.05), transparent);animation:cardShine 8s infinite}
+    .hero-spot h3{font-size:28px;color:var(--accent-b);margin-bottom:6px;position:relative;z-index:1}
+    .hero-spot p{color:var(--muted);font-size:14px;position:relative;z-index:1}
 
-    /* gacha board (hidden in showcase mode, shown in Gacha mode) */
-    .gacha-board{position:absolute;left:50%;transform:translateX(-50%);bottom:28px;z-index:4;background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));padding:14px 18px;border-radius:12px;border:1px solid rgba(255,255,255,0.03);display:flex;gap:18px;align-items:center;backdrop-filter:blur(8px)}
+    /* gacha board dengan efek shine */
+    .gacha-board{position:absolute;left:50%;transform:translateX(-50%);bottom:28px;z-index:4;background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));padding:14px 18px;border-radius:12px;border:1px solid rgba(255,255,255,0.03);display:flex;gap:18px;align-items:center;backdrop-filter:blur(8px);position:relative;overflow:hidden}
+    .gacha-board::before{content:'';position:absolute;top:0;left:-100%;width:100%;height:100%;background:linear-gradient(90deg, transparent, rgba(57,210,255,0.1), transparent);animation:cardShine 10s infinite}
+    
     .gtiles{display:flex;gap:12px}
-    .gtile{width:88px;height:116px;border-radius:10px;overflow:hidden;background:rgba(255,255,255,0.02);display:flex;align-items:center;justify-content:center;border:1px solid rgba(255,255,255,0.03);transition:transform 300ms, box-shadow 300ms}
-    .gtile.sel{box-shadow:0 20px 60px rgba(57,210,255,0.12);transform:translateY(-10px)}
-    .spin-btn{padding:12px 28px;border-radius:12px;background:linear-gradient(90deg,var(--accent-a),var(--accent-b));border:none;font-weight:900;cursor:pointer;box-shadow:0 18px 60px rgba(57,210,255,0.08);transition:all 0.3s ease}
+    .gtile{width:88px;height:116px;border-radius:10px;overflow:hidden;background:rgba(255,255,255,0.02);display:flex;align-items:center;justify-content:center;border:1px solid rgba(255,255,255,0.03);transition:transform 300ms, box-shadow 300ms;position:relative}
+    .gtile::before{content:'';position:absolute;top:0;left:0;right:0;bottom:0;border-radius:10px;background:linear-gradient(45deg, transparent, rgba(255,255,255,0.05), transparent);opacity:0;transition:opacity 0.3s ease}
+    .gtile:hover::before{opacity:1}
+    .gtile.sel{box-shadow:0 20px 60px rgba(57,210,255,0.3);transform:translateY(-10px);border-color:var(--accent-a)}
+    
+    .spin-btn{padding:12px 28px;border-radius:12px;background:linear-gradient(90deg,var(--accent-a),var(--accent-b));border:none;font-weight:900;cursor:pointer;box-shadow:0 18px 60px rgba(57,210,255,0.15);transition:all 0.3s ease;position:relative;overflow:hidden}
     .spin-btn:disabled{opacity:0.6;cursor:not-allowed}
+    .spin-btn:not(:disabled):hover{transform:translateY(-2px);box-shadow:0 25px 80px rgba(57,210,255,0.25)}
+    .spin-btn::before{content:'';position:absolute;top:0;left:-100%;width:100%;height:100%;background:linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);transition:left 0.5s ease}
+    .spin-btn:hover::before{left:100%}
 
-    /* result popup */
-    .result-overlay{position:fixed;inset:0;z-index:60;display:flex;align-items:center;justify-content:center;background:rgba(0,6,12,0.6);pointer-events:none;opacity:0;transition:opacity 260ms}
+    /* result popup dengan efek glow */
+    .result-overlay{position:fixed;inset:0;z-index:60;display:flex;align-items:center;justify-content:center;background:rgba(0,6,12,0.8);pointer-events:none;opacity:0;transition:opacity 260ms;backdrop-filter:blur(5px)}
     .result-overlay.open{pointer-events:auto;opacity:1}
-    .result-card{width:520px;background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));padding:26px;border-radius:14px;border:1px solid rgba(255,255,255,0.03);text-align:center;box-shadow:0 40px 140px rgba(2,6,20,0.7)}
-    .result-card h2{color:var(--gold);margin-bottom:8px}
-    .result-card p{color:var(--muted)}
-    .result-actions{display:flex;gap:12px;justify-content:center;margin-top:16px}
+    .result-card{width:520px;background:linear-gradient(180deg, rgba(255,255,255,0.05), rgba(255,255,255,0.02));padding:26px;border-radius:14px;border:1px solid rgba(255,255,255,0.05);text-align:center;box-shadow:0 40px 140px rgba(2,6,20,0.8);position:relative;overflow:hidden;transform:scale(0.9);transition:transform 0.3s ease}
+    .result-overlay.open .result-card{transform:scale(1)}
+    .result-card::before{content:'';position:absolute;top:0;left:0;right:0;bottom:0;background:conic-gradient(from 0deg, transparent, var(--result-glow, rgba(57,210,255,0.1)), transparent);border-radius:14px;animation:rotateAura 4s linear infinite;filter:blur(30px)}
+    .result-card h2{color:var(--gold);margin-bottom:8px;position:relative;z-index:1;font-size:24px}
+    .result-card p{color:var(--muted);position:relative;z-index:1}
+    .result-actions{display:flex;gap:12px;justify-content:center;margin-top:16px;position:relative;z-index:1}
 
     /* loading spinner */
     .spinner{width:20px;height:20px;border:2px solid transparent;border-top:2px solid currentColor;border-radius:50%;animation:spin 1s linear infinite;display:inline-block}
@@ -118,6 +169,7 @@
       .showcase-wrap{padding:20px}
       .gacha-board{left:8%;transform:none;bottom:18px;flex-direction:column;width:95%}
       .main{padding:10px}
+      .shine-effect{animation:shine 12s infinite}
     }
 
     /* utility */
@@ -130,6 +182,7 @@
 <body>
   <div class="app">
     <header class="top" role="banner" aria-label="Header utama">
+      <div class="shine-effect"></div>
       <div class="brand">
         <div class="logo" aria-label="Logo Gacha">G</div>
         <div>
@@ -184,10 +237,14 @@
 
           <div class="showcase-view" id="showcaseView">
             <div id="carousel" class="carousel">
-              <!-- 6 panels dengan ukuran medium -->
-              <div class="panel" data-name="Aurelia" data-rarity="Mythic" data-file="/mods/aurelia.zip" data-description="Abyss Walker">
+              <!-- 6 panels dengan ukuran medium dan aura -->
+              <div class="panel" data-name="Aurelia" data-rarity="Mythic" data-file="mods/aurelia.zip" data-description="Abyss Walker" data-aura-color="#ffd700">
+                <div class="aura-container">
+                  <div class="aura" style="--aura-color: #ffd700"></div>
+                  <div class="aura aura-2" style="--aura-color: #ffd700"></div>
+                </div>
                 <div class="panel-inner">
-                  <img src="assets/panel1.jpg" alt="Karakter Aurelia - Mythic rarity" onerror="handleImageError(this)">
+                  <img src="assets/panels/panel1.jpg" alt="Karakter Aurelia - Mythic rarity" onerror="handleImageError(this)">
                   <div class="meta">
                     <div class="pname">Aurelia</div>
                     <div class="prarity">Mythic</div>
@@ -195,9 +252,13 @@
                 </div>
               </div>
 
-              <div class="panel" data-name="Korven" data-rarity="Legendary" data-file="/mods/korven.zip" data-description="Dragon Knight">
+              <div class="panel" data-name="Korven" data-rarity="Legendary" data-file="mods/korven.zip" data-description="Dragon Knight" data-aura-color="#9b7bff">
+                <div class="aura-container">
+                  <div class="aura" style="--aura-color: #9b7bff"></div>
+                  <div class="aura aura-2" style="--aura-color: #9b7bff"></div>
+                </div>
                 <div class="panel-inner">
-                  <img src="assets/panel2.jpg" alt="Karakter Korven - Legendary rarity" onerror="handleImageError(this)">
+                  <img src="assets/panels/panel2.jpg" alt="Karakter Korven - Legendary rarity" onerror="handleImageError(this)">
                   <div class="meta">
                     <div class="pname">Korven</div>
                     <div class="prarity">Legend</div>
@@ -205,9 +266,13 @@
                 </div>
               </div>
 
-              <div class="panel" data-name="Sibyl" data-rarity="Elite" data-file="/mods/sibyl.zip" data-description="Oracle Seer">
+              <div class="panel" data-name="Sibyl" data-rarity="Elite" data-file="mods/sibyl.zip" data-description="Oracle Seer" data-aura-color="#39d2ff">
+                <div class="aura-container">
+                  <div class="aura" style="--aura-color: #39d2ff"></div>
+                  <div class="aura aura-2" style="--aura-color: #39d2ff"></div>
+                </div>
                 <div class="panel-inner">
-                  <img src="assets/panel3.jpg" alt="Karakter Sibyl - Elite rarity" onerror="handleImageError(this)">
+                  <img src="assets/panels/panel3.jpg" alt="Karakter Sibyl - Elite rarity" onerror="handleImageError(this)">
                   <div class="meta">
                     <div class="pname">Sibyl</div>
                     <div class="prarity">Elite</div>
@@ -215,9 +280,13 @@
                 </div>
               </div>
 
-              <div class="panel" data-name="Truffle" data-rarity="Common" data-file="/mods/truffle.zip" data-description="Forest Guardian">
+              <div class="panel" data-name="Truffle" data-rarity="Common" data-file="mods/truffle.zip" data-description="Forest Guardian" data-aura-color="#94a6bf">
+                <div class="aura-container">
+                  <div class="aura" style="--aura-color: #94a6bf"></div>
+                  <div class="aura aura-2" style="--aura-color: #94a6bf"></div>
+                </div>
                 <div class="panel-inner">
-                  <img src="assets/panel4.jpg" alt="Karakter Truffle - Common rarity" onerror="handleImageError(this)">
+                  <img src="assets/panels/panel4.jpg" alt="Karakter Truffle - Common rarity" onerror="handleImageError(this)">
                   <div class="meta">
                     <div class="pname">Truffle</div>
                     <div class="prarity">Common</div>
@@ -225,9 +294,13 @@
                 </div>
               </div>
 
-              <div class="panel" data-name="Rebecca" data-rarity="Elite" data-file="/mods/rebecca.zip" data-description="Cyber Ninja">
+              <div class="panel" data-name="Rebecca" data-rarity="Elite" data-file="mods/rebecca.zip" data-description="Cyber Ninja" data-aura-color="#39d2ff">
+                <div class="aura-container">
+                  <div class="aura" style="--aura-color: #39d2ff"></div>
+                  <div class="aura aura-2" style="--aura-color: #39d2ff"></div>
+                </div>
                 <div class="panel-inner">
-                  <img src="assets/panel5.jpg" alt="Karakter Rebecca - Elite rarity" onerror="handleImageError(this)">
+                  <img src="assets/panels/panel5.jpg" alt="Karakter Rebecca - Elite rarity" onerror="handleImageError(this)">
                   <div class="meta">
                     <div class="pname">Rebecca</div>
                     <div class="prarity">Elite</div>
@@ -235,9 +308,13 @@
                 </div>
               </div>
 
-              <div class="panel" data-name="Fen" data-rarity="Legendary" data-file="/mods/fen.zip" data-description="Phoenix Mage">
+              <div class="panel" data-name="Fen" data-rarity="Legendary" data-file="mods/fen.zip" data-description="Phoenix Mage" data-aura-color="#9b7bff">
+                <div class="aura-container">
+                  <div class="aura" style="--aura-color: #9b7bff"></div>
+                  <div class="aura aura-2" style="--aura-color: #9b7bff"></div>
+                </div>
                 <div class="panel-inner">
-                  <img src="assets/panel6.jpg" alt="Karakter Fen - Legendary rarity" onerror="handleImageError(this)">
+                  <img src="assets/panels/panel6.jpg" alt="Karakter Fen - Legendary rarity" onerror="handleImageError(this)">
                   <div class="meta">
                     <div class="pname">Fen</div>
                     <div class="prarity">Legend</div>
@@ -258,22 +335,22 @@
 
         <!-- gacha board (hidden initially) -->
         <div class="gacha-board hide" id="gachaBoard" aria-label="Portal summon gacha">
-          <div style="display:flex;flex-direction:column;gap:8px;min-width:220px">
+          <div style="display:flex;flex-direction:column;gap:8px;min-width:220px;position:relative;z-index:1">
             <div style="font-weight:800">Summon Portal</div>
             <div class="muted" style="font-size:13px">Click SUMMON to perform a visual summon (client-side demo)</div>
           </div>
 
-          <div class="gtiles" id="gtiles">
+          <div class="gtiles" id="gtiles" style="position:relative;z-index:1">
             <!-- 6 box seperti yang diminta -->
-            <div class="gtile"><img src="assets/thumb1.jpg" style="width:100%;height:100%;object-fit:cover" alt="Thumbnail karakter 1" onerror="handleImageError(this)"></div>
-            <div class="gtile"><img src="assets/thumb2.jpg" style="width:100%;height:100%;object-fit:cover" alt="Thumbnail karakter 2" onerror="handleImageError(this)"></div>
-            <div class="gtile"><img src="assets/thumb3.jpg" style="width:100%;height:100%;object-fit:cover" alt="Thumbnail karakter 3" onerror="handleImageError(this)"></div>
-            <div class="gtile"><img src="assets/thumb4.jpg" style="width:100%;height:100%;object-fit:cover" alt="Thumbnail karakter 4" onerror="handleImageError(this)"></div>
-            <div class="gtile"><img src="assets/thumb5.jpg" style="width:100%;height:100%;object-fit:cover" alt="Thumbnail karakter 5" onerror="handleImageError(this)"></div>
-            <div class="gtile"><img src="assets/thumb6.jpg" style="width:100%;height:100%;object-fit:cover" alt="Thumbnail karakter 6" onerror="handleImageError(this)"></div>
+            <div class="gtile"><img src="assets/thumbnails/thumb1.jpg" style="width:100%;height:100%;object-fit:cover" alt="Thumbnail karakter 1" onerror="handleImageError(this)"></div>
+            <div class="gtile"><img src="assets/thumbnails/thumb2.jpg" style="width:100%;height:100%;object-fit:cover" alt="Thumbnail karakter 2" onerror="handleImageError(this)"></div>
+            <div class="gtile"><img src="assets/thumbnails/thumb3.jpg" style="width:100%;height:100%;object-fit:cover" alt="Thumbnail karakter 3" onerror="handleImageError(this)"></div>
+            <div class="gtile"><img src="assets/thumbnails/thumb4.jpg" style="width:100%;height:100%;object-fit:cover" alt="Thumbnail karakter 4" onerror="handleImageError(this)"></div>
+            <div class="gtile"><img src="assets/thumbnails/thumb5.jpg" style="width:100%;height:100%;object-fit:cover" alt="Thumbnail karakter 5" onerror="handleImageError(this)"></div>
+            <div class="gtile"><img src="assets/thumbnails/thumb6.jpg" style="width:100%;height:100%;object-fit:cover" alt="Thumbnail karakter 6" onerror="handleImageError(this)"></div>
           </div>
 
-          <div style="display:flex;flex-direction:column;gap:10px;align-items:center">
+          <div style="display:flex;flex-direction:column;gap:10px;align-items:center;position:relative;z-index:1">
             <button id="summonBtn" class="spin-btn" disabled>SUMMON</button>
             <button id="singleSummon" class="btn small" disabled>Single</button>
           </div>
@@ -299,15 +376,22 @@
 
   <script>
     /************************************************************************
-     * IMPROVED TEMPLATE SCRIPT
+     * ENHANCED TEMPLATE SCRIPT WITH SHINE EFFECTS & AURAS
      * - Manual slider system (no auto-loop)
-     * - Medium sized panels for better visibility
+     * - Medium sized panels with character auras
+     * - Shining effects on headers and buttons
      * - 6 boxes in summon portal
      * - Better accessibility and error handling
      ************************************************************************/
 
     /* ---------------------- CONFIG (edit these) ---------------------- */
-    const SLIDES = [];
+    const SLIDES = [
+      'assets/backgrounds/bg1.jpg',
+      'assets/backgrounds/bg2.jpg',
+      'assets/backgrounds/bg3.jpg',
+      'assets/backgrounds/bg4.jpg'
+    ];
+
     const rarityRates = {
       Mythic: 0.02,
       Legendary: 0.08,
@@ -320,6 +404,13 @@
       Legendary: '#9b7bff',
       Elite: '#39d2ff',
       Common: '#94a6bf'
+    };
+
+    const rarityGlow = {
+      Mythic: 'rgba(243, 212, 143, 0.3)',
+      Legendary: 'rgba(155, 123, 255, 0.3)',
+      Elite: 'rgba(57, 210, 255, 0.3)',
+      Common: 'rgba(148, 166, 191, 0.3)'
     };
 
     const YT_CHANNEL = 'https://youtube.com/';
@@ -338,15 +429,17 @@
     // Preload critical images
     function preloadImages() {
       const criticalImages = [
-        'assets/panel1.jpg', 'assets/panel2.jpg', 'assets/panel3.jpg',
-        'assets/panel4.jpg', 'assets/panel5.jpg', 'assets/panel6.jpg',
-        'assets/thumb1.jpg', 'assets/thumb2.jpg', 'assets/thumb3.jpg',
-        'assets/thumb4.jpg', 'assets/thumb5.jpg', 'assets/thumb6.jpg'
+        'assets/panels/panel1.jpg', 'assets/panels/panel2.jpg', 'assets/panels/panel3.jpg',
+        'assets/panels/panel4.jpg', 'assets/panels/panel5.jpg', 'assets/panels/panel6.jpg',
+        'assets/thumbnails/thumb1.jpg', 'assets/thumbnails/thumb2.jpg', 'assets/thumbnails/thumb3.jpg',
+        'assets/thumbnails/thumb4.jpg', 'assets/thumbnails/thumb5.jpg', 'assets/thumbnails/thumb6.jpg',
+        'assets/backgrounds/bg1.jpg', 'assets/backgrounds/bg2.jpg', 'assets/backgrounds/bg3.jpg', 'assets/backgrounds/bg4.jpg'
       ];
       
       criticalImages.forEach(src => {
         const img = new Image();
         img.src = src;
+        img.onerror = () => console.warn('Failed to load:', src);
       });
     }
 
@@ -419,8 +512,13 @@
           const name = panel.dataset.name || 'Unknown';
           const rarity = panel.dataset.rarity || '';
           const description = panel.dataset.description || '';
+          const auraColor = panel.dataset.auraColor || '#39d2ff';
+          
           heroName.textContent = name;
           heroDesc.textContent = `${rarity} • ${description}`;
+          
+          // Set CSS variable for glow effects
+          panel.style.setProperty('--aura-glow', rarityGlow[rarity] || 'rgba(57,210,255,0.3)');
         } else {
           panel.classList.remove('active');
         }
@@ -446,7 +544,7 @@
       }
     }
 
-    // Background slideshow (optional)
+    // Background slideshow
     (function setupBackgroundSlides(){
       if(SLIDES.length === 0) return;
       SLIDES.forEach((src,i)=>{
@@ -477,6 +575,7 @@
       if (e.key === 'ArrowRight') nextSlide();
       if (e.key === 'Escape' && resultOverlay.classList.contains('open')) {
         resultOverlay.classList.remove('open');
+        resultOverlay.setAttribute('aria-hidden', 'true');
       }
     });
 
@@ -523,7 +622,7 @@
       enableBtn.classList.add('primary');
     }
 
-    /* ---------------------- IMPROVED GACHA SYSTEM ---------------------- */
+    /* ---------------------- ENHANCED GACHA SYSTEM ---------------------- */
     function chooseRarity(){
       const r = Math.random();
       for(const node of cdf){ if(r <= node.at) return node.key; }
@@ -554,13 +653,15 @@
       const name = panel.dataset.name || 'Unknown';
       const rarity = panel.dataset.rarity || 'Unknown';
       const description = panel.dataset.description || '';
+      const auraColor = panel.dataset.auraColor || '#39d2ff';
       
       resultTitle.textContent = `${rarity} • You Obtained ${name}`;
-      resultText.textContent = `${description} - Demo reveal animation`;
+      resultText.textContent = `${description} - Shining reveal!`;
       claimBtn.dataset.file = panel.dataset.file || '';
       
-      const color = rarityColors[rarity] || '#39d2ff';
-      document.querySelector('.result-card').style.boxShadow = `0 40px 140px ${hexToRgba(color,0.18)}`;
+      // Set result card glow based on rarity
+      const resultCard = document.querySelector('.result-card');
+      resultCard.style.setProperty('--result-glow', rarityGlow[rarity] || 'rgba(57,210,255,0.2)');
       
       resultOverlay.classList.add('open');
       resultOverlay.setAttribute('aria-hidden', 'false');
@@ -659,6 +760,8 @@
       goToSlide: goToSlide,
       currentSlide: () => currentSlide
     };
+
+    console.log('🎮 Gacha Showcase loaded with shine effects & auras!');
   </script>
 </body>
 </html>
