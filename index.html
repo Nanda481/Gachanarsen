@@ -5,6 +5,8 @@
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>High-Tier Gacha Showcase • Limited Summon</title>
   <meta name="description" content="High-end cinematic gacha showcase with summon limits — dual mode: Showcase & Gacha."/>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
   <style>
     /* ---------- THEME COLORS ---------- */
     :root{
@@ -645,7 +647,7 @@
       transform: translateX(-50%) translateY(0);
     }
 
-    /* Music Player Styles */
+    /* Music Player Styles - IMPROVED */
     .music-player {
       position: fixed;
       bottom: 20px;
@@ -657,17 +659,19 @@
       padding: 15px;
       border: 1px solid rgba(255,255,255,0.1);
       box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+      min-width: 200px;
     }
 
     .music-controls {
       display: flex;
       align-items: center;
-      gap: 10px;
+      gap: 8px;
+      flex-wrap: wrap;
     }
 
     .music-btn {
-      width: 40px;
-      height: 40px;
+      width: 35px;
+      height: 35px;
       border-radius: 50%;
       border: none;
       background: linear-gradient(45deg, var(--accent-a), var(--accent-b));
@@ -676,11 +680,18 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 16px;
+      font-size: 12px;
       transition: all 0.3s ease;
+      flex-shrink: 0;
     }
 
-    .music-btn:hover {
+    .music-btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+      transform: none !important;
+    }
+
+    .music-btn:not(:disabled):hover {
       transform: scale(1.1);
       box-shadow: 0 5px 15px rgba(57,210,255,0.4);
     }
@@ -689,17 +700,36 @@
       background: rgba(255,255,255,0.05);
       border: 1px solid rgba(255,255,255,0.1);
       border-radius: 8px;
-      padding: 8px 12px;
+      padding: 6px 10px;
       color: var(--muted);
-      font-size: 12px;
+      font-size: 11px;
       min-width: 120px;
+      flex: 1;
     }
 
     .music-info {
-      font-size: 11px;
+      font-size: 10px;
       color: var(--muted);
       margin-top: 8px;
       text-align: center;
+      word-break: break-word;
+    }
+
+    /* Loading state untuk music player */
+    .music-loading {
+      opacity: 0.7;
+      pointer-events: none;
+    }
+
+    .music-loading::after {
+      content: '...';
+      animation: loadingDots 1.5s infinite;
+    }
+
+    @keyframes loadingDots {
+      0%, 20% { content: '.'; }
+      40% { content: '..'; }
+      60%, 100% { content: '...'; }
     }
 
     /* Fireworks Animation */
@@ -878,7 +908,7 @@
                   <div class="aura aura-2" style="--aura-color: #ffd700"></div>
                 </div>
                 <div class="panel-inner">
-                  <img src="assets/panels/panel1.png" alt="Sasuke Uchiha - Mythic rarity" onerror="handleImageError(this)">
+                  <img src="/assets/panels/panel1.png" alt="Sasuke Uchiha - Mythic rarity" onerror="handleImageError(this)">
                   <div class="meta">
                     <div class="pname">Sasuke</div>
                     <div class="prarity">Mythic</div>
@@ -892,7 +922,7 @@
                   <div class="aura aura-2" style="--aura-color: #9b7bff"></div>
                 </div>
                 <div class="panel-inner">
-                  <img src="assets/panels/panel2.png" alt="Obito Uchiha - Legendary rarity" onerror="handleImageError(this)">
+                  <img src="/assets/panels/panel2.png" alt="Obito Uchiha - Legendary rarity" onerror="handleImageError(this)">
                   <div class="meta">
                     <div class="pname">Obito</div>
                     <div class="prarity">Legend</div>
@@ -906,7 +936,7 @@
                   <div class="aura aura-2" style="--aura-color: #39d2ff"></div>
                 </div>
                 <div class="panel-inner">
-                  <img src="assets/panels/panel3.png" alt="Madara Uchiha - Supreme" onerror="handleImageError(this)">
+                  <img src="/assets/panels/panel3.png" alt="Madara Uchiha - Supreme" onerror="handleImageError(this)">
                   <div class="meta">
                     <div class="pname">Madara</div>
                     <div class="prarity">Elite</div>
@@ -920,7 +950,7 @@
                   <div class="aura aura-2" style="--aura-color: #94a6bf"></div>
                 </div>
                 <div class="panel-inner">
-                  <img src="assets/panels/panel4.png" alt="Naruto - Elite rarity" onerror="handleImageError(this)">
+                  <img src="/assets/panels/panel4.png" alt="Naruto - Elite rarity" onerror="handleImageError(this)">
                   <div class="meta">
                     <div class="pname">Naruto</div>
                     <div class="prarity">Common</div>
@@ -934,7 +964,7 @@
                   <div class="aura aura-2" style="--aura-color: #39d2ff"></div>
                 </div>
                 <div class="panel-inner">
-                  <img src="assets/panels/panel5.png" alt="SasukeHebi - Elite rarity" onerror="handleImageError(this)">
+                  <img src="/assets/panels/panel5.png" alt="SasukeHebi - Elite rarity" onerror="handleImageError(this)">
                   <div class="meta">
                     <div class="pname">SasukeHebi</div>
                     <div class="prarity">Elite</div>
@@ -948,7 +978,7 @@
                   <div class="aura aura-2" style="--aura-color: #9b7bff"></div>
                 </div>
                 <div class="panel-inner">
-                  <img src="assets/panels/panel6.png" alt="BorutoUzumaki - Legendary rarity" onerror="handleImageError(this)">
+                  <img src="/assets/panels/panel6.png" alt="BorutoUzumaki - Legendary rarity" onerror="handleImageError(this)">
                   <div class="meta">
                     <div class="pname">BorutoUzumaki</div>
                     <div class="prarity">Legend</div>
@@ -1005,11 +1035,11 @@
       <button class="music-btn" id="playPause">▶️</button>
       <button class="music-btn" id="nextMusic">⏭</button>
       <select class="music-select" id="musicSelect">
-        <option value="music.mp3">Background Music 1</option>
-        <option value="music1.mp3">Background Music 2</option>
-        <option value="music2.mp3">Background Music 3</option>
-        <option value="music3.mp3">Background Music 4</option>
-        <option value="music4.mp3">Background Music 5</option>
+        <option value="0">Background Music 1</option>
+        <option value="1">Background Music 2</option>
+        <option value="2">Background Music 3</option>
+        <option value="3">Background Music 4</option>
+        <option value="4">Background Music 5</option>
       </select>
     </div>
     <div class="music-info" id="musicInfo">Now Playing: Background Music 1</div>
@@ -1085,11 +1115,13 @@
   <script>
 /************************************************************************
  * ENHANCED GACHA SYSTEM WITH ALL FIXES
- * - Fixed background music path to root directory
- * - Removed slider navigation buttons
- * - Added border aesthetic to showcase panels
- * - Added voice preview on hover
- * - Added hero image display on hover
+ * - FIXED: Music Player dengan robust error handling
+ * - FIXED: Memory management dan cleanup
+ * - FIXED: Path assets untuk Vercel deployment
+ * - REMOVED: Slider navigation buttons
+ * - ADDED: Border aesthetic ke showcase panels
+ * - ADDED: Voice preview on hover
+ * - ADDED: Hero image display on hover
  ************************************************************************/
 
 /* ---------------------- CHARACTER DATA DENGAN VOICE - DIPERBAIKI ---------------------- */
@@ -1098,81 +1130,85 @@ const CHARACTERS = [
     id: 'Sasuke',
     name: 'Sasuke Uchiha',
     rarity: 'Mythic',
-    image: 'assets/panels/panel1.png',
+    image: '/assets/panels/panel1.png',
     description: 'Abyss Walker',
     file: 'Sasuke',
     auraColor: '#ffd700',
-    voice: 'sasuke_voice.mp3' // Path di root directory
+    voice: '/assets/voices/sasuke_voice.mp3'
   },
   {
     id: 'Obito',
     name: 'Obito Uchiha',
     rarity: 'Legendary',
-    image: 'assets/panels/panel2.png',
+    image: '/assets/panels/panel2.png',
     description: 'Dragon Knight',
     file: 'Obito',
     auraColor: '#9b7bff',
-    voice: 'obito_voice.mp3' // Path di root directory
+    voice: '/assets/voices/obito_voice.mp3'
   },
   {
     id: 'Madara',
     name: 'Madara Uchiha',
     rarity: 'Elite',
-    image: 'assets/panels/panel3.png',
+    image: '/assets/panels/panel3.png',
     description: 'Oracle Seer',
     file: 'Madara',
     auraColor: '#39d2ff',
-    voice: 'madara_voice.mp3' // Path di root directory
+    voice: '/assets/voices/madara_voice.mp3'
   },
   {
     id: 'Naruto',
     name: 'Naruto',
     rarity: 'Common',
-    image: 'assets/panels/panel4.png',
+    image: '/assets/panels/panel4.png',
     description: 'Forest Guardian',
     file: 'Naruto',
     auraColor: '#94a6bf',
-    voice: 'naruto_voice.mp3' // Path di root directory
+    voice: '/assets/voices/naruto_voice.mp3'
   },
   {
     id: 'SasukeHebi',
     name: 'SasukeHebi',
     rarity: 'Elite',
-    image: 'assets/panels/panel5.png',
+    image: '/assets/panels/panel5.png',
     description: 'Cyber Ninja',
     file: 'SasukeHebi',
     auraColor: '#39d2ff',
-    voice: 'sasukehebi_voice.mp3' // Path di root directory
+    voice: '/assets/voices/sasukehebi_voice.mp3'
   },
   {
     id: 'BorutoUzumaki',
     name: 'BorutoUzumaki',
     rarity: 'Legendary',
-    image: 'assets/panels/panel6.png',
+    image: '/assets/panels/panel6.png',
     description: 'Phoenix Mage',
     file: 'BorutoUzumaki',
     auraColor: '#9b7bff',
-    voice: 'boruto_voice.mp3' // Path di root directory
+    voice: '/assets/voices/boruto_voice.mp3'
   }
 ];
 
-/* ---------------------- MUSIC PLAYER SYSTEM - DIPERBAIKI ---------------------- */
+/* ---------------------- MUSIC PLAYER SYSTEM - FULLY FIXED ---------------------- */
 class MusicPlayerSystem {
   constructor() {
-    this.audio = new Audio();
+    this.audio = null;
     this.currentTrack = 0;
     this.isPlaying = false;
-    // Path music di root directory
+    this.hasInteracted = false;
+    this.isLoading = false;
+    
+    // Path music di root directory - PASTIKAN FILE INI ADA
     this.tracks = [
-      'music.mp3',
-      'music1.mp3', 
-      'music2.mp3',
-      'music3.mp3',
-      'music4.mp3'
+      '/music.mp3',
+      '/music1.mp3', 
+      '/music2.mp3',
+      '/music3.mp3',
+      '/music4.mp3'
     ];
+    
     this.trackNames = [
       'Background Music 1',
-      'Background Music 2',
+      'Background Music 2', 
       'Background Music 3',
       'Background Music 4',
       'Background Music 5'
@@ -1182,18 +1218,36 @@ class MusicPlayerSystem {
   }
 
   init() {
+    this.createAudioElement();
     this.setupEventListeners();
     this.loadTrack(0);
     
     // Auto-play dengan user interaction
-    document.addEventListener('click', () => {
+    const initPlay = () => {
       if (!this.hasInteracted) {
         this.hasInteracted = true;
         if (!this.isPlaying) {
           this.play().catch(e => console.log('Auto-play prevented:', e));
         }
       }
-    }, { once: true });
+    };
+
+    document.addEventListener('click', initPlay, { once: true });
+    document.addEventListener('touchstart', initPlay, { once: true });
+  }
+
+  createAudioElement() {
+    // Cleanup existing audio
+    if (this.audio) {
+      this.audio.pause();
+      this.audio.src = '';
+      this.audio = null;
+    }
+    
+    // Create new audio element
+    this.audio = new Audio();
+    this.audio.preload = 'auto';
+    this.audio.crossOrigin = 'anonymous';
   }
 
   setupEventListeners() {
@@ -1202,88 +1256,202 @@ class MusicPlayerSystem {
     const nextMusicBtn = document.getElementById('nextMusic');
     const musicSelect = document.getElementById('musicSelect');
 
-    playPauseBtn.addEventListener('click', () => this.togglePlayPause());
-    prevMusicBtn.addEventListener('click', () => this.previousTrack());
-    nextMusicBtn.addEventListener('click', () => this.nextTrack());
-    musicSelect.addEventListener('change', (e) => this.selectTrack(parseInt(e.target.value)));
+    // Remove existing listeners dan re-attach
+    const newPlayPause = playPauseBtn.cloneNode(true);
+    const newPrevMusic = prevMusicBtn.cloneNode(true);
+    const newNextMusic = nextMusicBtn.cloneNode(true);
+    const newMusicSelect = musicSelect.cloneNode(true);
 
-    this.audio.addEventListener('ended', () => this.nextTrack());
-    this.audio.addEventListener('loadeddata', () => this.updateUI());
-    
-    // Error handling untuk audio
+    playPauseBtn.parentNode.replaceChild(newPlayPause, playPauseBtn);
+    prevMusicBtn.parentNode.replaceChild(newPrevMusic, prevMusicBtn);
+    nextMusicBtn.parentNode.replaceChild(newNextMusic, nextMusicBtn);
+    musicSelect.parentNode.replaceChild(newMusicSelect, musicSelect);
+
+    // Add new event listeners
+    newPlayPause.addEventListener('click', () => this.togglePlayPause());
+    newPrevMusic.addEventListener('click', () => this.previousTrack());
+    newNextMusic.addEventListener('click', () => this.nextTrack());
+    newMusicSelect.addEventListener('change', (e) => {
+      const index = parseInt(e.target.value);
+      if (!isNaN(index)) {
+        this.selectTrack(index);
+      }
+    });
+
+    // Audio event listeners
+    this.audio.addEventListener('loadeddata', () => {
+      this.isLoading = false;
+      this.updateUI();
+    });
+
+    this.audio.addEventListener('canplay', () => {
+      console.log('Audio ready to play');
+    });
+
+    this.audio.addEventListener('ended', () => {
+      this.nextTrack();
+    });
+
     this.audio.addEventListener('error', (e) => {
-      console.error('Audio error:', e);
+      console.error('Audio error:', this.audio.error);
+      this.isLoading = false;
       this.handleAudioError();
     });
+
+    // Cleanup on page unload
+    window.addEventListener('beforeunload', () => this.cleanup());
   }
 
   handleAudioError() {
-    console.log('Trying next track due to error...');
-    this.nextTrack();
+    console.log('Handling audio error, trying next track...');
+    this.audio.src = '';
+    setTimeout(() => this.nextTrack(), 1000);
   }
 
-  loadTrack(index) {
-    if (index < 0 || index >= this.tracks.length) return;
+  async loadTrack(index) {
+    if (this.isLoading) return;
     
-    this.currentTrack = index;
-    this.audio.src = this.tracks[index];
-    this.audio.load();
-    this.updateUI();
+    if (index < 0 || index >= this.tracks.length) {
+      console.error('Invalid track index:', index);
+      return;
+    }
+    
+    try {
+      this.isLoading = true;
+      
+      // Pause dan reset current audio
+      if (this.audio) {
+        this.audio.pause();
+        this.audio.currentTime = 0;
+        this.audio.src = '';
+      }
+
+      this.currentTrack = index;
+      const trackUrl = this.tracks[index];
+      
+      console.log('Loading track:', trackUrl);
+      
+      // Set new source
+      this.audio.src = trackUrl;
+      
+      // Small delay sebelum load
+      await new Promise(resolve => setTimeout(resolve, 100));
+      this.audio.load();
+      
+    } catch (error) {
+      console.error('Error loading track:', error);
+      this.isLoading = false;
+      this.handleAudioError();
+    }
   }
 
   async togglePlayPause() {
+    if (this.isLoading) return;
+    
     try {
       if (this.isPlaying) {
-        this.pause();
+        await this.pause();
       } else {
         await this.play();
       }
     } catch (error) {
-      console.log('Play/Pause error:', error);
+      console.error('Play/Pause error:', error);
     }
   }
 
   async play() {
+    if (!this.audio || !this.audio.src || this.isLoading) {
+      return;
+    }
+
     try {
       await this.audio.play();
       this.isPlaying = true;
       document.getElementById('playPause').textContent = '⏸️';
+      console.log('Audio playing successfully');
+      
     } catch (error) {
-      console.log('Audio play failed:', error);
-      // Fallback: coba track berikutnya
-      this.nextTrack();
+      console.error('Audio play failed:', error);
+      this.isPlaying = false;
+      document.getElementById('playPause').textContent = '▶️';
     }
   }
 
-  pause() {
-    this.audio.pause();
-    this.isPlaying = false;
-    document.getElementById('playPause').textContent = '▶️';
+  async pause() {
+    try {
+      if (this.audio) {
+        this.audio.pause();
+      }
+      this.isPlaying = false;
+      document.getElementById('playPause').textContent = '▶️';
+    } catch (error) {
+      console.error('Pause error:', error);
+    }
   }
 
   nextTrack() {
-    this.currentTrack = (this.currentTrack + 1) % this.tracks.length;
-    this.loadTrack(this.currentTrack);
-    if (this.isPlaying) this.play();
+    if (this.isLoading) return;
+    
+    const nextIndex = (this.currentTrack + 1) % this.tracks.length;
+    console.log('Moving to next track:', nextIndex);
+    
+    const wasPlaying = this.isPlaying;
+    this.loadTrack(nextIndex);
+    
+    if (wasPlaying) {
+      setTimeout(() => this.play(), 1000);
+    }
   }
 
   previousTrack() {
-    this.currentTrack = (this.currentTrack - 1 + this.tracks.length) % this.tracks.length;
-    this.loadTrack(this.currentTrack);
-    if (this.isPlaying) this.play();
+    if (this.isLoading) return;
+    
+    const prevIndex = (this.currentTrack - 1 + this.tracks.length) % this.tracks.length;
+    console.log('Moving to previous track:', prevIndex);
+    
+    const wasPlaying = this.isPlaying;
+    this.loadTrack(prevIndex);
+    
+    if (wasPlaying) {
+      setTimeout(() => this.play(), 1000);
+    }
   }
 
   selectTrack(index) {
+    if (this.isLoading || index < 0 || index >= this.tracks.length) return;
+    
+    console.log('Selected track:', index);
+    
+    const wasPlaying = this.isPlaying;
     this.loadTrack(index);
-    if (this.isPlaying) this.play();
+    
+    if (wasPlaying) {
+      setTimeout(() => this.play(), 1000);
+    }
   }
 
   updateUI() {
-    const musicSelect = document.getElementById('musicSelect');
-    const musicInfo = document.getElementById('musicInfo');
-    
-    musicSelect.value = this.currentTrack;
-    musicInfo.textContent = `Now Playing: ${this.trackNames[this.currentTrack]}`;
+    try {
+      const musicSelect = document.getElementById('musicSelect');
+      const musicInfo = document.getElementById('musicInfo');
+      
+      if (musicSelect && musicInfo) {
+        musicSelect.value = this.currentTrack;
+        musicInfo.textContent = `Now Playing: ${this.trackNames[this.currentTrack]}`;
+      }
+    } catch (error) {
+      console.error('UI update error:', error);
+    }
+  }
+
+  cleanup() {
+    if (this.audio) {
+      this.audio.pause();
+      this.audio.src = '';
+      this.audio.load();
+    }
+    this.isPlaying = false;
+    this.isLoading = false;
   }
 }
 
@@ -1299,6 +1467,7 @@ class VoiceSystem {
     if (this.currentVoice) {
       this.currentVoice.pause();
       this.currentVoice.currentTime = 0;
+      this.currentVoice = null;
     }
 
     // Check jika voice path valid
@@ -1307,13 +1476,23 @@ class VoiceSystem {
       return;
     }
 
-    // Play voice baru
-    this.currentVoice = new Audio(voicePath);
-    this.currentVoice.volume = 0.7;
-    
-    this.currentVoice.play().catch(error => {
-      console.log('Voice play failed:', error);
-    });
+    try {
+      // Play voice baru
+      this.currentVoice = new Audio(voicePath);
+      this.currentVoice.volume = 0.7;
+      
+      this.currentVoice.play().catch(error => {
+        console.log('Voice play failed:', error);
+      });
+
+      // Auto cleanup setelah selesai
+      this.currentVoice.addEventListener('ended', () => {
+        this.currentVoice = null;
+      });
+
+    } catch (error) {
+      console.error('Voice system error:', error);
+    }
   }
 
   // Method baru untuk hover preview
@@ -1333,12 +1512,17 @@ class VoiceSystem {
     if (this.currentVoice) {
       this.currentVoice.pause();
       this.currentVoice.currentTime = 0;
+      this.currentVoice = null;
     }
     
     // Clear hover timeout
     if (this.hoverTimeout) {
       clearTimeout(this.hoverTimeout);
     }
+  }
+
+  cleanup() {
+    this.stopVoice();
   }
 }
 
@@ -1374,7 +1558,9 @@ class FireworksSystem {
         if (opacity > 0) {
           requestAnimationFrame(animate);
         } else {
-          firework.remove();
+          if (firework.parentNode) {
+            firework.remove();
+          }
         }
       };
       
@@ -1401,6 +1587,13 @@ class FireworksSystem {
     };
     
     createFireworkBatch();
+  }
+
+  cleanup() {
+    // Remove all fireworks
+    document.querySelectorAll('.firework').forEach(firework => {
+      firework.remove();
+    });
   }
 }
 
@@ -1437,6 +1630,15 @@ class StarfieldSystem {
       this.container.appendChild(star);
       this.stars.push(star);
     }
+  }
+
+  cleanup() {
+    this.stars.forEach(star => {
+      if (star.parentNode) {
+        star.remove();
+      }
+    });
+    this.stars = [];
   }
 }
 
@@ -1514,7 +1716,7 @@ class SummonPortalSystem {
   // Highlight sequence untuk summon animation
   async highlightSequence(finalCharacterId, duration = 2000) {
     const characters = document.querySelectorAll('.portal-character');
-    const totalHighlights = 20; // Jumlah highlight selama animasi
+    const totalHighlights = 20;
     
     for (let i = 0; i < totalHighlights; i++) {
       const randomIndex = Math.floor(Math.random() * characters.length);
@@ -1522,14 +1724,16 @@ class SummonPortalSystem {
       
       await sleep(duration / totalHighlights);
       
-      // Jangan remove highlight untuk yang terakhir
       if (i < totalHighlights - 1) {
         characters[randomIndex].classList.remove('active');
       }
     }
     
-    // Pastikan final character yang aktif
     this.highlightCharacter(finalCharacterId);
+  }
+
+  cleanup() {
+    this.deactivateAll();
   }
 }
 
@@ -1546,6 +1750,7 @@ class SummonLimitSystem {
     
     this.currentSummons = 0;
     this.resetTime = null;
+    this.cooldownInterval = null;
     this.init();
   }
 
@@ -1645,6 +1850,8 @@ class SummonLimitSystem {
     const summonBtnBottom = document.getElementById('summonBtnBottom');
     const singleSummonBottom = document.getElementById('singleSummonBottom');
 
+    if (!limitCounter) return;
+
     // Update counter dots
     limitCounter.innerHTML = '';
     for (let i = 0; i < this.MAX_SUMMONS; i++) {
@@ -1655,31 +1862,39 @@ class SummonLimitSystem {
 
     // Update summons left text
     const remaining = this.getRemainingSummons();
-    summonsLeft.textContent = remaining;
+    if (summonsLeft) {
+      summonsLeft.textContent = remaining;
+    }
     
     // Update button states
     const canSummon = this.canSummon() && window.securitySystem?.isVerified;
-    summonBtn.disabled = !canSummon;
-    singleSummon.disabled = !canSummon;
-    summonBtnBottom.disabled = !canSummon;
-    singleSummonBottom.disabled = !canSummon;
+    
+    [summonBtn, singleSummon, summonBtnBottom, singleSummonBottom].forEach(btn => {
+      if (btn) {
+        btn.disabled = !canSummon;
+      }
+    });
 
     // Show cooldown timer jika limit habis
-    if (!this.canSummon()) {
-      cooldownTimer.classList.add('show');
-    } else {
-      cooldownTimer.classList.remove('show');
+    if (cooldownTimer) {
+      if (!this.canSummon()) {
+        cooldownTimer.classList.add('show');
+      } else {
+        cooldownTimer.classList.remove('show');
+      }
     }
   }
 
   startCooldownTimer() {
-    setInterval(() => {
+    this.cooldownInterval = setInterval(() => {
       this.updateCooldownText();
     }, 1000);
   }
 
   updateCooldownText() {
     const cooldownText = document.getElementById('cooldownText');
+    if (!cooldownText) return;
+    
     const timeUntilReset = this.getTimeUntilReset();
     
     const formatTime = (time) => time.toString().padStart(2, '0');
@@ -1717,11 +1932,19 @@ class SummonLimitSystem {
 
   showRefreshNotification() {
     const refreshNotification = document.getElementById('refreshNotification');
-    refreshNotification.classList.add('show');
-    
-    setTimeout(() => {
-      refreshNotification.classList.remove('show');
-    }, 5000);
+    if (refreshNotification) {
+      refreshNotification.classList.add('show');
+      
+      setTimeout(() => {
+        refreshNotification.classList.remove('show');
+      }, 5000);
+    }
+  }
+
+  cleanup() {
+    if (this.cooldownInterval) {
+      clearInterval(this.cooldownInterval);
+    }
   }
 }
 
@@ -1753,6 +1976,11 @@ class GachaSystem {
     const claimBtn = document.getElementById('claimBtn');
     const closeResult = document.getElementById('closeResult');
     const modeBtn = document.getElementById('modeBtn');
+
+    if (!summonBtn || !modeBtn) {
+      console.error('Required elements not found');
+      return;
+    }
 
     // Summon dari portal besar
     summonBtn.addEventListener('click', (e) => {
@@ -1849,8 +2077,7 @@ class GachaSystem {
   }
 
   handlePanelHoverEnd() {
-    // Tidak melakukan apa-apa saat hover end, biar hero spot tetap
-    // atau kembali ke active panel jika ada
+    // Kembali ke active panel jika ada
     if (this.currentActivePanel) {
       const characterName = this.currentActivePanel.dataset.name;
       const character = CHARACTERS.find(char => char.name === characterName);
@@ -1913,7 +2140,7 @@ class GachaSystem {
     singleSummonBottom.disabled = true;
 
     try {
-      // Pilih rarity dan character yang benar-benar akan didapat
+      // Pilih rarity dan character
       const chosenRarity = this.chooseRarity();
       const winnerCharacter = this.pickCharacterByRarity(chosenRarity);
       
@@ -1953,7 +2180,7 @@ class GachaSystem {
       showNotification('🔄 Generating secure download link...');
       await sleep(1000);
       
-      const downloadUrl = `mods/${filename}.zip`;
+      const downloadUrl = `/mods/${filename}.zip`;
       const link = document.createElement('a');
       link.href = downloadUrl;
       link.download = `${filename}.zip`;
@@ -1973,10 +2200,10 @@ class GachaSystem {
   setupBackground() {
     const bgContainer = document.getElementById('bgContainer');
     const SLIDES = [
-      'assets/backgrounds/bg1.jpg',
-      'assets/backgrounds/bg2.jpg',
-      'assets/backgrounds/bg3.jpg',
-      'assets/backgrounds/bg4.jpg'
+      '/assets/backgrounds/bg1.jpg',
+      '/assets/backgrounds/bg2.jpg',
+      '/assets/backgrounds/bg3.jpg',
+      '/assets/backgrounds/bg4.jpg'
     ];
 
     if (SLIDES.length === 0) return;
@@ -2035,7 +2262,6 @@ class GachaSystem {
       return matches[Math.floor(Math.random() * matches.length)];
     }
     
-    // Fallback ke random character jika tidak ada match
     return CHARACTERS[Math.floor(Math.random() * CHARACTERS.length)];
   }
 
@@ -2098,6 +2324,14 @@ class GachaSystem {
       heroSpot.style.display = 'none';
       summonPortal.classList.remove('hide');
     }
+  }
+
+  cleanup() {
+    this.summonLimitSystem.cleanup();
+    this.voiceSystem.cleanup();
+    this.fireworksSystem.cleanup();
+    this.starfieldSystem.cleanup();
+    this.summonPortal.cleanup();
   }
 }
 
@@ -2163,23 +2397,23 @@ class SubscriptionSecurity {
     const enableBtn = document.getElementById('enableBtn');
 
     if (this.isVerified) {
-      subBadge.style.display = 'inline-flex';
-      statusDot.className = 'status-dot verified';
-      statusText.textContent = 'Verified ✓';
-      enableBtn.style.display = 'none';
+      if (subBadge) subBadge.style.display = 'inline-flex';
+      if (statusDot) statusDot.className = 'status-dot verified';
+      if (statusText) statusText.textContent = 'Verified ✓';
+      if (enableBtn) enableBtn.style.display = 'none';
       
       // Enable summon buttons jika limit masih ada
       if (window.gachaSystem?.summonLimitSystem.canSummon()) {
-        document.getElementById('summonBtn').disabled = false;
-        document.getElementById('singleSummon').disabled = false;
-        document.getElementById('summonBtnBottom').disabled = false;
-        document.getElementById('singleSummonBottom').disabled = false;
+        ['summonBtn', 'singleSummon', 'summonBtnBottom', 'singleSummonBottom'].forEach(id => {
+          const btn = document.getElementById(id);
+          if (btn) btn.disabled = false;
+        });
       }
     } else {
-      subBadge.style.display = 'none';
-      statusDot.className = 'status-dot';
-      statusText.textContent = 'Verification Required';
-      enableBtn.style.display = 'block';
+      if (subBadge) subBadge.style.display = 'none';
+      if (statusDot) statusDot.className = 'status-dot';
+      if (statusText) statusText.textContent = 'Verification Required';
+      if (enableBtn) enableBtn.style.display = 'block';
     }
   }
 
@@ -2190,25 +2424,35 @@ class SubscriptionSecurity {
     const confirmSubscriptionBtn = document.getElementById('confirmSubscription');
     const closeVerificationBtn = document.getElementById('closeVerification');
 
-    openChannelBtn?.addEventListener('click', () => {
-      this.showVerificationModal();
-    });
+    if (openChannelBtn) {
+      openChannelBtn.addEventListener('click', () => {
+        this.showVerificationModal();
+      });
+    }
 
-    enableBtn?.addEventListener('click', () => {
-      this.showVerificationModal();
-    });
+    if (enableBtn) {
+      enableBtn.addEventListener('click', () => {
+        this.showVerificationModal();
+      });
+    }
 
-    openYoutubeBtn?.addEventListener('click', () => {
-      this.openYouTubeChannel();
-    });
+    if (openYoutubeBtn) {
+      openYoutubeBtn.addEventListener('click', () => {
+        this.openYouTubeChannel();
+      });
+    }
 
-    confirmSubscriptionBtn?.addEventListener('click', () => {
-      this.verifySubscription();
-    });
+    if (confirmSubscriptionBtn) {
+      confirmSubscriptionBtn.addEventListener('click', () => {
+        this.verifySubscription();
+      });
+    }
 
-    closeVerificationBtn?.addEventListener('click', () => {
-      this.hideVerificationModal();
-    });
+    if (closeVerificationBtn) {
+      closeVerificationBtn.addEventListener('click', () => {
+        this.hideVerificationModal();
+      });
+    }
   }
 
   showVerificationModal() {
@@ -2247,27 +2491,52 @@ class SubscriptionSecurity {
     
     // Show access granted animation
     const accessGranted = document.getElementById('accessGranted');
-    accessGranted.classList.add('show');
-    setTimeout(() => {
-      accessGranted.classList.remove('show');
-    }, 3000);
+    if (accessGranted) {
+      accessGranted.classList.add('show');
+      setTimeout(() => {
+        accessGranted.classList.remove('show');
+      }, 3000);
+    }
+  }
+}
+
+/* ---------------------- GLOBAL CLEANUP ---------------------- */
+function cleanupAllSystems() {
+  if (window.musicPlayer) {
+    window.musicPlayer.cleanup();
+  }
+  if (window.gachaSystem) {
+    window.gachaSystem.cleanup();
+  }
+  if (window.voiceSystem) {
+    window.voiceSystem.cleanup();
   }
 }
 
 /* ---------------------- INITIALIZATION ---------------------- */
 document.addEventListener('DOMContentLoaded', function() {
-  // Initialize semua systems
-  window.voiceSystem = new VoiceSystem();
-  window.musicPlayer = new MusicPlayerSystem();
-  window.securitySystem = new SubscriptionSecurity();
-  window.gachaSystem = new GachaSystem();
-  
-  // Add error handlers ke images
-  document.querySelectorAll('img').forEach(img => {
-    img.addEventListener('error', () => handleImageError(img));
-  });
+  try {
+    // Initialize semua systems
+    window.voiceSystem = new VoiceSystem();
+    window.musicPlayer = new MusicPlayerSystem();
+    window.securitySystem = new SubscriptionSecurity();
+    window.gachaSystem = new GachaSystem();
+    
+    // Add error handlers ke images
+    document.querySelectorAll('img').forEach(img => {
+      img.addEventListener('error', () => handleImageError(img));
+    });
 
-  console.log('🎮 Enhanced Gacha System with All Fixes Initialized');
+    // Setup cleanup on page unload
+    window.addEventListener('beforeunload', cleanupAllSystems);
+    window.addEventListener('pagehide', cleanupAllSystems);
+
+    console.log('🎮 Enhanced Gacha System with All Fixes Initialized');
+
+  } catch (error) {
+    console.error('Initialization error:', error);
+    showNotification('❌ System initialization failed. Please refresh.');
+  }
 });
 </script>
 </body>
