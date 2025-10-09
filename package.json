@@ -1,0 +1,11 @@
+{
+  "name": "gacha-showcase",
+  "version": "1.0.0",
+  "description": "High-tier Gacha Showcase with Limited Summon",
+  "scripts": {
+    "build": "echo 'No build step required for static site'"
+  },
+  "keywords": ["gacha", "showcase", "anime", "summon"],
+  "author": "FANI ISNANDA",
+  "license": "MIT"
+}
