@@ -77,26 +77,49 @@
     .bg-slide.active{opacity:1;transform:scale(1)}
     .bg-overlay{position:absolute;inset:0;background:linear-gradient(180deg, rgba(2,6,20,0.25), rgba(2,6,30,0.6));z-index:1}
 
-    /* showcase carousel container - DIUBAH */
+    /* showcase carousel container */
     .showcase-wrap{position:relative;z-index:2;width:100%;max-width:1400px;padding:48px 32px;display:flex;flex-direction:column;gap:18px;align-items:center;justify-content:center}
     .showcase-title{display:flex;align-items:center;gap:12px;width:100%;justify-content:space-between}
     .showcase-title h2{font-size:20px;letter-spacing:1px;background:linear-gradient(45deg, var(--accent-a), var(--accent-b));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
     .showcase-view{width:100%;overflow:hidden;padding:20px 0 28px 0;position:relative}
     
-    /* slider navigation - DIHAPUS */
+    /* slider navigation - DIHAPUS SESUAI PERMINTAAN */
     .slider-nav{display:none}
+    .nav-btn{display:none}
 
     .carousel{display:flex;gap:28px;align-items:center;justify-content:center;flex-wrap:wrap;will-change:transform}
     
-    /* panel - medium size dengan aura FIXED dan border aesthetic */
+    /* panel - medium size dengan aura FIXED */
     .panel{width:280px;height:620px;border-radius:14px;overflow:visible;background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(0,0,0,0.08));backdrop-filter:blur(6px);position:relative;box-shadow:0 40px 120px rgba(2,8,20,0.6);transition:all 350ms cubic-bezier(0.25, 0.46, 0.45, 0.94);border:2px solid transparent}
-    .panel:hover{border:2px solid var(--accent-a)}
+    
+    /* Border aesthetic untuk panel */
+    .panel::after {
+      content: '';
+      position: absolute;
+      top: -2px;
+      left: -2px;
+      right: -2px;
+      bottom: -2px;
+      border-radius: 16px;
+      background: linear-gradient(45deg, var(--accent-a), var(--accent-b), var(--accent-a));
+      z-index: -1;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+    
+    .panel:hover::after {
+      opacity: 0.3;
+    }
+    
+    .panel.active::after {
+      opacity: 0.5;
+    }
+    
     .panel-inner{width:100%;height:100%;position:relative;display:flex;flex-direction:column;align-items:center;border-radius:14px;overflow:hidden}
     
     /* Aura effect container FIXED */
     .aura-container{position:absolute;top:-5px;left:-5px;right:-5px;bottom:-5px;border-radius:16px;z-index:0;opacity:0;transition:opacity 0.5s ease;pointer-events:none;overflow:hidden}
     .panel.active .aura-container{opacity:0.8}
-    .panel:hover .aura-container{opacity:0.6}
     .aura{position:absolute;top:50%;left:50%;width:140%;height:140%;background:conic-gradient(from 0deg, transparent, var(--aura-color), transparent);transform:translate(-50%, -50%) rotate(0deg);animation:rotateAura 4s linear infinite;border-radius:50%}
     .aura-2{animation-delay:-2s; opacity:0.7}
     
@@ -114,6 +137,7 @@
 
     /* hover focus dengan efek glow */
     .panel:hover{transform:translateY(-18px) scale(1.02);box-shadow:0 60px 140px rgba(3,12,30,0.75);filter:brightness(1.04)}
+    .panel:hover .aura-container{opacity:0.6}
     .panel.active{transform:translateY(-12px) scale(1);box-shadow:0 50px 130px var(--aura-glow, rgba(57,210,255,0.3))}
 
     /* HERO SPOT DIPERBAIKI DENGAN GAMBAR */
@@ -130,6 +154,12 @@
       background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(0,0,0,0.15));
       border: 1px solid rgba(255,255,255,0.03);
       position: relative;
+      opacity: 0;
+      transition: opacity 0.5s ease;
+    }
+
+    .hero-spot.active {
+      opacity: 1;
     }
 
     .hero-image-container {
@@ -615,7 +645,7 @@
       transform: translateX(-50%) translateY(0);
     }
 
-    /* Music Player Styles - DIPERBAIKI */
+    /* Music Player Styles */
     .music-player {
       position: fixed;
       bottom: 20px;
@@ -706,117 +736,6 @@
       50% { opacity: calc(var(--opacity) * 0.3); }
     }
 
-    /* NEW: Leaderboard Styles */
-    .leaderboard-container {
-      position: fixed;
-      top: 80px;
-      right: 20px;
-      z-index: 45;
-      background: rgba(255,255,255,0.05);
-      backdrop-filter: blur(10px);
-      border-radius: 12px;
-      padding: 15px;
-      border: 1px solid rgba(255,255,255,0.1);
-      box-shadow: 0 10px 30px rgba(0,0,0,0.3);
-      max-width: 300px;
-      max-height: 400px;
-      overflow-y: auto;
-    }
-
-    .leaderboard-title {
-      color: var(--accent-a);
-      font-size: 16px;
-      margin-bottom: 12px;
-      text-align: center;
-    }
-
-    .leaderboard-item {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      padding: 8px;
-      margin-bottom: 6px;
-      background: rgba(255,255,255,0.02);
-      border-radius: 8px;
-      border: 1px solid rgba(255,255,255,0.05);
-    }
-
-    .leaderboard-rank {
-      width: 24px;
-      height: 24px;
-      background: linear-gradient(45deg, var(--accent-a), var(--accent-b));
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 12px;
-      font-weight: 800;
-      color: #021226;
-    }
-
-    .leaderboard-info {
-      flex: 1;
-    }
-
-    .leaderboard-name {
-      font-weight: 600;
-      font-size: 12px;
-    }
-
-    .leaderboard-stats {
-      font-size: 10px;
-      color: var(--muted);
-    }
-
-    /* NEW: Social Sharing Styles */
-    .share-buttons {
-      display: flex;
-      gap: 8px;
-      margin-top: 15px;
-      justify-content: center;
-    }
-
-    .share-btn {
-      padding: 8px 12px;
-      border-radius: 8px;
-      border: none;
-      font-size: 12px;
-      font-weight: 600;
-      cursor: pointer;
-      transition: all 0.3s ease;
-    }
-
-    .share-twitter {
-      background: #1DA1F2;
-      color: white;
-    }
-
-    .share-discord {
-      background: #5865F2;
-      color: white;
-    }
-
-    .share-copy {
-      background: var(--accent-a);
-      color: #021226;
-    }
-
-    /* NEW: Seasonal Events Banner */
-    .seasonal-banner {
-      position: fixed;
-      top: 20px;
-      left: 50%;
-      transform: translateX(-50%);
-      z-index: 40;
-      background: linear-gradient(45deg, #ff6b6b, #ffa726);
-      color: white;
-      padding: 10px 20px;
-      border-radius: 25px;
-      font-weight: 700;
-      box-shadow: 0 5px 20px rgba(255,107,107,0.3);
-      animation: pulse 2s infinite;
-    }
-
     /* small screens */
     @media (max-width:1100px){
       .hero-spot{display:none}
@@ -832,9 +751,6 @@
       .music-player {
         bottom: 80px;
         right: 10px;
-      }
-      .leaderboard-container {
-        display: none;
       }
     }
     @media (max-width:900px){
@@ -883,11 +799,6 @@
 </head>
 <body>
   <div class="app">
-    <!-- Seasonal Events Banner -->
-    <div class="seasonal-banner" id="seasonalBanner">
-      🎄 Christmas Event Coming Soon! Limited Characters!
-    </div>
-
     <header class="top" role="banner" aria-label="Header utama">
       <div class="shine-effect"></div>
       <div class="brand">
@@ -940,14 +851,6 @@
           <h4>Rarity Rates</h4>
           <p class="muted" id="ratesSummary">Mythic: 2% • Legendary: 8% • Elite: 20% • Common: 70%</p>
         </div>
-
-        <!-- Leaderboard Mini -->
-        <div class="card">
-          <h4>Top Summoners</h4>
-          <div id="miniLeaderboard">
-            <!-- Leaderboard items akan diisi JavaScript -->
-          </div>
-        </div>
       </aside>
 
       <!-- CENTER: showcase & gacha -->
@@ -956,19 +859,20 @@
         <div class="bg-overlay"></div>
         <div class="starfield" id="starfield"></div>
 
-        <!-- SHOWCASE MODE - DIUBAH TANPA SLIDER -->
+        <!-- SHOWCASE MODE -->
         <div class="showcase-wrap" id="showcaseWrap">
           <div class="showcase-title">
             <div>
               <h2>Character Showcase</h2>
               <div class="muted">Click characters to preview • Hover for voice preview</div>
             </div>
+            <!-- Slider navigation dihapus sesuai permintaan -->
           </div>
 
           <div class="showcase-view" id="showcaseView">
             <div id="carousel" class="carousel">
-              <!-- 6 panels dengan border aesthetic -->
-              <div class="panel" data-name="Sasuke Uchiha" data-rarity="Mythic" data-file="SasukeRinnegan" data-description="Abyss Walker" data-aura-color="#ffd700">
+              <!-- 6 panels dengan border aesthetic dan hover voice preview -->
+              <div class="panel" data-name="Sasuke Uchiha" data-rarity="Mythic" data-file="SasukeRinnegan" data-description="Uchiha" data-aura-color="#ffd700">
                 <div class="aura-container">
                   <div class="aura" style="--aura-color: #ffd700"></div>
                   <div class="aura aura-2" style="--aura-color: #ffd700"></div>
@@ -982,7 +886,7 @@
                 </div>
               </div>
 
-              <div class="panel" data-name="Obito Uchiha" data-rarity="Legendary" data-file="ObitoUnmasked" data-description="Dragon Knight" data-aura-color="#9b7bff">
+              <div class="panel" data-name="Obito Uchiha" data-rarity="Legendary" data-file="ObitoUnmasked" data-description="Uchiha" data-aura-color="#9b7bff">
                 <div class="aura-container">
                   <div class="aura" style="--aura-color: #9b7bff"></div>
                   <div class="aura aura-2" style="--aura-color: #9b7bff"></div>
@@ -996,13 +900,13 @@
                 </div>
               </div>
 
-              <div class="panel" data-name="Madara Uchiha" data-rarity="Elite" data-file="Madara" data-description="Oracle Seer" data-aura-color="#39d2ff">
+              <div class="panel" data-name="Madara Uchiha" data-rarity="Supreme" data-file="Madara" data-description="Uchiha" data-aura-color="#39d2ff">
                 <div class="aura-container">
                   <div class="aura" style="--aura-color: #39d2ff"></div>
                   <div class="aura aura-2" style="--aura-color: #39d2ff"></div>
                 </div>
                 <div class="panel-inner">
-                  <img src="assets/panels/panel3.png" alt="Madara Uchiha - Elite" onerror="handleImageError(this)">
+                  <img src="assets/panels/panel3.png" alt="Madara Uchiha - Supreme" onerror="handleImageError(this)">
                   <div class="meta">
                     <div class="pname">Madara</div>
                     <div class="prarity">Elite</div>
@@ -1010,13 +914,13 @@
                 </div>
               </div>
 
-              <div class="panel" data-name="Naruto" data-rarity="Common" data-file="Naruto" data-description="Forest Guardian" data-aura-color="#94a6bf">
+              <div class="panel" data-name="Naruto" data-rarity="Common" data-file="Naruto" data-description="Uzumaki" data-aura-color="#94a6bf">
                 <div class="aura-container">
                   <div class="aura" style="--aura-color: #94a6bf"></div>
                   <div class="aura aura-2" style="--aura-color: #94a6bf"></div>
                 </div>
                 <div class="panel-inner">
-                  <img src="assets/panels/panel4.png" alt="Naruto - Common rarity" onerror="handleImageError(this)">
+                  <img src="assets/panels/panel4.png" alt="Naruto - Elite rarity" onerror="handleImageError(this)">
                   <div class="meta">
                     <div class="pname">Naruto</div>
                     <div class="prarity">Common</div>
@@ -1024,7 +928,7 @@
                 </div>
               </div>
 
-              <div class="panel" data-name="SasukeHebi" data-rarity="Elite" data-file="SasukeHebi" data-description="Cyber Ninja" data-aura-color="#39d2ff">
+              <div class="panel" data-name="SasukeHebi" data-rarity="Elite" data-file="SasukeHebi" data-description="Uchiha" data-aura-color="#39d2ff">
                 <div class="aura-container">
                   <div class="aura" style="--aura-color: #39d2ff"></div>
                   <div class="aura aura-2" style="--aura-color: #39d2ff"></div>
@@ -1038,7 +942,7 @@
                 </div>
               </div>
 
-              <div class="panel" data-name="BorutoUzumaki" data-rarity="Legendary" data-file="BorutoUzumaki" data-description="Phoenix Mage" data-aura-color="#9b7bff">
+              <div class="panel" data-name="BorutoUzumaki" data-rarity="Legendary" data-file="BorutoUzumaki" data-description="Uzumaki" data-aura-color="#9b7bff">
                 <div class="aura-container">
                   <div class="aura" style="--aura-color: #9b7bff"></div>
                   <div class="aura aura-2" style="--aura-color: #9b7bff"></div>
@@ -1061,7 +965,7 @@
             <img id="heroImage" src="" alt="Character Preview" onerror="handleImageError(this)">
             <div class="hero-content">
               <h3 id="heroName">Select a Character</h3>
-              <p id="heroDesc" class="muted">Hover or click characters to preview</p>
+              <p id="heroDesc" class="muted">Click on any character to preview</p>
             </div>
           </div>
         </div>
@@ -1091,14 +995,6 @@
           </div>
         </div>
       </section>
-
-      <!-- Leaderboard Side Panel -->
-      <div class="leaderboard-container" id="leaderboardPanel">
-        <div class="leaderboard-title">🏆 Top Summoners</div>
-        <div id="leaderboardList">
-          <!-- Leaderboard items akan diisi JavaScript -->
-        </div>
-      </div>
     </main>
   </div>
 
@@ -1168,7 +1064,7 @@
     <span>🎮</span> GACHA ACCESS GRANTED!
   </div>
 
-  <!-- Result Overlay dengan Social Sharing -->
+  <!-- Result Overlay -->
   <div class="result-overlay" id="resultOverlay" aria-hidden="true">
     <div class="result-card">
       <div class="result-character-image" id="resultCharacterImage">
@@ -1176,14 +1072,6 @@
       </div>
       <h2 id="resultTitle">Mythic • You Obtained Sasuke</h2>
       <p id="resultText">Beautiful reveal animation — Download secured with single-use token.</p>
-      
-      <!-- Social Sharing Buttons -->
-      <div class="share-buttons">
-        <button class="share-btn share-twitter" id="shareTwitter">Twitter</button>
-        <button class="share-btn share-discord" id="shareDiscord">Discord</button>
-        <button class="share-btn share-copy" id="shareCopy">Copy Link</button>
-      </div>
-      
       <div class="result-actions">
         <button id="claimBtn" class="btn primary">Download File</button>
         <button id="closeResult" class="btn">Close</button>
@@ -1197,14 +1085,11 @@
   <script>
 /************************************************************************
  * ENHANCED GACHA SYSTEM WITH ALL FIXES
- * - Fixed background music system
- * - Removed slider navigation
- * - Added border aesthetic to showcase
- * - Voice preview on hover
- * - Hero image update on hover
- * - Leaderboard system
- * - Social sharing
- * - Seasonal events
+ * - Fixed background music path to root directory
+ * - Removed slider navigation buttons
+ * - Added border aesthetic to showcase panels
+ * - Added voice preview on hover
+ * - Added hero image display on hover
  ************************************************************************/
 
 /* ---------------------- CHARACTER DATA DENGAN VOICE - DIPERBAIKI ---------------------- */
@@ -1217,7 +1102,7 @@ const CHARACTERS = [
     description: 'Abyss Walker',
     file: 'Sasuke',
     auraColor: '#ffd700',
-    voice: 'assets/voices/sasuke_voice.mp3'
+    voice: 'sasuke_voice.mp3' // Path di root directory
   },
   {
     id: 'Obito',
@@ -1227,7 +1112,7 @@ const CHARACTERS = [
     description: 'Dragon Knight',
     file: 'Obito',
     auraColor: '#9b7bff',
-    voice: 'assets/voices/obito_voice.mp3'
+    voice: 'obito_voice.mp3' // Path di root directory
   },
   {
     id: 'Madara',
@@ -1237,7 +1122,7 @@ const CHARACTERS = [
     description: 'Oracle Seer',
     file: 'Madara',
     auraColor: '#39d2ff',
-    voice: 'assets/voices/madara_voice.mp3'
+    voice: 'madara_voice.mp3' // Path di root directory
   },
   {
     id: 'Naruto',
@@ -1247,7 +1132,7 @@ const CHARACTERS = [
     description: 'Forest Guardian',
     file: 'Naruto',
     auraColor: '#94a6bf',
-    voice: 'assets/voices/naruto_voice.mp3'
+    voice: 'naruto_voice.mp3' // Path di root directory
   },
   {
     id: 'SasukeHebi',
@@ -1257,7 +1142,7 @@ const CHARACTERS = [
     description: 'Cyber Ninja',
     file: 'SasukeHebi',
     auraColor: '#39d2ff',
-    voice: 'assets/voices/sasukehebi_voice.mp3'
+    voice: 'sasukehebi_voice.mp3' // Path di root directory
   },
   {
     id: 'BorutoUzumaki',
@@ -1267,7 +1152,7 @@ const CHARACTERS = [
     description: 'Phoenix Mage',
     file: 'BorutoUzumaki',
     auraColor: '#9b7bff',
-    voice: 'assets/voices/boruto_voice.mp3'
+    voice: 'boruto_voice.mp3' // Path di root directory
   }
 ];
 
@@ -1277,7 +1162,7 @@ class MusicPlayerSystem {
     this.audio = new Audio();
     this.currentTrack = 0;
     this.isPlaying = false;
-    // MUSIC PATHS DIUBAH KE ROOT
+    // Path music di root directory
     this.tracks = [
       'music.mp3',
       'music1.mp3', 
@@ -1286,11 +1171,11 @@ class MusicPlayerSystem {
       'music4.mp3'
     ];
     this.trackNames = [
-      'Epic Adventure',
-      'Mystic Forest',
-      'Dragon\'s Lair',
-      'Celestial Realm',
-      'Abyss Depths'
+      'Background Music 1',
+      'Background Music 2',
+      'Background Music 3',
+      'Background Music 4',
+      'Background Music 5'
     ];
     
     this.init();
@@ -1302,8 +1187,11 @@ class MusicPlayerSystem {
     
     // Auto-play dengan user interaction
     document.addEventListener('click', () => {
-      if (!this.isPlaying && this.audio.paused) {
-        this.play().catch(console.log);
+      if (!this.hasInteracted) {
+        this.hasInteracted = true;
+        if (!this.isPlaying) {
+          this.play().catch(e => console.log('Auto-play prevented:', e));
+        }
       }
     }, { once: true });
   }
@@ -1321,20 +1209,25 @@ class MusicPlayerSystem {
 
     this.audio.addEventListener('ended', () => this.nextTrack());
     this.audio.addEventListener('loadeddata', () => this.updateUI());
+    
+    // Error handling untuk audio
     this.audio.addEventListener('error', (e) => {
-      console.error('Music error:', e);
-      this.nextTrack(); // Skip to next track if error
+      console.error('Audio error:', e);
+      this.handleAudioError();
     });
   }
 
+  handleAudioError() {
+    console.log('Trying next track due to error...');
+    this.nextTrack();
+  }
+
   loadTrack(index) {
-    this.currentTrack = index;
+    if (index < 0 || index >= this.tracks.length) return;
     
-    // Coba load dari root directory
+    this.currentTrack = index;
     this.audio.src = this.tracks[index];
-    this.audio.load().catch(e => {
-      console.log('Failed to load track:', this.tracks[index], e);
-    });
+    this.audio.load();
     this.updateUI();
   }
 
@@ -1346,7 +1239,7 @@ class MusicPlayerSystem {
         await this.play();
       }
     } catch (error) {
-      console.log('Play/Pause failed:', error);
+      console.log('Play/Pause error:', error);
     }
   }
 
@@ -1389,7 +1282,7 @@ class MusicPlayerSystem {
     const musicSelect = document.getElementById('musicSelect');
     const musicInfo = document.getElementById('musicInfo');
     
-    musicSelect.selectedIndex = this.currentTrack;
+    musicSelect.value = this.currentTrack;
     musicInfo.textContent = `Now Playing: ${this.trackNames[this.currentTrack]}`;
   }
 }
@@ -1401,44 +1294,39 @@ class VoiceSystem {
     this.hoverTimeout = null;
   }
 
-  playVoice(voicePath, isPreview = false) {
-    // Stop current voice
+  playVoice(voicePath) {
+    // Stop current voice jika sedang bermain
     if (this.currentVoice) {
       this.currentVoice.pause();
       this.currentVoice.currentTime = 0;
     }
 
-    if (!voicePath || voicePath === 'undefined') {
+    // Check jika voice path valid
+    if (!voicePath) {
+      console.warn('Invalid voice path');
       return;
     }
 
+    // Play voice baru
     this.currentVoice = new Audio(voicePath);
-    this.currentVoice.volume = isPreview ? 0.3 : 0.7;
+    this.currentVoice.volume = 0.7;
     
     this.currentVoice.play().catch(error => {
       console.log('Voice play failed:', error);
     });
   }
 
-  // Voice preview on hover
-  playHoverPreview(character) {
-    // Clear existing timeout
+  // Method baru untuk hover preview
+  playHoverPreview(voicePath) {
+    // Clear previous timeout
     if (this.hoverTimeout) {
       clearTimeout(this.hoverTimeout);
     }
-
-    // Play preview after short delay
+    
+    // Set timeout untuk mencegah spam
     this.hoverTimeout = setTimeout(() => {
-      if (character.voice) {
-        this.playVoice(character.voice, true);
-      }
-    }, 500);
-  }
-
-  cancelHoverPreview() {
-    if (this.hoverTimeout) {
-      clearTimeout(this.hoverTimeout);
-    }
+      this.playVoice(voicePath);
+    }, 300);
   }
 
   stopVoice() {
@@ -1446,221 +1334,11 @@ class VoiceSystem {
       this.currentVoice.pause();
       this.currentVoice.currentTime = 0;
     }
-    this.cancelHoverPreview();
-  }
-}
-
-/* ---------------------- LEADERBOARD SYSTEM ---------------------- */
-class LeaderboardSystem {
-  constructor() {
-    this.leaderboard = [];
-    this.STORAGE_KEY = 'gacha_leaderboard';
-    this.init();
-  }
-
-  init() {
-    this.loadLeaderboard();
-    this.updateUI();
-  }
-
-  loadLeaderboard() {
-    const saved = localStorage.getItem(this.STORAGE_KEY);
-    if (saved) {
-      this.leaderboard = JSON.parse(saved);
-    } else {
-      // Default leaderboard
-      this.leaderboard = [
-        { name: 'GachaMaster', mythic: 3, legendary: 12, score: 150 },
-        { name: 'SummonQueen', mythic: 2, legendary: 8, score: 100 },
-        { name: 'LuckLord', mythic: 1, legendary: 15, score: 95 },
-        { name: 'Beginner', mythic: 0, legendary: 5, score: 25 },
-        { name: 'NewPlayer', mythic: 0, legendary: 2, score: 10 }
-      ];
-      this.saveLeaderboard();
+    
+    // Clear hover timeout
+    if (this.hoverTimeout) {
+      clearTimeout(this.hoverTimeout);
     }
-  }
-
-  saveLeaderboard() {
-    localStorage.setItem(this.STORAGE_KEY, JSON.stringify(this.leaderboard));
-  }
-
-  addSummonResult(character, playerName = 'You') {
-    const score = this.calculateScore(character.rarity);
-    
-    // Find or create player entry
-    let player = this.leaderboard.find(p => p.name === playerName);
-    if (!player) {
-      player = { name: playerName, mythic: 0, legendary: 0, elite: 0, common: 0, score: 0 };
-      this.leaderboard.push(player);
-    }
-
-    // Update stats
-    player[character.rarity.toLowerCase()]++;
-    player.score += score;
-
-    // Sort leaderboard
-    this.leaderboard.sort((a, b) => b.score - a.score);
-    
-    // Keep only top 10
-    this.leaderboard = this.leaderboard.slice(0, 10);
-    
-    this.saveLeaderboard();
-    this.updateUI();
-    
-    return player;
-  }
-
-  calculateScore(rarity) {
-    const scores = {
-      'Mythic': 50,
-      'Legendary': 10,
-      'Elite': 3,
-      'Common': 1
-    };
-    return scores[rarity] || 1;
-  }
-
-  updateUI() {
-    const miniLeaderboard = document.getElementById('miniLeaderboard');
-    const leaderboardList = document.getElementById('leaderboardList');
-    
-    if (miniLeaderboard) {
-      miniLeaderboard.innerHTML = this.leaderboard.slice(0, 3).map((player, index) => `
-        <div class="leaderboard-item">
-          <div class="leaderboard-rank">${index + 1}</div>
-          <div class="leaderboard-info">
-            <div class="leaderboard-name">${player.name}</div>
-            <div class="leaderboard-stats">Score: ${player.score} • M:${player.mythic} L:${player.legendary}</div>
-          </div>
-        </div>
-      `).join('');
-    }
-
-    if (leaderboardList) {
-      leaderboardList.innerHTML = this.leaderboard.map((player, index) => `
-        <div class="leaderboard-item">
-          <div class="leaderboard-rank">${index + 1}</div>
-          <div class="leaderboard-info">
-            <div class="leaderboard-name">${player.name}</div>
-            <div class="leaderboard-stats">Score: ${player.score} • M:${player.mythic} L:${player.legendary} E:${player.elite} C:${player.common}</div>
-          </div>
-        </div>
-      `).join('');
-    }
-  }
-}
-
-/* ---------------------- SOCIAL SHARING SYSTEM ---------------------- */
-class SocialSharingSystem {
-  constructor() {
-    this.init();
-  }
-
-  init() {
-    this.setupEventListeners();
-  }
-
-  setupEventListeners() {
-    document.getElementById('shareTwitter')?.addEventListener('click', () => this.shareTwitter());
-    document.getElementById('shareDiscord')?.addEventListener('click', () => this.shareDiscord());
-    document.getElementById('shareCopy')?.addEventListener('click', () => this.copyLink());
-  }
-
-  shareTwitter() {
-    const text = `I just summoned ${window.lastSummonedCharacter?.name} (${window.lastSummonedCharacter?.rarity}) in the Gacha Showcase! 🎮✨`;
-    const url = encodeURIComponent(window.location.href);
-    const twitterUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}&url=${url}`;
-    window.open(twitterUrl, '_blank', 'width=600,height=400');
-  }
-
-  shareDiscord() {
-    const text = `🎮 **Gacha Summon Result!**\nI just obtained **${window.lastSummonedCharacter?.name}** (${window.lastSummonedCharacter?.rarity})!\n\nCheck out the showcase: ${window.location.href}`;
-    
-    // Copy to clipboard for Discord
-    navigator.clipboard.writeText(text).then(() => {
-      showNotification('📋 Copied to clipboard! Paste in Discord to share.');
-    }).catch(() => {
-      // Fallback
-      const textArea = document.createElement('textarea');
-      textArea.value = text;
-      document.body.appendChild(textArea);
-      textArea.select();
-      document.execCommand('copy');
-      document.body.removeChild(textArea);
-      showNotification('📋 Copied to clipboard! Paste in Discord to share.');
-    });
-  }
-
-  copyLink() {
-    const text = `Check out my Gacha summon: I got ${window.lastSummonedCharacter?.name} (${window.lastSummonedCharacter?.rarity})! ${window.location.href}`;
-    
-    navigator.clipboard.writeText(text).then(() => {
-      showNotification('🔗 Link copied to clipboard!');
-    }).catch(() => {
-      // Fallback
-      const textArea = document.createElement('textarea');
-      textArea.value = text;
-      document.body.appendChild(textArea);
-      textArea.select();
-      document.execCommand('copy');
-      document.body.removeChild(textArea);
-      showNotification('🔗 Link copied to clipboard!');
-    });
-  }
-}
-
-/* ---------------------- SEASONAL EVENTS SYSTEM ---------------------- */
-class SeasonalEventsSystem {
-  constructor() {
-    this.currentEvent = null;
-    this.events = [
-      {
-        id: 'christmas',
-        name: 'Christmas Festival',
-        startDate: new Date('2024-12-01'),
-        endDate: new Date('2024-12-31'),
-        banner: '🎄 Christmas Event Coming Soon! Limited Characters!',
-        featuredCharacters: ['Santa Naruto', 'Reindeer Sasuke']
-      }
-    ];
-    this.init();
-  }
-
-  init() {
-    this.checkCurrentEvent();
-    this.updateBanner();
-  }
-
-  checkCurrentEvent() {
-    const now = new Date();
-    this.currentEvent = this.events.find(event => 
-      now >= event.startDate && now <= event.endDate
-    );
-  }
-
-  updateBanner() {
-    const banner = document.getElementById('seasonalBanner');
-    if (banner && this.currentEvent) {
-      banner.textContent = this.currentEvent.banner;
-      banner.style.display = 'block';
-    } else if (banner) {
-      banner.style.display = 'none';
-    }
-  }
-
-  isEventActive() {
-    return this.currentEvent !== null;
-  }
-
-  getEventRates() {
-    if (!this.currentEvent) return null;
-    
-    return {
-      'Mythic': 0.03, // Increased during events
-      'Legendary': 0.12,
-      'Elite': 0.25,
-      'Common': 0.6
-    };
   }
 }
 
@@ -1787,6 +1465,7 @@ class SummonPortalSystem {
         <img src="${character.image}" alt="${character.name}" onerror="handleImageError(this)">
       `;
       
+      // Click event untuk preview
       characterElement.addEventListener('click', () => {
         this.activateCharacter(characterElement, character);
       });
@@ -1796,14 +1475,19 @@ class SummonPortalSystem {
   }
 
   activateCharacter(element, character) {
+    // Remove active class dari semua characters
     document.querySelectorAll('.portal-character').forEach(char => {
       char.classList.remove('active');
     });
     
+    // Add active class ke character yang diklik
     element.classList.add('active');
     this.currentActive = character;
     
+    // Play character voice
     window.voiceSystem.playVoice(character.voice);
+    
+    // Show preview notification
     showNotification(`👁️ Preview: ${character.name} - ${character.rarity}`, 2000);
   }
 
@@ -1827,9 +1511,10 @@ class SummonPortalSystem {
     return CHARACTERS[Math.floor(Math.random() * CHARACTERS.length)];
   }
 
+  // Highlight sequence untuk summon animation
   async highlightSequence(finalCharacterId, duration = 2000) {
     const characters = document.querySelectorAll('.portal-character');
-    const totalHighlights = 20;
+    const totalHighlights = 20; // Jumlah highlight selama animasi
     
     for (let i = 0; i < totalHighlights; i++) {
       const randomIndex = Math.floor(Math.random() * characters.length);
@@ -1837,11 +1522,13 @@ class SummonPortalSystem {
       
       await sleep(duration / totalHighlights);
       
+      // Jangan remove highlight untuk yang terakhir
       if (i < totalHighlights - 1) {
         characters[randomIndex].classList.remove('active');
       }
     }
     
+    // Pastikan final character yang aktif
     this.highlightCharacter(finalCharacterId);
   }
 }
@@ -1894,6 +1581,8 @@ class SummonLimitSystem {
     localStorage.setItem(this.STORAGE_KEYS.SUMMON_COUNT, '0');
     localStorage.setItem(this.STORAGE_KEYS.LAST_SUMMON_DATE, today);
     this.setResetTime();
+    
+    console.log('🎯 Daily summon limits reset');
   }
 
   setResetTime() {
@@ -1956,6 +1645,7 @@ class SummonLimitSystem {
     const summonBtnBottom = document.getElementById('summonBtnBottom');
     const singleSummonBottom = document.getElementById('singleSummonBottom');
 
+    // Update counter dots
     limitCounter.innerHTML = '';
     for (let i = 0; i < this.MAX_SUMMONS; i++) {
       const dot = document.createElement('div');
@@ -1963,15 +1653,18 @@ class SummonLimitSystem {
       limitCounter.appendChild(dot);
     }
 
+    // Update summons left text
     const remaining = this.getRemainingSummons();
     summonsLeft.textContent = remaining;
     
+    // Update button states
     const canSummon = this.canSummon() && window.securitySystem?.isVerified;
     summonBtn.disabled = !canSummon;
     singleSummon.disabled = !canSummon;
     summonBtnBottom.disabled = !canSummon;
     singleSummonBottom.disabled = !canSummon;
 
+    // Show cooldown timer jika limit habis
     if (!this.canSummon()) {
       cooldownTimer.classList.add('show');
     } else {
@@ -2036,78 +1729,20 @@ class SummonLimitSystem {
 class GachaSystem {
   constructor() {
     this.panels = Array.from(document.querySelectorAll('.panel'));
-    this.currentSlide = 0;
-    this.totalSlides = this.panels.length;
+    this.currentActivePanel = null;
     this.summonLimitSystem = new SummonLimitSystem();
     this.summonPortal = new SummonPortalSystem();
     this.voiceSystem = new VoiceSystem();
     this.fireworksSystem = new FireworksSystem();
     this.starfieldSystem = new StarfieldSystem();
-    this.leaderboardSystem = new LeaderboardSystem();
-    this.socialSharingSystem = new SocialSharingSystem();
-    this.seasonalEventsSystem = new SeasonalEventsSystem();
     this.init();
   }
 
   init() {
-    this.setupShowcase(); // Diubah dari setupCarousel
+    this.setupShowcase();
     this.setupGacha();
     this.setupBackground();
     this.preloadHeroImages();
-    this.updateActivePanel();
-  }
-
-  setupShowcase() {
-    // Hapus event listener slider yang lama
-    const prevBtn = document.getElementById('prevBtn');
-    const nextBtn = document.getElementById('nextBtn');
-    if (prevBtn) prevBtn.style.display = 'none';
-    if (nextBtn) nextBtn.style.display = 'none';
-
-    // Setup showcase panels dengan hover effects
-    this.panels.forEach((panel, index) => {
-      const character = CHARACTERS.find(char => char.name === panel.dataset.name);
-      
-      if (character) {
-        // Click event untuk preview lengkap
-        panel.addEventListener('click', () => {
-          this.showCharacterPreview(character);
-          this.voiceSystem.playVoice(character.voice);
-        });
-
-        // Hover event untuk voice preview dan hero image update
-        panel.addEventListener('mouseenter', () => {
-          this.voiceSystem.playHoverPreview(character);
-          this.updateHeroSpot(character);
-        });
-
-        panel.addEventListener('mouseleave', () => {
-          this.voiceSystem.cancelHoverPreview();
-        });
-      }
-    });
-  }
-
-  showCharacterPreview(character) {
-    // Update hero spot dengan gambar karakter
-    this.updateHeroSpot(character);
-    
-    // Show notification
-    showNotification(`🎭 Previewing: ${character.name} - ${character.rarity}`, 2000);
-  }
-
-  updateHeroSpot(character) {
-    const heroImage = document.getElementById('heroImage');
-    const heroName = document.getElementById('heroName');
-    const heroDesc = document.getElementById('heroDesc');
-
-    if (heroImage && character.image) {
-      heroImage.src = character.image;
-      heroImage.alt = `${character.name} - ${character.rarity}`;
-    }
-    
-    if (heroName) heroName.textContent = character.name;
-    if (heroDesc) heroDesc.textContent = `${character.rarity} • ${character.description}`;
   }
 
   setupGacha() {
@@ -2119,6 +1754,7 @@ class GachaSystem {
     const closeResult = document.getElementById('closeResult');
     const modeBtn = document.getElementById('modeBtn');
 
+    // Summon dari portal besar
     summonBtn.addEventListener('click', (e) => {
       if (!this.checkSummonConditions()) return;
       this.performSummon(true);
@@ -2129,6 +1765,7 @@ class GachaSystem {
       this.performSummon(false);
     });
 
+    // Summon dari bottom board
     summonBtnBottom.addEventListener('click', (e) => {
       if (!this.checkSummonConditions()) return;
       this.performSummon(true);
@@ -2153,12 +1790,91 @@ class GachaSystem {
       this.closeResult();
     });
 
+    // Mode switching
     let currentMode = 'showcase';
     modeBtn.addEventListener('click', () => {
       currentMode = currentMode === 'showcase' ? 'gacha' : 'showcase';
       modeBtn.textContent = `Mode: ${currentMode.charAt(0).toUpperCase() + currentMode.slice(1)}`;
       this.setMode(currentMode);
     });
+  }
+
+  /* ---------------------- SETUP SHOWCASE DENGAN HOVER EFFECTS ---------------------- */
+  setupShowcase() {
+    this.panels.forEach((panel, index) => {
+      const characterName = panel.dataset.name;
+      const character = CHARACTERS.find(char => char.name === characterName);
+      
+      if (!character) return;
+      
+      // Click event untuk select panel
+      panel.addEventListener('click', () => {
+        this.selectPanel(panel, character);
+      });
+      
+      // Hover event untuk voice preview dan hero image
+      panel.addEventListener('mouseenter', () => {
+        this.handlePanelHover(panel, character);
+      });
+      
+      panel.addEventListener('mouseleave', () => {
+        this.handlePanelHoverEnd();
+      });
+    });
+  }
+
+  selectPanel(panel, character) {
+    // Remove active class dari semua panels
+    this.panels.forEach(p => p.classList.remove('active'));
+    
+    // Add active class ke panel yang diklik
+    panel.classList.add('active');
+    this.currentActivePanel = panel;
+    
+    // Update hero spot
+    this.updateHeroSpot(character);
+    
+    // Play full voice
+    this.voiceSystem.playVoice(character.voice);
+    
+    showNotification(`🎭 Selected: ${character.name} - ${character.rarity}`, 2000);
+  }
+
+  handlePanelHover(panel, character) {
+    // Show hero image preview
+    this.updateHeroSpot(character);
+    
+    // Play voice preview
+    this.voiceSystem.playHoverPreview(character.voice);
+  }
+
+  handlePanelHoverEnd() {
+    // Tidak melakukan apa-apa saat hover end, biar hero spot tetap
+    // atau kembali ke active panel jika ada
+    if (this.currentActivePanel) {
+      const characterName = this.currentActivePanel.dataset.name;
+      const character = CHARACTERS.find(char => char.name === characterName);
+      if (character) {
+        this.updateHeroSpot(character);
+      }
+    }
+  }
+
+  updateHeroSpot(character) {
+    const heroSpot = document.getElementById('heroSpot');
+    const heroImage = document.getElementById('heroImage');
+    const heroName = document.getElementById('heroName');
+    const heroDesc = document.getElementById('heroDesc');
+    
+    if (character && character.image) {
+      heroImage.src = character.image;
+      heroImage.alt = `${character.name} - ${character.rarity}`;
+      heroName.textContent = character.name;
+      heroDesc.textContent = `${character.rarity} • ${character.description}`;
+      heroSpot.classList.add('active');
+    } else {
+      heroSpot.classList.remove('active');
+    }
   }
 
   checkSummonConditions() {
@@ -2189,6 +1905,7 @@ class GachaSystem {
       return;
     }
 
+    // Disable semua button
     summonBtn.innerHTML = '<div class="spinner"></div> Loading...';
     summonBtn.disabled = true;
     singleSummon.disabled = true;
@@ -2196,33 +1913,32 @@ class GachaSystem {
     singleSummonBottom.disabled = true;
 
     try {
+      // Pilih rarity dan character yang benar-benar akan didapat
       const chosenRarity = this.chooseRarity();
       const winnerCharacter = this.pickCharacterByRarity(chosenRarity);
       
       console.log(`🎯 Summon result: ${winnerCharacter.name} (${winnerCharacter.rarity})`);
 
+      // Highlight sequence di portal
       await this.summonPortal.highlightSequence(winnerCharacter.id, full ? 2000 : 1500);
       
       await sleep(500);
       
+      // Increment summon count
       const summonSuccess = this.summonLimitSystem.incrementSummon();
       if (!summonSuccess) {
         showNotification('❌ Summon failed: Limit reached');
         return;
       }
       
-      // Add to leaderboard
-      this.leaderboardSystem.addSummonResult(winnerCharacter);
-      
-      // Store for social sharing
-      window.lastSummonedCharacter = winnerCharacter;
-      
+      // Reveal result dengan fireworks
       await this.revealCharacter(winnerCharacter);
       
     } catch (error) {
       console.error('Summon error:', error);
       showNotification('❌ Summon failed. Please try again.');
     } finally {
+      // Reset button states
       summonBtn.innerHTML = 'SUMMON';
       const canSummon = this.summonLimitSystem.canSummon() && window.securitySystem?.isVerified;
       summonBtn.disabled = !canSummon;
@@ -2293,15 +2009,8 @@ class GachaSystem {
     });
   }
 
-  updateActivePanel() {
-    // Tidak perlu update slider lagi
-    document.getElementById('slideCounter').textContent = `1/${this.totalSlides}`;
-  }
-
   chooseRarity() {
-    // Gunakan event rates jika ada event aktif
-    const eventRates = this.seasonalEventsSystem.getEventRates();
-    const rarityRates = eventRates || {
+    const rarityRates = {
       Mythic: 0.02,
       Legendary: 0.08,
       Elite: 0.2,
@@ -2326,16 +2035,20 @@ class GachaSystem {
       return matches[Math.floor(Math.random() * matches.length)];
     }
     
+    // Fallback ke random character jika tidak ada match
     return CHARACTERS[Math.floor(Math.random() * CHARACTERS.length)];
   }
 
   async revealCharacter(character) {
+    // Highlight character di portal
     this.summonPortal.highlightCharacter(character.id);
     
+    // Update result card dengan gambar character
     document.getElementById('resultTitle').textContent = `${character.rarity} • You Obtained ${character.name}`;
     document.getElementById('resultText').textContent = `${character.description} - Secure download ready!`;
     document.getElementById('claimBtn').dataset.filename = character.file;
     
+    // Set character image di result
     const resultCharImg = document.getElementById('resultCharImg');
     resultCharImg.src = character.image;
     resultCharImg.alt = `${character.name} - ${character.rarity}`;
@@ -2350,9 +2063,13 @@ class GachaSystem {
     const resultCard = document.querySelector('.result-card');
     resultCard.style.setProperty('--result-glow', rarityGlow[character.rarity] || 'rgba(57,210,255,0.2)');
     
+    // Play character voice
     this.voiceSystem.playVoice(character.voice);
+    
+    // Show fireworks
     this.fireworksSystem.createFireworksShow(15, 5000);
     
+    // Show result overlay
     document.getElementById('resultOverlay').classList.add('open');
     document.getElementById('resultOverlay').setAttribute('aria-hidden', 'false');
   }
@@ -2451,6 +2168,7 @@ class SubscriptionSecurity {
       statusText.textContent = 'Verified ✓';
       enableBtn.style.display = 'none';
       
+      // Enable summon buttons jika limit masih ada
       if (window.gachaSystem?.summonLimitSystem.canSummon()) {
         document.getElementById('summonBtn').disabled = false;
         document.getElementById('singleSummon').disabled = false;
@@ -2504,6 +2222,7 @@ class SubscriptionSecurity {
   }
 
   openYouTubeChannel() {
+    // GANTI DENGAN YOUTUBE CHANNEL ANDA
     const YT_CHANNEL = 'https://youtube.com/@your-channel';
     window.open(YT_CHANNEL, '_blank');
     
@@ -2526,6 +2245,7 @@ class SubscriptionSecurity {
     
     showNotification('✅ Subscription verified! Gacha access granted.');
     
+    // Show access granted animation
     const accessGranted = document.getElementById('accessGranted');
     accessGranted.classList.add('show');
     setTimeout(() => {
@@ -2547,7 +2267,8 @@ document.addEventListener('DOMContentLoaded', function() {
     img.addEventListener('error', () => handleImageError(img));
   });
 
-  console.log('🎮 Enhanced Gacha System with All Features Initialized');
+  console.log('🎮 Enhanced Gacha System with All Fixes Initialized');
 });
 </script>
+</body>
 </html>
