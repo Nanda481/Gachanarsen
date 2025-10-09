@@ -1204,14 +1204,24 @@ class MusicPlayerSystem {
     this.audio = new Audio();
     this.currentTrack = 0;
     this.isPlaying = false;
+
+    const base = window.location.origin; // otomatis https://gachanarsen.vercel.app
     this.tracks = [
-  './assets/music/music.mp3',
-  './assets/music/music1.mp3',
-  './assets/music/music2.mp3',
-  './assets/music/music3.mp3',
-  './assets/music/music4.mp3'
-];
-    
+      `${base}/assets/music/music.mp3`,
+      `${base}/assets/music/music1.mp3`,
+      `${base}/assets/music/music2.mp3`,
+      `${base}/assets/music/music3.mp3`,
+      `${base}/assets/music/music4.mp3`
+    ];
+
+    this.trackNames = [
+      'Background Music 1',
+      'Background Music 2',
+      'Background Music 3',
+      'Background Music 4',
+      'Background Music 5'
+    ];
+
     this.init();
   }
 
@@ -1233,72 +1243,38 @@ class MusicPlayerSystem {
 
     this.audio.addEventListener('ended', () => this.nextTrack());
     this.audio.addEventListener('loadeddata', () => this.updateUI());
-    
-    // Error handling untuk audio
     this.audio.addEventListener('error', (e) => {
       console.error('❌ Audio error:', e);
       console.error('Failed to load:', this.tracks[this.currentTrack]);
-      this.nextTrack(); // Coba track berikutnya
+      this.nextTrack();
     });
-  }
-
-  async checkAudioAvailability() {
-    for (let i = 0; i < this.tracks.length; i++) {
-      try {
-        const testAudio = new Audio(this.tracks[i]);
-        await new Promise((resolve, reject) => {
-          testAudio.addEventListener('canplaythrough', resolve);
-          testAudio.addEventListener('error', reject);
-          testAudio.load();
-        });
-        console.log(`✅ Audio available: ${this.tracks[i]}`);
-        return true;
-      } catch (error) {
-        console.warn(`❌ Audio not available: ${this.tracks[i]}`);
-      }
-    }
-    return false;
   }
 
   loadTrack(index) {
     if (index < 0 || index >= this.tracks.length) return;
-    
+
     this.currentTrack = index;
     this.audio.src = this.tracks[index];
-    this.audio.load().catch(error => {
-      console.warn('Audio load failed:', error);
-    });
+    console.log('🎧 Loading track:', this.audio.src);
+    this.audio.load();
     this.updateUI();
   }
 
   togglePlayPause() {
-    if (this.isPlaying) {
-      this.pause();
-    } else {
-      this.play();
-    }
+    if (this.isPlaying) this.pause();
+    else this.play();
   }
 
   async play() {
     try {
-      // Stop dulu sebelum play baru
-      this.audio.pause();
-      this.audio.currentTime = 0;
-      
       await this.audio.play();
       this.isPlaying = true;
       document.getElementById('playPause').textContent = '⏸️';
-      console.log('🎵 Now playing:', this.tracks[this.currentTrack]);
     } catch (error) {
       console.error('❌ Audio play failed:', error);
       this.isPlaying = false;
       document.getElementById('playPause').textContent = '▶️';
-      
-      // Fallback: coba load track berikutnya
-      if (error.name === 'AbortError' || error.name === 'NotSupportedError') {
-        console.log('🔄 Trying next track...');
-        this.nextTrack();
-      }
+      this.nextTrack();
     }
   }
 
@@ -1328,11 +1304,11 @@ class MusicPlayerSystem {
   updateUI() {
     const musicSelect = document.getElementById('musicSelect');
     const musicInfo = document.getElementById('musicInfo');
-    
-    musicSelect.value = this.currentTrack;
-    musicInfo.textContent = `Now Playing: ${this.trackNames[this.currentTrack]}`;
+    if (musicSelect) musicSelect.value = this.currentTrack;
+    if (musicInfo) musicInfo.textContent = `Now Playing: ${this.trackNames[this.currentTrack]}`;
   }
 }
+
 
 /* ---------------------- VOICE SYSTEM - DIPERBAIKI ---------------------- */
 class VoiceSystem {
