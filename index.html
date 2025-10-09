@@ -1,0 +1,202 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>High-Tier Gacha Showcase • Limited Summon</title>
+  <meta name="description" content="High-end cinematic gacha showcase with summon limits — dual mode: Showcase & Gacha."/>
+  
+  <!-- Font Preloading -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+  
+  <!-- CSS -->
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <!-- Loading Screen -->
+  <div class="loading-screen" id="loadingScreen">
+    <div class="loading-content">
+      <div class="loading-logo">G</div>
+      <div class="loading-title">Gacha Showcase</div>
+      <div class="loading-bar">
+        <div class="loading-progress" id="loadingProgress"></div>
+      </div>
+      <div class="loading-text" id="loadingText">Loading assets...</div>
+    </div>
+  </div>
+
+  <div class="app">
+    <header class="top" role="banner" aria-label="Header utama">
+      <div class="shine-effect"></div>
+      <div class="brand">
+        <div class="logo" aria-label="Logo Gacha">G</div>
+        <div>
+          <div class="title">Gacha • Event Showcase 
+            <span class="subscription-badge" id="subBadge" style="display: none;">
+              <span>✓</span> SUBSCRIBED
+            </span>
+          </div>
+          <div class="subtitle">Limited Summon • 5 Summons Daily</div>
+        </div>
+      </div>
+
+      <nav class="controls" aria-label="Navigasi kontrol">
+        <button id="modeBtn" class="btn ghost small">Mode: Showcase</button>
+        <button id="openChannel" class="btn small">Verify Subscription</button>
+        <button id="enableBtn" class="btn primary" style="display: none;">Access Gacha</button>
+      </nav>
+    </header>
+
+    <main class="main" role="main" aria-label="Konten utama">
+      <!-- Scrollable Content Container -->
+      <div class="scrollable-content" id="scrollableContent">
+        <!-- LEFT: info -->
+        <aside class="left" aria-label="Informasi panel">
+          <div class="card">
+            <h4>Subscription Required</h4>
+            <div class="security-status">
+              <div class="status-dot" id="statusDot"></div>
+              <div class="status-text" id="statusText">Verification Required</div>
+            </div>
+            <p class="muted">Subscribe to our YouTube channel to unlock summon features.</p>
+          </div>
+
+          <div class="card">
+            <h4>Summon Limits</h4>
+            <div class="summon-limit">
+              <div class="limit-counter" id="limitCounter">
+                <!-- Dots akan diisi oleh JavaScript -->
+              </div>
+              <div class="limit-text">5 summons per day</div>
+            </div>
+            <div class="cooldown-timer" id="cooldownTimer">
+              <span>⏰</span>
+              <span id="cooldownText">Resets in: 24:00:00</span>
+            </div>
+            <p class="muted">Daily limit: 5 summons • Resets every 24 hours</p>
+          </div>
+
+          <div class="card">
+            <h4>Rarity Rates</h4>
+            <p class="muted" id="ratesSummary">Mythic: 2% • Legendary: 8% • Elite: 20% • Common: 70%</p>
+          </div>
+        </aside>
+
+        <!-- CENTER: showcase & gacha -->
+        <section class="center" aria-label="Area showcase dan gacha">
+          <div class="bg-container" id="bgContainer"></div>
+          <div class="bg-overlay"></div>
+          <div class="starfield" id="starfield"></div>
+
+          <!-- Horizontal Scroll Container -->
+          <div class="horizontal-scroll-container" id="horizontalScroll">
+            <!-- SHOWCASE MODE -->
+            <div class="showcase-wrap" id="showcaseWrap">
+              <div class="showcase-title">
+                <div>
+                  <h2>Character Showcase</h2>
+                  <div class="muted">Click characters to preview • Hover for voice preview</div>
+                </div>
+              </div>
+
+              <div class="showcase-view" id="showcaseView">
+                <div id="carousel" class="carousel">
+                  <!-- 6 panels dengan border aesthetic dan hover voice preview -->
+                  <div class="panel" data-name="Sasuke Uchiha" data-rarity="Mythic" data-file="SasukeRinnegan" data-description="Uchiha" data-aura-color="#ffd700">
+                    <div class="aura-container">
+                      <div class="aura" style="--aura-color: #ffd700"></div>
+                      <div class="aura aura-2" style="--aura-color: #ffd700"></div>
+                    </div>
+                    <div class="panel-inner">
+                      <img src="/assets/panels/panel1.png" alt="Sasuke Uchiha - Mythic rarity" onerror="handleImageError(this)">
+                      <div class="meta">
+                        <div class="pname">Sasuke</div>
+                        <div class="prarity">Mythic</div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- Other panels... (sama seperti sebelumnya) -->
+                </div>
+              </div>
+            </div>
+
+            <!-- HERO SPOT -->
+            <div class="hero-spot" id="heroSpot">
+              <div class="hero-image-container">
+                <img id="heroImage" src="" alt="Character Preview" onerror="handleImageError(this)">
+                <div class="hero-content">
+                  <h3 id="heroName">Select a Character</h3>
+                  <p id="heroDesc" class="muted">Click on any character to preview</p>
+                </div>
+              </div>
+            </div>
+
+            <!-- SUMMON PORTAL -->
+            <div class="summon-portal hide" id="summonPortal">
+              <div class="portal-grid" id="portalGrid">
+                <!-- Portal characters akan diisi oleh JavaScript -->
+              </div>
+              <div class="portal-controls">
+                <div style="display:flex;flex-direction:column;gap:8px;align-items:center;">
+                  <div style="font-weight:800; font-size:18px">Summon Portal</div>
+                  <div class="muted" style="font-size:14px">
+                    <span id="summonsLeft">5</span> summons remaining today
+                  </div>
+                </div>
+                <button id="summonBtn" class="spin-btn" disabled>SUMMON</button>
+                <button id="singleSummon" class="btn small" disabled>Single</button>
+              </div>
+            </div>
+          </div>
+        </section>
+      </div>
+
+      <!-- GACHA MODE -->
+      <div class="gacha-board hide" id="gachaBoard" aria-label="Portal summon gacha">
+        <div style="display:flex;flex-direction:column;gap:12px;align-items:center;position:relative;z-index:1">
+          <button id="summonBtnBottom" class="spin-btn" disabled>SUMMON</button>
+          <button id="singleSummonBottom" class="btn small" disabled>Single</button>
+        </div>
+      </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+      <div class="footer-content">
+        <div class="footer-text">Created with ❤️ by Gacha Showcase Team</div>
+        <div class="footer-links">
+          <a href="https://github.com/your-username/gacha-showcase" target="_blank" rel="noopener">GitHub</a>
+          <span class="separator">•</span>
+          <a href="#" id="reportBug">Report Bug</a>
+        </div>
+      </div>
+    </footer>
+  </div>
+
+  <!-- Music Player -->
+  <div class="music-player" id="musicPlayer">
+    <div class="music-controls">
+      <button class="music-btn" id="prevMusic">⏮</button>
+      <button class="music-btn" id="playPause">▶️</button>
+      <button class="music-btn" id="nextMusic">⏭</button>
+      <select class="music-select" id="musicSelect">
+        <option value="0">Background Music 1</option>
+        <option value="1">Background Music 2</option>
+        <option value="2">Background Music 3</option>
+        <option value="3">Background Music 4</option>
+        <option value="4">Background Music 5</option>
+      </select>
+    </div>
+    <div class="music-info" id="musicInfo">Now Playing: Background Music 1</div>
+  </div>
+
+  <!-- Components lainnya (sama seperti sebelumnya) -->
+  <!-- Refresh Notification, Verification Modal, Access Granted, Result Overlay, Notification -->
+
+  <!-- JavaScript -->
+  <script src="main.js"></script>
+</body>
+</html>
