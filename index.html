@@ -84,10 +84,70 @@
     .showcase-view{width:100%;overflow:hidden;padding:20px 0 28px 0;position:relative}
     
     /* slider navigation */
-    .slider-nav{display:flex;gap:10px;align-items:center}
-    .nav-btn{width:40px;height:40px;border-radius:50%;border:1px solid rgba(255,255,255,0.1);background:rgba(255,255,255,0.05);color:var(--accent-a);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:18px;transition:all 0.3s ease;position:relative;overflow:hidden}
-    .nav-btn:hover{background:rgba(255,255,255,0.1);transform:scale(1.1);box-shadow:0 0 20px rgba(57,210,255,0.3)}
-    .nav-btn:disabled{opacity:0.4;cursor:not-allowed}
+    .slider-controls {
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+      align-items: center;
+      width: 100%;
+      margin-top: 20px;
+    }
+
+    .range-slider {
+      width: 80%;
+      max-width: 400px;
+      height: 6px;
+      background: rgba(255,255,255,0.1);
+      border-radius: 10px;
+      outline: none;
+      -webkit-appearance: none;
+      position: relative;
+    }
+
+    .range-slider::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      background: linear-gradient(45deg, var(--accent-a), var(--accent-b));
+      cursor: pointer;
+      box-shadow: 0 0 15px rgba(57,210,255,0.5);
+      transition: all 0.3s ease;
+    }
+
+    .range-slider::-webkit-slider-thumb:hover {
+      transform: scale(1.2);
+      box-shadow: 0 0 20px rgba(57,210,255,0.8);
+    }
+
+    .range-slider::-moz-range-thumb {
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      background: linear-gradient(45deg, var(--accent-a), var(--accent-b));
+      cursor: pointer;
+      border: none;
+      box-shadow: 0 0 15px rgba(57,210,255,0.5);
+    }
+
+    .slider-labels {
+      display: flex;
+      justify-content: space-between;
+      width: 80%;
+      max-width: 400px;
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .slider-label {
+      transition: all 0.3s ease;
+    }
+
+    .slider-label.active {
+      color: var(--accent-a);
+      font-weight: 700;
+      transform: scale(1.1);
+    }
 
     .carousel{display:flex;gap:28px;align-items:center;will-change:transform;transition:transform 500ms cubic-bezier(.2,.9,.2,1)}
     
@@ -836,12 +896,7 @@
           <div class="showcase-title">
             <div>
               <h2>Character Showcase</h2>
-              <div class="muted">Manual slider • 6 characters • Click to preview</div>
-            </div>
-            <div class="slider-nav">
-              <button id="prevBtn" class="nav-btn" aria-label="Previous character">←</button>
-              <span class="muted" id="slideCounter">1/6</span>
-              <button id="nextBtn" class="nav-btn" aria-label="Next character">→</button>
+              <div class="muted">Drag slider to navigate • 6 characters • Click to preview</div>
             </div>
           </div>
 
@@ -854,7 +909,7 @@
                   <div class="aura aura-2" style="--aura-color: #ffd700"></div>
                 </div>
                 <div class="panel-inner">
-                  <img src="assets/panels/panel1.png" alt="Sasuke Uchiha - Mythic rarity" onerror="handleImageError(this)">
+                  <img src="/assets/panels/panel1.png" alt="Sasuke Uchiha - Mythic rarity" onerror="handleImageError(this)">
                   <div class="meta">
                     <div class="pname">Sasuke</div>
                     <div class="prarity">Mythic</div>
@@ -868,7 +923,7 @@
                   <div class="aura aura-2" style="--aura-color: #9b7bff"></div>
                 </div>
                 <div class="panel-inner">
-                  <img src="assets/panels/panel2.png" alt="Obito Uchiha - Legendary rarity" onerror="handleImageError(this)">
+                  <img src="/assets/panels/panel2.png" alt="Obito Uchiha - Legendary rarity" onerror="handleImageError(this)">
                   <div class="meta">
                     <div class="pname">Obito</div>
                     <div class="prarity">Legend</div>
@@ -882,7 +937,7 @@
                   <div class="aura aura-2" style="--aura-color: #39d2ff"></div>
                 </div>
                 <div class="panel-inner">
-                  <img src="assets/panels/panel3.png" alt="Madara Uchiha - Supreme" onerror="handleImageError(this)">
+                  <img src="/assets/panels/panel3.png" alt="Madara Uchiha - Supreme" onerror="handleImageError(this)">
                   <div class="meta">
                     <div class="pname">Madara</div>
                     <div class="prarity">Elite</div>
@@ -896,7 +951,7 @@
                   <div class="aura aura-2" style="--aura-color: #94a6bf"></div>
                 </div>
                 <div class="panel-inner">
-                  <img src="assets/panels/panel4.png" alt="Naruto - Elite rarity" onerror="handleImageError(this)">
+                  <img src="/assets/panels/panel4.png" alt="Naruto - Elite rarity" onerror="handleImageError(this)">
                   <div class="meta">
                     <div class="pname">Naruto</div>
                     <div class="prarity">Common</div>
@@ -910,7 +965,7 @@
                   <div class="aura aura-2" style="--aura-color: #39d2ff"></div>
                 </div>
                 <div class="panel-inner">
-                  <img src="assets/panels/panel5.png" alt="SasukeHebi - Elite rarity" onerror="handleImageError(this)">
+                  <img src="/assets/panels/panel5.png" alt="SasukeHebi - Elite rarity" onerror="handleImageError(this)">
                   <div class="meta">
                     <div class="pname">SasukeHebi</div>
                     <div class="prarity">Elite</div>
@@ -924,13 +979,26 @@
                   <div class="aura aura-2" style="--aura-color: #9b7bff"></div>
                 </div>
                 <div class="panel-inner">
-                  <img src="assets/panels/panel6.png" alt="BorutoUzumaki - Legendary rarity" onerror="handleImageError(this)">
+                  <img src="/assets/panels/panel6.png" alt="BorutoUzumaki - Legendary rarity" onerror="handleImageError(this)">
                   <div class="meta">
                     <div class="pname">BorutoUzumaki</div>
                     <div class="prarity">Legend</div>
                   </div>
                 </div>
               </div>
+            </div>
+          </div>
+
+          <!-- CUSTOM RANGE SLIDER -->
+          <div class="slider-controls">
+            <input type="range" min="1" max="6" value="1" class="range-slider" id="characterSlider">
+            <div class="slider-labels" id="sliderLabels">
+              <span class="slider-label active">1</span>
+              <span class="slider-label">2</span>
+              <span class="slider-label">3</span>
+              <span class="slider-label">4</span>
+              <span class="slider-label">5</span>
+              <span class="slider-label">6</span>
             </div>
           </div>
         </div>
@@ -981,11 +1049,11 @@
       <button class="music-btn" id="playPause">▶️</button>
       <button class="music-btn" id="nextMusic">⏭</button>
       <select class="music-select" id="musicSelect">
-        <option value="music.mp3">Background Music 1</option>
-        <option value="music1.mp3">Background Music 2</option>
-        <option value="music2.mp3">Background Music 3</option>
-        <option value="music3.mp3">Background Music 4</option>
-        <option value="music4.mp3">Background Music 5</option>
+        <option value="0">Background Music 1</option>
+        <option value="1">Background Music 2</option>
+        <option value="2">Background Music 3</option>
+        <option value="3">Background Music 4</option>
+        <option value="4">Background Music 5</option>
       </select>
     </div>
     <div class="music-info" id="musicInfo">Now Playing: Background Music 1</div>
@@ -1060,89 +1128,88 @@
 
   <script>
 /************************************************************************
- * ENHANCED GACHA SYSTEM WITH ALL FIXES FOR VOICE SYSTEM
- * - Fixed voice playback for all characters in showcase
- * - Multiple background music with player
- * - Enhanced result with character images & fireworks
- * - Animated starfield background
+ * ENHANCED GACHA SYSTEM WITH ALL FIXES
+ * - Fixed music player with correct asset paths
+ * - Custom range slider with bounce effects
+ * - Boundary detection for smooth navigation
  ************************************************************************/
 
 /* ---------------------- CHARACTER DATA DENGAN VOICE - DIPERBAIKI ---------------------- */
 const CHARACTERS = [
   {
     id: 'Sasuke',
-    name: 'Sasuke Uchiha', // SESUAIKAN DENGAN data-name DI HTML
+    name: 'Sasuke Uchiha',
     rarity: 'Mythic',
-    image: 'assets/panels/panel1.png',
+    image: '/assets/panels/panel1.png',
     description: 'Abyss Walker',
     file: 'Sasuke',
     auraColor: '#ffd700',
-    voice: 'assets/voices/sasuke_voice.mp3'
+    voice: '/assets/voices/sasuke_voice.mp3'
   },
   {
     id: 'Obito',
-    name: 'Obito Uchiha', // SESUAIKAN DENGAN data-name DI HTML
+    name: 'Obito Uchiha',
     rarity: 'Legendary',
-    image: 'assets/panels/panel2.png',
+    image: '/assets/panels/panel2.png',
     description: 'Dragon Knight',
     file: 'Obito',
     auraColor: '#9b7bff',
-    voice: 'assets/voices/obito_voice.mp3'
+    voice: '/assets/voices/obito_voice.mp3'
   },
   {
     id: 'Madara',
-    name: 'Madara Uchiha', // SESUAIKAN DENGAN data-name DI HTML
+    name: 'Madara Uchiha',
     rarity: 'Elite',
-    image: 'assets/panels/panel3.png',
+    image: '/assets/panels/panel3.png',
     description: 'Oracle Seer',
     file: 'Madara',
     auraColor: '#39d2ff',
-    voice: 'assets/voices/madara_voice.mp3'
+    voice: '/assets/voices/madara_voice.mp3'
   },
   {
     id: 'Naruto',
-    name: 'Naruto', // SESUAIKAN DENGAN data-name DI HTML
+    name: 'Naruto',
     rarity: 'Common',
-    image: 'assets/panels/panel4.png',
+    image: '/assets/panels/panel4.png',
     description: 'Forest Guardian',
     file: 'Naruto',
     auraColor: '#94a6bf',
-    voice: 'assets/voices/naruto_voice.mp3'
+    voice: '/assets/voices/naruto_voice.mp3'
   },
   {
     id: 'SasukeHebi',
-    name: 'SasukeHebi', // SESUAIKAN DENGAN data-name DI HTML
+    name: 'SasukeHebi',
     rarity: 'Elite',
-    image: 'assets/panels/panel5.png',
+    image: '/assets/panels/panel5.png',
     description: 'Cyber Ninja',
     file: 'SasukeHebi',
     auraColor: '#39d2ff',
-    voice: 'assets/voices/sasukehebi_voice.mp3'
+    voice: '/assets/voices/sasukehebi_voice.mp3'
   },
   {
     id: 'BorutoUzumaki',
-    name: 'BorutoUzumaki', // SESUAIKAN DENGAN data-name DI HTML
+    name: 'BorutoUzumaki',
     rarity: 'Legendary',
-    image: 'assets/panels/panel6.png',
+    image: '/assets/panels/panel6.png',
     description: 'Phoenix Mage',
     file: 'BorutoUzumaki',
     auraColor: '#9b7bff',
-    voice: 'assets/voices/boruto_voice.mp3'
+    voice: '/assets/voices/boruto_voice.mp3'
   }
 ];
 
-/* ---------------------- MUSIC PLAYER SYSTEM ---------------------- */
+/* ---------------------- MUSIC PLAYER SYSTEM - DIPERBAIKI ---------------------- */
 class MusicPlayerSystem {
   constructor() {
     this.audio = new Audio();
     this.currentTrack = 0;
     this.isPlaying = false;
     this.tracks = [
-      'assets/music/music.mp3',
-      'assets/music/music1.mp3',
-      'assets/music/music2.mp3',
-      'assets/music/music3.mp3',
-      'assets/music/music4.mp3'
+      '/assets/music/music.mp3',
+      '/assets/music/music1.mp3',
+      '/assets/music/music2.mp3',
+      '/assets/music/music3.mp3',
+      '/assets/music/music4.mp3'
     ];
     this.trackNames = [
       'Background Music 1',
@@ -1173,12 +1240,41 @@ class MusicPlayerSystem {
 
     this.audio.addEventListener('ended', () => this.nextTrack());
     this.audio.addEventListener('loadeddata', () => this.updateUI());
+    
+    // Error handling untuk audio
+    this.audio.addEventListener('error', (e) => {
+      console.error('❌ Audio error:', e);
+      console.error('Failed to load:', this.tracks[this.currentTrack]);
+      this.nextTrack(); // Coba track berikutnya
+    });
+  }
+
+  async checkAudioAvailability() {
+    for (let i = 0; i < this.tracks.length; i++) {
+      try {
+        const testAudio = new Audio(this.tracks[i]);
+        await new Promise((resolve, reject) => {
+          testAudio.addEventListener('canplaythrough', resolve);
+          testAudio.addEventListener('error', reject);
+          testAudio.load();
+        });
+        console.log(`✅ Audio available: ${this.tracks[i]}`);
+        return true;
+      } catch (error) {
+        console.warn(`❌ Audio not available: ${this.tracks[i]}`);
+      }
+    }
+    return false;
   }
 
   loadTrack(index) {
+    if (index < 0 || index >= this.tracks.length) return;
+    
     this.currentTrack = index;
     this.audio.src = this.tracks[index];
-    this.audio.load();
+    this.audio.load().catch(error => {
+      console.warn('Audio load failed:', error);
+    });
     this.updateUI();
   }
 
@@ -1192,11 +1288,24 @@ class MusicPlayerSystem {
 
   async play() {
     try {
+      // Stop dulu sebelum play baru
+      this.audio.pause();
+      this.audio.currentTime = 0;
+      
       await this.audio.play();
       this.isPlaying = true;
       document.getElementById('playPause').textContent = '⏸️';
+      console.log('🎵 Now playing:', this.tracks[this.currentTrack]);
     } catch (error) {
-      console.log('Audio play failed:', error);
+      console.error('❌ Audio play failed:', error);
+      this.isPlaying = false;
+      document.getElementById('playPause').textContent = '▶️';
+      
+      // Fallback: coba load track berikutnya
+      if (error.name === 'AbortError' || error.name === 'NotSupportedError') {
+        console.log('🔄 Trying next track...');
+        this.nextTrack();
+      }
     }
   }
 
@@ -1665,12 +1774,15 @@ class SummonLimitSystem {
   }
 }
 
-/* ---------------------- GACHA SYSTEM DENGAN VOICE FIXES ---------------------- */
+/* ---------------------- GACHA SYSTEM DENGAN SLIDER FIXES ---------------------- */
 class GachaSystem {
   constructor() {
     this.panels = Array.from(document.querySelectorAll('.panel'));
     this.currentSlide = 0;
     this.totalSlides = this.panels.length;
+    this.isAnimating = false;
+    this.springAnimation = null;
+    
     this.summonLimitSystem = new SummonLimitSystem();
     this.summonPortal = new SummonPortalSystem();
     this.voiceSystem = new VoiceSystem();
@@ -1685,7 +1797,7 @@ class GachaSystem {
     this.setupBackground();
     this.preloadHeroImages();
     this.updateSlider();
-    this.debugVoiceSystem(); // DEBUG VOICE SYSTEM
+    this.debugVoiceSystem();
   }
 
   setupGacha() {
@@ -1818,7 +1930,7 @@ class GachaSystem {
       showNotification('🔄 Generating secure download link...');
       await sleep(1000);
       
-      const downloadUrl = `mods/${filename}.zip`;
+      const downloadUrl = `/mods/${filename}.zip`;
       const link = document.createElement('a');
       link.href = downloadUrl;
       link.download = `${filename}.zip`;
@@ -1835,28 +1947,143 @@ class GachaSystem {
     }
   }
 
+  /* ---------------------- CUSTOM SLIDER WITH BOUNCE EFFECTS ---------------------- */
   setupCarousel() {
-    const prevBtn = document.getElementById('prevBtn');
-    const nextBtn = document.getElementById('nextBtn');
-
-    prevBtn.addEventListener('click', () => this.prevSlide());
-    nextBtn.addEventListener('click', () => this.nextSlide());
-
-    document.addEventListener('keydown', (e) => {
-      if (e.key === 'ArrowLeft') this.prevSlide();
-      if (e.key === 'ArrowRight') this.nextSlide();
+    const slider = document.getElementById('characterSlider');
+    const sliderLabels = document.getElementById('sliderLabels').children;
+    
+    // Range slider event
+    slider.addEventListener('input', (e) => {
+      const newSlide = parseInt(e.target.value) - 1;
+      this.goToSlideWithBounce(newSlide);
     });
-
+    
+    // Panel click events
     this.panels.forEach((panel, index) => {
       panel.addEventListener('click', () => {
-        this.goToSlide(index);
-        // Play character voice ketika panel diklik - DIPERBAIKI
+        this.goToSlideWithBounce(index);
         this.playPanelVoice(panel);
       });
     });
+    
+    // Keyboard navigation (opsional)
+    document.addEventListener('keydown', (e) => {
+      if (this.isAnimating) return;
+      
+      if (e.key === 'ArrowLeft') {
+        this.goToSlideWithBounce(this.currentSlide - 1);
+      } else if (e.key === 'ArrowRight') {
+        this.goToSlideWithBounce(this.currentSlide + 1);
+      }
+    });
+    
+    // Touch/swipe support
+    this.setupTouchEvents();
   }
 
-  /* ---------------------- METHOD BARU UNTUK VOICE PANEL - DIPERBAIKI ---------------------- */
+  goToSlideWithBounce(targetSlide) {
+    if (this.isAnimating) return;
+    
+    // Boundary detection dengan bounce effect
+    if (targetSlide < 0) {
+      this.animateBounce(0, -10);
+      return;
+    }
+    
+    if (targetSlide >= this.totalSlides) {
+      this.animateBounce(this.totalSlides - 1, 10);
+      return;
+    }
+    
+    this.goToSlide(targetSlide);
+  }
+
+  animateBounce(targetSlide, bounceOffset) {
+    this.isAnimating = true;
+    
+    // Animate to slightly beyond boundary
+    this.animateToPosition(targetSlide, bounceOffset);
+    
+    // Then bounce back
+    setTimeout(() => {
+      this.animateToPosition(targetSlide, 0, () => {
+        this.isAnimating = false;
+      });
+    }, 150);
+  }
+
+  animateToPosition(slide, offset, callback = null) {
+    const panelWidth = 280;
+    const gap = 28;
+    const targetOffset = -slide * (panelWidth + gap) + offset;
+    
+    const carousel = document.getElementById('carousel');
+    carousel.style.transition = 'transform 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55)';
+    carousel.style.transform = `translate3d(${targetOffset}px, 0, 0)`;
+    
+    if (callback) {
+      setTimeout(callback, 300);
+    }
+  }
+
+  setupTouchEvents() {
+    const carousel = document.getElementById('carousel');
+    let startX = 0;
+    let currentX = 0;
+    let isDragging = false;
+    
+    carousel.addEventListener('touchstart', (e) => {
+      startX = e.touches[0].clientX;
+      isDragging = true;
+      carousel.style.transition = 'none';
+    });
+    
+    carousel.addEventListener('touchmove', (e) => {
+      if (!isDragging) return;
+      
+      currentX = e.touches[0].clientX;
+      const diff = currentX - startX;
+      
+      // Apply resistance at boundaries
+      let resistance = 1;
+      if ((this.currentSlide === 0 && diff > 0) || 
+          (this.currentSlide === this.totalSlides - 1 && diff < 0)) {
+        resistance = 0.3;
+      }
+      
+      const panelWidth = 280;
+      const gap = 28;
+      const baseOffset = -this.currentSlide * (panelWidth + gap);
+      const dragOffset = diff * resistance;
+      
+      carousel.style.transform = `translate3d(${baseOffset + dragOffset}px, 0, 0)`;
+    });
+    
+    carousel.addEventListener('touchend', () => {
+      if (!isDragging) return;
+      
+      isDragging = false;
+      carousel.style.transition = 'transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94)';
+      
+      const diff = currentX - startX;
+      const threshold = 50;
+      
+      if (Math.abs(diff) > threshold) {
+        if (diff > 0 && this.currentSlide > 0) {
+          this.goToSlideWithBounce(this.currentSlide - 1);
+        } else if (diff < 0 && this.currentSlide < this.totalSlides - 1) {
+          this.goToSlideWithBounce(this.currentSlide + 1);
+        } else {
+          // Bounce back jika di boundary
+          this.updateSlider();
+        }
+      } else {
+        // Snap back jika tidak cukup swipe
+        this.updateSlider();
+      }
+    });
+  }
+
   playPanelVoice(panel) {
     const characterName = panel.dataset.name;
     console.log('🔍 Looking for character:', characterName);
@@ -1885,7 +2112,6 @@ class GachaSystem {
     }
   }
 
-  /* ---------------------- DEBUG VOICE SYSTEM ---------------------- */
   debugVoiceSystem() {
     console.log('=== VOICE SYSTEM DEBUG ===');
     
@@ -1911,10 +2137,10 @@ class GachaSystem {
   setupBackground() {
     const bgContainer = document.getElementById('bgContainer');
     const SLIDES = [
-      'assets/backgrounds/bg1.jpg',
-      'assets/backgrounds/bg2.jpg',
-      'assets/backgrounds/bg3.jpg',
-      'assets/backgrounds/bg4.jpg'
+      '/assets/backgrounds/bg1.jpg',
+      '/assets/backgrounds/bg2.jpg',
+      '/assets/backgrounds/bg3.jpg',
+      '/assets/backgrounds/bg4.jpg'
     ];
 
     if (SLIDES.length === 0) return;
@@ -1951,11 +2177,19 @@ class GachaSystem {
     const panelWidth = 280;
     const gap = 28;
     const offset = -this.currentSlide * (panelWidth + gap);
-    document.getElementById('carousel').style.transform = `translate3d(${offset}px, 0, 0)`;
-    document.getElementById('slideCounter').textContent = `${this.currentSlide + 1}/${this.totalSlides}`;
     
-    document.getElementById('prevBtn').disabled = this.currentSlide === 0;
-    document.getElementById('nextBtn').disabled = this.currentSlide === this.totalSlides - 1;
+    const carousel = document.getElementById('carousel');
+    carousel.style.transform = `translate3d(${offset}px, 0, 0)`;
+    
+    // Update range slider
+    const slider = document.getElementById('characterSlider');
+    slider.value = this.currentSlide + 1;
+    
+    // Update slider labels
+    const labels = document.querySelectorAll('.slider-label');
+    labels.forEach((label, index) => {
+      label.classList.toggle('active', index === this.currentSlide);
+    });
     
     this.updateActivePanel();
   }
@@ -2259,19 +2493,30 @@ class SubscriptionSecurity {
 }
 
 /* ---------------------- INITIALIZATION ---------------------- */
-document.addEventListener('DOMContentLoaded', function() {
-  // Initialize semua systems
+document.addEventListener('DOMContentLoaded', async function() {
+  // Initialize systems
   window.voiceSystem = new VoiceSystem();
-  window.musicPlayer = new MusicPlayerSystem();
   window.securitySystem = new SubscriptionSecurity();
   window.gachaSystem = new GachaSystem();
   
-  // Add error handlers ke images
+  // Initialize music player dan check availability
+  window.musicPlayer = new MusicPlayerSystem();
+  
+  // Check audio availability
+  setTimeout(async () => {
+    const audioAvailable = await window.musicPlayer.checkAudioAvailability();
+    if (!audioAvailable) {
+      console.warn('🎵 No audio files available, music player disabled');
+      document.getElementById('musicPlayer').style.display = 'none';
+    }
+  }, 1000);
+  
+  // Error handling untuk images
   document.querySelectorAll('img').forEach(img => {
     img.addEventListener('error', () => handleImageError(img));
   });
 
-  console.log('🎮 Enhanced Gacha System with Voice Fixes Initialized');
+  console.log('🎮 Enhanced Gacha System with Slider Fixes Initialized');
 });
 </script>
 </html>
