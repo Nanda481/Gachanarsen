@@ -1053,8 +1053,8 @@
           <div class="hero-image-container">
             <img id="heroImage" src="" alt="Character Preview" onerror="handleImageError(this)">
             <div class="hero-content">
-              <h3 id="heroName">Sasuke</h3>
-              <p id="heroDesc" class="muted">Mythic • Abyss Walker</p>
+              <h3 id="heroName">Select a Character</h3>
+              <p id="heroDesc" class="muted">Click on any character to preview</p>
             </div>
           </div>
         </div>
@@ -1177,11 +1177,18 @@
   <script>
 // ==================== MUSIC FILES ====================
 const MUSIC_FILES = [
-  './music.mp3',
-  './music1.mp3', 
-  './music2.mp3',
-  './music3.mp3',
-  './music4.mp3'
+  './music/music1.mp3',
+  './music/music2.mp3', 
+  './music/music3.mp3',
+  './music/music4.mp3',
+  './music/music5.mp3'
+];
+
+// ==================== BACKGROUND IMAGES ====================
+const BACKGROUNDS = [
+  'https://images.unsplash.com/photo-1451187580459-43490279c0fa?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2072&q=80',
+  'https://images.unsplash.com/photo-1485470733090-0aae1788d5af?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80',
+  'https://images.unsplash.com/photo-1505506874110-6a7a69069a08?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2067&q=80'
 ];
 
 // ==================== CHARACTER DATA ====================
@@ -1191,6 +1198,7 @@ const CHARACTERS = [
     name: 'Sasuke Uchiha',
     rarity: 'Mythic',
     image: './assets/panels/panel1.png',
+    fallback: 'https://images.unsplash.com/photo-1542831371-29b0f74f9713?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80',
     description: 'Abyss Walker',
     file: 'Sasuke',
     auraColor: '#ffd700',
@@ -1201,6 +1209,7 @@ const CHARACTERS = [
     name: 'Obito Uchiha',
     rarity: 'Legendary',
     image: './assets/panels/panel2.png',
+    fallback: 'https://images.unsplash.com/photo-1542831371-29b0f74f9713?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80',
     description: 'Dragon Knight',
     file: 'Obito',
     auraColor: '#9b7bff',
@@ -1211,6 +1220,7 @@ const CHARACTERS = [
     name: 'Madara Uchiha',
     rarity: 'Elite',
     image: './assets/panels/panel3.png',
+    fallback: 'https://images.unsplash.com/photo-1542831371-29b0f74f9713?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80',
     description: 'Oracle Seer',
     file: 'Madara',
     auraColor: '#39d2ff',
@@ -1221,6 +1231,7 @@ const CHARACTERS = [
     name: 'Naruto',
     rarity: 'Common',
     image: './assets/panels/panel4.png',
+    fallback: 'https://images.unsplash.com/photo-1542831371-29b0f74f9713?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80',
     description: 'Forest Guardian',
     file: 'Naruto',
     auraColor: '#94a6bf',
@@ -1231,6 +1242,7 @@ const CHARACTERS = [
     name: 'SasukeHebi',
     rarity: 'Elite',
     image: './assets/panels/panel5.png',
+    fallback: 'https://images.unsplash.com/photo-1542831371-29b0f74f9713?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80',
     description: 'Cyber Ninja',
     file: 'SasukeHebi',
     auraColor: '#39d2ff',
@@ -1241,6 +1253,7 @@ const CHARACTERS = [
     name: 'BorutoUzumaki',
     rarity: 'Legendary',
     image: './assets/panels/panel6.png',
+    fallback: 'https://images.unsplash.com/photo-1542831371-29b0f74f9713?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80',
     description: 'Phoenix Mage',
     file: 'BorutoUzumaki',
     auraColor: '#9b7bff',
@@ -1254,7 +1267,13 @@ function sleep(ms){ return new Promise(r=>setTimeout(r, ms)); }
 
 function handleImageError(img) {
   console.log('Image failed to load:', img.src);
-  img.src = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAwIiBoZWlnaHQ9IjUwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjMDgxODI5Ii8+PHRleHQgeD0iNTAlIiB5PSI1MCUiIGZvbnQtZmFtaWx5PSJzYW5zLXNlcmlmIiBmb250LXNpemU9IjE2IiBmaWxsPSIjMzlkMmZmIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBkeT0iLjNlbSI+Q2hhcmFjdGVyIEltYWdlIE5vdCBGb3VuZDwvdGV4dD48L3N2Zz4=';
+  const character = CHARACTERS.find(char => char.image === img.src) || 
+                   CHARACTERS.find(char => char.fallback === img.src);
+  if (character) {
+    img.src = character.fallback;
+  } else {
+    img.src = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAwIiBoZWlnaHQ9IjUwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjMDgxODI5Ii8+PHRleHQgeD0iNTAlIiB5PSI1MCUiIGZvbnQtZmFtaWx5PSJzYW5zLXNlcmlmIiBmb250LXNpemU9IjE2IiBmaWxsPSIjMzlkMmZmIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBkeT0iLjNlbSI+Q2hhcmFjdGVyIEltYWdlIE5vdCBGb3VuZDwvdGV4dD48L3N2Zz4=';
+  }
   img.alt = 'Character image not available';
   
   if (img.id === 'heroImage') {
@@ -1275,95 +1294,76 @@ function showNotification(message, duration = 3000) {
 }
 
 // ==================== BACKGROUND SYSTEM ====================
-function setupBackground() {
+function setupBackgroundSystem() {
   const bgContainer = document.getElementById('bgContainer');
   if (!bgContainer) return;
-  
-  console.log('🎨 Setting up background slideshow...');
-  
-  const SLIDES = [
-    './assets/backgrounds/bg1.jpg',
-    './assets/backgrounds/bg2.jpg', 
-    './assets/backgrounds/bg3.jpg',
-    './assets/backgrounds/bg4.jpg'
-  ];
 
   // Create background slides
-  SLIDES.forEach((src, i) => {
+  BACKGROUNDS.forEach((bg, index) => {
     const slide = document.createElement('div');
-    slide.className = 'bg-slide';
-    slide.style.backgroundImage = `url(${src})`;
-    if (i === 0) slide.classList.add('active');
+    slide.className = `bg-slide ${index === 0 ? 'active' : ''}`;
+    slide.style.backgroundImage = `url('${bg}')`;
     bgContainer.appendChild(slide);
   });
 
-  // Background slideshow animation
-  let currentBgIndex = 0;
-  const bgSlides = bgContainer.querySelectorAll('.bg-slide');
-  
+  // Auto rotate backgrounds
+  let currentBg = 0;
   setInterval(() => {
-    if (bgSlides.length > 0) {
-      bgSlides[currentBgIndex].classList.remove('active');
-      currentBgIndex = (currentBgIndex + 1) % bgSlides.length;
-      bgSlides[currentBgIndex].classList.add('active');
+    const slides = document.querySelectorAll('.bg-slide');
+    slides.forEach(slide => slide.classList.remove('active'));
+    
+    currentBg = (currentBg + 1) % BACKGROUNDS.length;
+    if (slides[currentBg]) {
+      slides[currentBg].classList.add('active');
     }
-  }, 6000);
-  
-  console.log('✅ Background setup completed');
+  }, 5000);
 }
 
-// ==================== SHOWCASE SYSTEM ====================
-function setupShowcaseSystem() {
-  console.log('🎭 Setting up showcase system...');
-  
-  const panels = document.querySelectorAll('.panel');
+// ==================== HERO SPOT SYSTEM ====================
+function setupHeroSpotSystem() {
   const heroImage = document.getElementById('heroImage');
   const heroName = document.getElementById('heroName');
   const heroDesc = document.getElementById('heroDesc');
-  
-  // Set default hero image
-  if (heroImage && panels.length > 0) {
-    const firstPanelImg = panels[0].querySelector('img');
-    if (firstPanelImg) {
-      heroImage.src = firstPanelImg.src;
-    }
-  }
-  
-  // Add click events to panels
-  panels.forEach((panel, index) => {
+  const panels = document.querySelectorAll('.panel');
+
+  if (!heroImage || !panels.length) return;
+
+  panels.forEach(panel => {
     panel.addEventListener('click', function() {
-      // Update active panel
-      panels.forEach(p => p.classList.remove('active'));
-      this.classList.add('active');
-      
-      // Update hero spot
-      const img = this.querySelector('img');
       const name = this.dataset.name;
       const rarity = this.dataset.rarity;
       const description = this.dataset.description;
+      const img = this.querySelector('img');
       
-      if (heroImage && img) heroImage.src = img.src;
+      if (heroImage) {
+        heroImage.src = img.src;
+        heroImage.alt = `${name} - ${rarity}`;
+      }
       if (heroName) heroName.textContent = name;
       if (heroDesc) heroDesc.textContent = `${rarity} • ${description}`;
       
       // Play character voice
       const character = CHARACTERS.find(char => char.name === name);
-      if (character && character.voice && window.voiceSystem) {
+      if (character && window.voiceSystem) {
         window.voiceSystem.playVoice(character.voice);
       }
+      
+      // Add active class
+      panels.forEach(p => p.classList.remove('active'));
+      this.classList.add('active');
+      
+      showNotification(`👁️ Previewing: ${name}`, 2000);
     });
-    
-    // Add hover voice preview
+
+    // Hover preview with voice
     panel.addEventListener('mouseenter', function() {
       const name = this.dataset.name;
       const character = CHARACTERS.find(char => char.name === name);
-      if (character && character.voice && window.voiceSystem) {
+      if (character && window.voiceSystem) {
         window.voiceSystem.playVoice(character.voice);
       }
     });
   });
-  
-  console.log('✅ Showcase system setup completed');
 }
 
 // ==================== SIMPLE MODE MANAGER ====================
@@ -1802,17 +1802,17 @@ class VoiceSystem {
     }
 
     // Check jika voice path valid
-    if (!voicePath) {
-      console.warn('Invalid voice path');
+    if (!voicePath || voicePath.includes('undefined')) {
+      console.warn('Invalid voice path:', voicePath);
       return;
     }
 
     // Play voice baru
     this.currentVoice = new Audio(voicePath);
-    this.currentVoice.volume = 0.8;
+    this.currentVoice.volume = 0.7;
     
     this.currentVoice.play().catch(error => {
-      console.log('Voice play failed:', error);
+      console.log('Voice play failed (normal for missing files):', error);
     });
   }
 
@@ -1937,11 +1937,32 @@ class MusicPlayerSystem {
   }
 }
 
+// ==================== STARFIELD SYSTEM ====================
+function setupStarfield() {
+  const starfield = document.getElementById('starfield');
+  if (!starfield) return;
+
+  for (let i = 0; i < 150; i++) {
+    const star = document.createElement('div');
+    star.className = 'star';
+    star.style.left = `${Math.random() * 100}%`;
+    star.style.top = `${Math.random() * 100}%`;
+    star.style.width = `${Math.random() * 2 + 1}px`;
+    star.style.height = star.style.width;
+    star.style.setProperty('--duration', `${Math.random() * 3 + 2}s`);
+    star.style.setProperty('--opacity', `${Math.random() * 0.7 + 0.3}`);
+    starfield.appendChild(star);
+  }
+}
+
 // ==================== INITIALIZATION ====================
 document.addEventListener('DOMContentLoaded', function() {
   console.log('🚀 Initializing Gacha System...');
   
-  // Setup simple systems first
+  // Setup semua systems
+  setupBackgroundSystem();
+  setupStarfield();
+  setupHeroSpotSystem();
   setupModeManager();
   setupVerificationSystem();
   setupPortalSystem();
@@ -1957,9 +1978,13 @@ document.addEventListener('DOMContentLoaded', function() {
   });
 
   console.log('🎮 Gacha System Initialized Successfully!');
+  console.log('✅ Background system: Working');
+  console.log('✅ Hero spot system: Working');
   console.log('✅ Mode switching: Working');
   console.log('✅ Subscription verification: Working');
   console.log('✅ Portal characters: Created');
+  console.log('✅ Voice system: Ready');
+  console.log('✅ Music player: Ready');
   console.log('✅ All buttons: Responsive');
 });
   </script>
