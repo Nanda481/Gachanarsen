@@ -1177,63 +1177,33 @@ const CHARACTERS = [
 /* ---------------------- MUSIC PLAYER SYSTEM ---------------------- */
 class MusicPlayerSystem {
   constructor() {
-    this.audio = null;
+    this.audio = new Audio();
     this.currentTrack = 0;
     this.isPlaying = false;
-    this.hasInteracted = false;
-    this.isLoading = false;
-    
-    // Path music di root directory - PASTIKAN FILE INI ADA
+
+    // File musik ada di folder root
     this.tracks = [
-      '/music.mp3',
-      '/music1.mp3', 
-      '/music2.mp3',
-      '/music3.mp3',
-      '/music4.mp3'
+      'music.mp3',
+      'music1.mp3',
+      'music2.mp3',
+      'music3.mp3',
+      'music4.mp3'
     ];
-    
+
     this.trackNames = [
       'Background Music 1',
-      'Background Music 2', 
+      'Background Music 2',
       'Background Music 3',
       'Background Music 4',
       'Background Music 5'
     ];
-    
+
     this.init();
   }
 
   init() {
-    this.createAudioElement();
     this.setupEventListeners();
     this.loadTrack(0);
-    
-    // Auto-play dengan user interaction
-    const initPlay = () => {
-      if (!this.hasInteracted) {
-        this.hasInteracted = true;
-        if (!this.isPlaying) {
-          this.play().catch(e => console.log('Auto-play prevented:', e));
-        }
-      }
-    };
-
-    document.addEventListener('click', initPlay, { once: true });
-    document.addEventListener('touchstart', initPlay, { once: true });
-  }
-
-  createAudioElement() {
-    // Cleanup existing audio
-    if (this.audio) {
-      this.audio.pause();
-      this.audio.src = '';
-      this.audio = null;
-    }
-    
-    // Create new audio element
-    this.audio = new Audio();
-    this.audio.preload = 'auto';
-    this.audio.crossOrigin = 'anonymous';
   }
 
   setupEventListeners() {
@@ -1242,273 +1212,127 @@ class MusicPlayerSystem {
     const nextMusicBtn = document.getElementById('nextMusic');
     const musicSelect = document.getElementById('musicSelect');
 
-    // Remove existing listeners dan re-attach
-    const newPlayPause = playPauseBtn.cloneNode(true);
-    const newPrevMusic = prevMusicBtn.cloneNode(true);
-    const newNextMusic = nextMusicBtn.cloneNode(true);
-    const newMusicSelect = musicSelect.cloneNode(true);
+    playPauseBtn.addEventListener('click', () => this.togglePlayPause());
+    prevMusicBtn.addEventListener('click', () => this.previousTrack());
+    nextMusicBtn.addEventListener('click', () => this.nextTrack());
+    musicSelect.addEventListener('change', (e) => this.selectTrack(parseInt(e.target.value)));
 
-    playPauseBtn.parentNode.replaceChild(newPlayPause, playPauseBtn);
-    prevMusicBtn.parentNode.replaceChild(newPrevMusic, prevMusicBtn);
-    nextMusicBtn.parentNode.replaceChild(newNextMusic, nextMusicBtn);
-    musicSelect.parentNode.replaceChild(newMusicSelect, musicSelect);
-
-    // Add new event listeners
-    newPlayPause.addEventListener('click', () => this.togglePlayPause());
-    newPrevMusic.addEventListener('click', () => this.previousTrack());
-    newNextMusic.addEventListener('click', () => this.nextTrack());
-    newMusicSelect.addEventListener('change', (e) => {
-      const index = parseInt(e.target.value);
-      if (!isNaN(index)) {
-        this.selectTrack(index);
-      }
-    });
-
-    // Audio event listeners
-    this.audio.addEventListener('loadeddata', () => {
-      this.isLoading = false;
-      this.updateUI();
-    });
-
-    this.audio.addEventListener('canplay', () => {
-      console.log('Audio ready to play');
-    });
-
-    this.audio.addEventListener('ended', () => {
+    this.audio.addEventListener('ended', () => this.nextTrack());
+    this.audio.addEventListener('loadeddata', () => this.updateUI());
+    this.audio.addEventListener('error', (e) => {
+      console.error('❌ Gagal load:', this.tracks[this.currentTrack]);
+      console.error(e);
       this.nextTrack();
     });
-
-    this.audio.addEventListener('error', (e) => {
-      console.error('Audio error:', this.audio.error);
-      this.isLoading = false;
-      this.handleAudioError();
-    });
-
-    // Cleanup on page unload
-    window.addEventListener('beforeunload', () => this.cleanup());
   }
 
-  handleAudioError() {
-    console.log('Handling audio error, trying next track...');
-    this.audio.src = '';
-    setTimeout(() => this.nextTrack(), 1000);
+  loadTrack(index) {
+    if (index < 0 || index >= this.tracks.length) return;
+
+    this.currentTrack = index;
+    this.audio.src = this.tracks[index];
+    console.log('🎧 Loading:', this.audio.src);
+    this.audio.load();
+    this.updateUI();
   }
 
-  async loadTrack(index) {
-    if (this.isLoading) return;
-    
-    if (index < 0 || index >= this.tracks.length) {
-      console.error('Invalid track index:', index);
-      return;
-    }
-    
-    try {
-      this.isLoading = true;
-      
-      // Pause dan reset current audio
-      if (this.audio) {
-        this.audio.pause();
-        this.audio.currentTime = 0;
-        this.audio.src = '';
-      }
-
-      this.currentTrack = index;
-      const trackUrl = this.tracks[index];
-      
-      console.log('Loading track:', trackUrl);
-      
-      // Set new source
-      this.audio.src = trackUrl;
-      
-      // Small delay sebelum load
-      await new Promise(resolve => setTimeout(resolve, 100));
-      this.audio.load();
-      
-    } catch (error) {
-      console.error('Error loading track:', error);
-      this.isLoading = false;
-      this.handleAudioError();
-    }
-  }
-
-  async togglePlayPause() {
-    if (this.isLoading) return;
-    
-    try {
-      if (this.isPlaying) {
-        await this.pause();
-      } else {
-        await this.play();
-      }
-    } catch (error) {
-      console.error('Play/Pause error:', error);
-    }
+  togglePlayPause() {
+    if (this.isPlaying) this.pause();
+    else this.play();
   }
 
   async play() {
-    if (!this.audio || !this.audio.src || this.isLoading) {
-      return;
-    }
-
     try {
       await this.audio.play();
       this.isPlaying = true;
       document.getElementById('playPause').textContent = '⏸️';
-      console.log('Audio playing successfully');
-      
     } catch (error) {
-      console.error('Audio play failed:', error);
+      console.error('❌ Audio play error:', error);
       this.isPlaying = false;
       document.getElementById('playPause').textContent = '▶️';
+      this.nextTrack();
     }
   }
 
-  async pause() {
-    try {
-      if (this.audio) {
-        this.audio.pause();
-      }
-      this.isPlaying = false;
-      document.getElementById('playPause').textContent = '▶️';
-    } catch (error) {
-      console.error('Pause error:', error);
-    }
+  pause() {
+    this.audio.pause();
+    this.isPlaying = false;
+    document.getElementById('playPause').textContent = '▶️';
   }
 
   nextTrack() {
-    if (this.isLoading) return;
-    
-    const nextIndex = (this.currentTrack + 1) % this.tracks.length;
-    console.log('Moving to next track:', nextIndex);
-    
-    const wasPlaying = this.isPlaying;
-    this.loadTrack(nextIndex);
-    
-    if (wasPlaying) {
-      setTimeout(() => this.play(), 1000);
-    }
+    this.currentTrack = (this.currentTrack + 1) % this.tracks.length;
+    this.loadTrack(this.currentTrack);
+    if (this.isPlaying) this.play();
   }
 
   previousTrack() {
-    if (this.isLoading) return;
-    
-    const prevIndex = (this.currentTrack - 1 + this.tracks.length) % this.tracks.length;
-    console.log('Moving to previous track:', prevIndex);
-    
-    const wasPlaying = this.isPlaying;
-    this.loadTrack(prevIndex);
-    
-    if (wasPlaying) {
-      setTimeout(() => this.play(), 1000);
-    }
+    this.currentTrack = (this.currentTrack - 1 + this.tracks.length) % this.tracks.length;
+    this.loadTrack(this.currentTrack);
+    if (this.isPlaying) this.play();
   }
 
   selectTrack(index) {
-    if (this.isLoading || index < 0 || index >= this.tracks.length) return;
-    
-    console.log('Selected track:', index);
-    
-    const wasPlaying = this.isPlaying;
     this.loadTrack(index);
-    
-    if (wasPlaying) {
-      setTimeout(() => this.play(), 1000);
-    }
+    if (this.isPlaying) this.play();
   }
 
   updateUI() {
-    try {
-      const musicSelect = document.getElementById('musicSelect');
-      const musicInfo = document.getElementById('musicInfo');
-      
-      if (musicSelect && musicInfo) {
-        musicSelect.value = this.currentTrack;
-        musicInfo.textContent = `Now Playing: ${this.trackNames[this.currentTrack]}`;
-      }
-    } catch (error) {
-      console.error('UI update error:', error);
-    }
-  }
-
-  cleanup() {
-    if (this.audio) {
-      this.audio.pause();
-      this.audio.src = '';
-      this.audio.load();
-    }
-    this.isPlaying = false;
-    this.isLoading = false;
+    const musicSelect = document.getElementById('musicSelect');
+    const musicInfo = document.getElementById('musicInfo');
+    if (musicSelect) musicSelect.value = this.currentTrack;
+    if (musicInfo) musicInfo.textContent = `Now Playing: ${this.trackNames[this.currentTrack]}`;
   }
 }
 
-/* ---------------------- VOICE SYSTEM - DIPERBAIKI DENGAN HOVER PREVIEW ---------------------- */
+
+/* ---------------------- VOICE SYSTEM - DIPERBAIKI ---------------------- */
 class VoiceSystem {
   constructor() {
     this.currentVoice = null;
-    this.hoverTimeout = null;
   }
 
   playVoice(voicePath) {
+    // Debug: log voice path
+    console.log('🎵 Attempting to play voice:', voicePath);
+    
     // Stop current voice jika sedang bermain
     if (this.currentVoice) {
       this.currentVoice.pause();
       this.currentVoice.currentTime = 0;
-      this.currentVoice = null;
     }
 
     // Check jika voice path valid
-    if (!voicePath) {
-      console.warn('Invalid voice path');
+    if (!voicePath || voicePath === 'undefined') {
+      console.warn('❌ Invalid voice path:', voicePath);
       return;
     }
 
-    try {
-      // Play voice baru
-      this.currentVoice = new Audio(voicePath);
-      this.currentVoice.volume = 0.7;
-      
-      this.currentVoice.play().catch(error => {
-        console.log('Voice play failed:', error);
-      });
-
-      // Auto cleanup setelah selesai
-      this.currentVoice.addEventListener('ended', () => {
-        this.currentVoice = null;
-      });
-
-    } catch (error) {
-      console.error('Voice system error:', error);
-    }
-  }
-
-  // Method baru untuk hover preview
-  playHoverPreview(voicePath) {
-    // Clear previous timeout
-    if (this.hoverTimeout) {
-      clearTimeout(this.hoverTimeout);
-    }
+    // Play voice baru
+    this.currentVoice = new Audio(voicePath);
+    this.currentVoice.volume = 0.7;
     
-    // Set timeout untuk mencegah spam
-    this.hoverTimeout = setTimeout(() => {
-      this.playVoice(voicePath);
-    }, 300);
+    this.currentVoice.play().catch(error => {
+      console.log('❌ Voice play failed:', error);
+      console.log('Voice path:', voicePath);
+    });
+    
+    // Event handlers untuk debugging
+    this.currentVoice.addEventListener('loadeddata', () => {
+      console.log('✅ Voice loaded successfully:', voicePath);
+    });
+    
+    this.currentVoice.addEventListener('error', (e) => {
+      console.error('❌ Voice loading error:', e);
+      console.error('Voice path:', voicePath);
+    });
   }
 
   stopVoice() {
     if (this.currentVoice) {
       this.currentVoice.pause();
       this.currentVoice.currentTime = 0;
-      this.currentVoice = null;
     }
-    
-    // Clear hover timeout
-    if (this.hoverTimeout) {
-      clearTimeout(this.hoverTimeout);
-    }
-  }
-
-  cleanup() {
-    this.stopVoice();
   }
 }
 
