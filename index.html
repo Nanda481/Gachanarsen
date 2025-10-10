@@ -2246,7 +2246,7 @@ function setupGachaSystem() {
   const claimBtn = document.getElementById('claimBtn');
   const closeResult = document.getElementById('closeResult');
   
-  // Summon function
+  // Summon function dengan ANIMASI - PAKAI INI
   async function performSummon(full = true) {
     // Check remaining summons
     const remaining = getRemainingSummons();
@@ -2267,7 +2267,7 @@ function setupGachaSystem() {
     const singleSummonBottom = document.getElementById('singleSummonBottom');
     
     if (summonBtn) {
-      summonBtn.innerHTML = '<div class="spinner"></div> Summoning...';
+      summonBtn.innerHTML = '<div class="spinner"></div> SUMMONING...';
       summonBtn.disabled = true;
     }
     if (singleSummon) singleSummon.disabled = true;
@@ -2275,14 +2275,34 @@ function setupGachaSystem() {
     if (singleSummonBottom) singleSummonBottom.disabled = true;
     
     try {
+      // ✅ STEP 1: Button shake effect
+      shakeSummonButton();
+      
+      // ✅ STEP 2: Portal opening animation
+      createPortalAnimation();
+      
+      // ✅ STEP 3: Create particles
+      createParticles(40);
+      
+      // ✅ STEP 4: Light beam effect
+      createLightBeam();
+      
+      // ✅ STEP 5: Flash effect
+      createFlashEffect();
+      
       // Choose random character
       const chosenRarity = chooseRarity();
       const winnerCharacter = pickCharacterByRarity(chosenRarity);
       
       console.log(`🎯 Summon result: ${winnerCharacter.name} (${winnerCharacter.rarity})`);
       
-      // Simulate summon animation
-      await sleep(1500);
+      // ✅ STEP 6: Character reveal animation
+      setTimeout(() => {
+        createRarityReveal(winnerCharacter);
+      }, 1000);
+      
+      // Simulate summon animation delay
+      await sleep(2500);
       
       // Use one summon
       useSummon();
@@ -2290,7 +2310,7 @@ function setupGachaSystem() {
       // Update statistics
       updatePullStatistics(winnerCharacter);
       
-      // Reveal result
+      // ✅ STEP 7: Show result overlay
       await revealCharacter(winnerCharacter);
       
     } catch (error) {
@@ -2409,22 +2429,22 @@ function setupGachaSystem() {
     }
   }
   
-  // Event listeners
+  // ✅ EVENT LISTENERS - PASTIKAN PANGGIL performSummon (BUKAN performSummonWithAnimation)
   if (summonBtn) {
-  summonBtn.addEventListener('click', () => performSummonWithAnimation(true));
-}
-
-if (singleSummon) {
-  singleSummon.addEventListener('click', () => performSummonWithAnimation(false));
-}
-
-if (summonBtnBottom) {
-  summonBtnBottom.addEventListener('click', () => performSummonWithAnimation(true));
-}
-
-if (singleSummonBottom) {
-  singleSummonBottom.addEventListener('click', () => performSummonWithAnimation(false));
-}
+    summonBtn.addEventListener('click', () => performSummon(true));
+  }
+  
+  if (singleSummon) {
+    singleSummon.addEventListener('click', () => performSummon(false));
+  }
+  
+  if (summonBtnBottom) {
+    summonBtnBottom.addEventListener('click', () => performSummon(true));
+  }
+  
+  if (singleSummonBottom) {
+    singleSummonBottom.addEventListener('click', () => performSummon(false));
+  }
   
   if (claimBtn) {
     claimBtn.addEventListener('click', async function() {
