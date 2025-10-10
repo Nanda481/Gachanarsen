@@ -5,8 +5,6 @@
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>High-Tier Gacha Showcase • Limited Summon</title>
   <meta name="description" content="High-end cinematic gacha showcase with summon limits — dual mode: Showcase & Gacha."/>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
   <style>
     /* ---------- THEME COLORS ---------- */
     :root{
@@ -20,15 +18,46 @@
 
     /* ---------- RESET & BASE ---------- */
     *{box-sizing:border-box;margin:0;padding:0}
-    html,body{height:100%;width:100%;font-family:Inter, ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial;color:#e6f3ff;background:linear-gradient(180deg,var(--bg-1),var(--bg-2));-webkit-font-smoothing:antialiased;overflow:hidden}
+    html,body{height:100%;width:100%;font-family:Inter, ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial;color:#e6f3ff;background:linear-gradient(180deg,var(--bg-1),var(--bg-2));-webkit-font-smoothing:antialiased;overflow:auto} /* Changed from overflow:hidden to overflow:auto */
     a{color:inherit}
     button{font-family:inherit}
 
+    /* ---------- CUSTOM SCROLLBAR ---------- */
+    ::-webkit-scrollbar {
+      width: 12px;
+      height: 12px;
+    }
+    
+    ::-webkit-scrollbar-track {
+      background: rgba(255,255,255,0.05);
+      border-radius: 6px;
+    }
+    
+    ::-webkit-scrollbar-thumb {
+      background: linear-gradient(45deg, var(--accent-a), var(--accent-b));
+      border-radius: 6px;
+      border: 2px solid rgba(255,255,255,0.1);
+    }
+    
+    ::-webkit-scrollbar-thumb:hover {
+      background: linear-gradient(45deg, var(--accent-b), var(--accent-a));
+    }
+    
+    ::-webkit-scrollbar-corner {
+      background: transparent;
+    }
+    
+    /* Firefox scrollbar */
+    html {
+      scrollbar-width: thin;
+      scrollbar-color: var(--accent-a) rgba(255,255,255,0.05);
+    }
+
     /* ---------- LAYOUT ---------- */
-    .app{display:flex;flex-direction:column;height:100vh;width:100vw}
+    .app{display:flex;flex-direction:column;min-height:100vh;width:100%;overflow:auto} /* Changed height to min-height and added overflow */
     
     /* Header dengan efek shine */
-    header.top{height:72px;display:flex;align-items:center;justify-content:space-between;padding:0 28px;background:linear-gradient(180deg, rgba(255,255,255,0.05), transparent);backdrop-filter:blur(6px);border-bottom:1px solid rgba(255,255,255,0.02);position:relative;overflow:hidden}
+    header.top{height:72px;display:flex;align-items:center;justify-content:space-between;padding:0 28px;background:linear-gradient(180deg, rgba(255,255,255,0.05), transparent);backdrop-filter:blur(6px);border-bottom:1px solid rgba(255,255,255,0.02);position:relative;overflow:hidden;flex-shrink:0} /* Added flex-shrink */
     .shine-effect{position:absolute;top:0;left:-100%;width:100%;height:100%;background:linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);animation:shine 8s infinite}
     
     @keyframes shine{
@@ -55,10 +84,10 @@
     .btn:disabled{opacity:0.6;cursor:not-allowed}
     .btn:not(:disabled):hover{transform:translateY(-2px);box-shadow:0 12px 40px rgba(57,210,255,0.2)}
 
-    main.main{flex:1;display:flex;gap:28px;padding:26px 36px;position:relative;overflow:hidden}
+    main.main{flex:1;display:flex;gap:28px;padding:26px 36px;position:relative;overflow:auto;min-height:calc(100vh - 72px)} /* Added overflow and min-height */
 
     /* left column */
-    aside.left{width:260px;display:flex;flex-direction:column;gap:18px}
+    aside.left{width:260px;display:flex;flex-direction:column;gap:18px;flex-shrink:0} /* Added flex-shrink */
     .card{background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));border-radius:12px;padding:18px;border:1px solid rgba(255,255,255,0.03);box-shadow:0 16px 60px rgba(2,6,20,0.55);position:relative;overflow:hidden}
     .card::before{content:'';position:absolute;top:0;left:-100%;width:100%;height:100%;background:linear-gradient(90deg, transparent, rgba(255,255,255,0.03), transparent);animation:cardShine 6s infinite}
     .card h4{color:var(--accent-a);margin-bottom:10px;position:relative;z-index:1}
@@ -71,7 +100,7 @@
     }
 
     /* center area */
-    .center{flex:1;position:relative;display:flex;align-items:center;justify-content:center;overflow:hidden}
+    .center{flex:1;position:relative;display:flex;align-items:flex-start;justify-content:center;overflow:auto;min-width:0} /* Changed align-items to flex-start, added min-width */
 
     /* background slideshow container */
     .bg-container{position:absolute;inset:0;z-index:0;overflow:hidden}
@@ -79,45 +108,21 @@
     .bg-slide.active{opacity:1;transform:scale(1)}
     .bg-overlay{position:absolute;inset:0;background:linear-gradient(180deg, rgba(2,6,20,0.25), rgba(2,6,30,0.6));z-index:1}
 
-    /* showcase carousel container */
-    .showcase-wrap{position:relative;z-index:2;width:100%;max-width:1400px;padding:48px 32px;display:flex;flex-direction:column;gap:18px;align-items:center;justify-content:center}
-    .showcase-title{display:flex;align-items:center;gap:12px;width:100%;justify-content:space-between}
+    /* showcase carousel container - DIUBAH KE GRID 3x2 */
+    .showcase-wrap{position:relative;z-index:2;width:100%;max-width:1400px;padding:48px 32px;display:flex;flex-direction:column;gap:18px;align-items:center;justify-content:flex-start;min-height:min-content} /* Added min-height */
+    .showcase-title{display:flex;align-items:center;gap:12px;width:100%;justify-content:space-between;flex-shrink:0} /* Added flex-shrink */
     .showcase-title h2{font-size:20px;letter-spacing:1px;background:linear-gradient(45deg, var(--accent-a), var(--accent-b));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
-    .showcase-view{width:100%;overflow:hidden;padding:20px 0 28px 0;position:relative}
+    .showcase-view{width:100%;overflow:auto;padding:20px 0 28px 0;position:relative;min-height:min-content} /* Changed overflow to auto */
     
-    /* slider navigation - DIHAPUS SESUAI PERMINTAAN */
-    .slider-nav{display:none}
-    .nav-btn{display:none}
+    /* slider navigation */
+    .slider-nav{display:flex;gap:10px;align-items:center;flex-shrink:0} /* Added flex-shrink */
 
-    .carousel{display:flex;gap:28px;align-items:center;justify-content:center;flex-wrap:wrap;will-change:transform}
+    /* CAROUSEL DIUBAH MENJADI GRID 3x2 */
+    .carousel{display:grid;grid-template-columns:repeat(3, 1fr);grid-template-rows:repeat(2, 1fr);gap:28px;width:100%;max-width:100%;transition:none;transform:none !important} /* Changed to grid */
     
     /* panel - medium size dengan aura FIXED */
-    .panel{width:280px;height:620px;border-radius:14px;overflow:visible;background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(0,0,0,0.08));backdrop-filter:blur(6px);position:relative;box-shadow:0 40px 120px rgba(2,8,20,0.6);transition:all 350ms cubic-bezier(0.25, 0.46, 0.45, 0.94);border:2px solid transparent}
-    
-    /* Border aesthetic untuk panel */
-    .panel::after {
-      content: '';
-      position: absolute;
-      top: -2px;
-      left: -2px;
-      right: -2px;
-      bottom: -2px;
-      border-radius: 16px;
-      background: linear-gradient(45deg, var(--accent-a), var(--accent-b), var(--accent-a));
-      z-index: -1;
-      opacity: 0;
-      transition: opacity 0.3s ease;
-    }
-    
-    .panel:hover::after {
-      opacity: 0.3;
-    }
-    
-    .panel.active::after {
-      opacity: 0.5;
-    }
-    
-    .panel-inner{width:100%;height:100%;position:relative;display:flex;flex-direction:column;align-items:center;border-radius:14px;overflow:hidden}
+    .panel{width:100%;height:620px;border-radius:14px;overflow:visible;background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(0,0,0,0.08));backdrop-filter:blur(6px);position:relative;box-shadow:0 40px 120px rgba(2,8,20,0.6);transform:none;transition:all 350ms cubic-bezier(0.25, 0.46, 0.45, 0.94)} /* Removed skew transform */
+    .panel-inner{transform:none;width:100%;height:100%;position:relative;display:flex;flex-direction:column;align-items:center;border-radius:14px;overflow:hidden} /* Removed skew transform */
     
     /* Aura effect container FIXED */
     .aura-container{position:absolute;top:-5px;left:-5px;right:-5px;bottom:-5px;border-radius:16px;z-index:0;opacity:0;transition:opacity 0.5s ease;pointer-events:none;overflow:hidden}
@@ -138,9 +143,9 @@
     .prarity{font-weight:700;font-size:12px;padding:6px 10px;border-radius:999px;background:linear-gradient(90deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));border:1px solid rgba(255,255,255,0.03);color:var(--muted)}
 
     /* hover focus dengan efek glow */
-    .panel:hover{transform:translateY(-18px) scale(1.02);box-shadow:0 60px 140px rgba(3,12,30,0.75);filter:brightness(1.04)}
+    .panel:hover{transform:translateY(-18px) scale(1.02);box-shadow:0 60px 140px rgba(3,12,30,0.75);filter:brightness(1.04)} /* Removed skew from transform */
     .panel:hover .aura-container{opacity:0.6}
-    .panel.active{transform:translateY(-12px) scale(1);box-shadow:0 50px 130px var(--aura-glow, rgba(57,210,255,0.3))}
+    .panel.active{transform:translateY(-12px) scale(1);box-shadow:0 50px 130px var(--aura-glow, rgba(57,210,255,0.3))} /* Removed skew from transform */
 
     /* HERO SPOT DIPERBAIKI DENGAN GAMBAR */
     .hero-spot {
@@ -156,12 +161,6 @@
       background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(0,0,0,0.15));
       border: 1px solid rgba(255,255,255,0.03);
       position: relative;
-      opacity: 0;
-      transition: opacity 0.5s ease;
-    }
-
-    .hero-spot.active {
-      opacity: 1;
     }
 
     .hero-image-container {
@@ -214,18 +213,16 @@
 
     /* SUMMON PORTAL BESAR DI TENGAH - REVISI */
     .summon-portal {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
+      position: relative;
       z-index: 4;
-      width: 600px;
-      height: 400px;
+      width: 100%;
+      max-width: 800px;
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
       gap: 20px;
+      margin: 0 auto;
     }
 
     .portal-grid {
@@ -286,11 +283,11 @@
     }
 
     /* gacha board dengan efek shine - REVISI POSISI */
-    .gacha-board{position:absolute;left:50%;transform:translateX(-50%);bottom:28px;z-index:4;background:linear-gradient(180deg, rgba(255,255,255,0.05), rgba(255,255,255,0.02));padding:18px 24px;border-radius:14px;border:1px solid rgba(255,255,255,0.05);display:flex;gap:24px;align-items:center;backdrop-filter:blur(12px);box-shadow:0 20px 80px rgba(2,6,20,0.8);min-width:max-content}
+    .gacha-board{position:relative;z-index:4;background:linear-gradient(180deg, rgba(255,255,255,0.05), rgba(255,255,255,0.02));padding:18px 24px;border-radius:14px;border:1px solid rgba(255,255,255,0.05);display:flex;gap:24px;align-items:center;backdrop-filter:blur(12px);box-shadow:0 20px 80px rgba(2,6,20,0.8);min-width:max-content;width:100%;max-width:800px;margin:0 auto} /* Changed position to relative */
     .gacha-board::before{content:'';position:absolute;top:0;left:-100%;width:100%;height:100%;background:linear-gradient(90deg, transparent, rgba(57,210,255,0.1), transparent);animation:cardShine 10s infinite}
     
-    .gtiles{display:flex;gap:12px}
-    .gtile{width:88px;height:116px;border-radius:10px;overflow:hidden;background:rgba(255,255,255,0.03);display:flex;align-items:center;justify-content:center;border:1px solid rgba(255,255,255,0.06);transition:all 300ms ease;position:relative}
+    .gtiles{display:flex;gap:12px;overflow-x:auto;padding-bottom:10px} /* Added overflow for horizontal scroll */
+    .gtile{width:88px;height:116px;border-radius:10px;overflow:hidden;background:rgba(255,255,255,0.03);display:flex;align-items:center;justify-content:center;border:1px solid rgba(255,255,255,0.06);transition:all 300ms ease;position:relative;flex-shrink:0} /* Added flex-shrink */
     .gtile::before{content:'';position:absolute;top:0;left:0;right:0;bottom:0;border-radius:10px;background:linear-gradient(45deg, transparent, rgba(255,255,255,0.08), transparent);opacity:0;transition:opacity 0.3s ease}
     .gtile:hover::before{opacity:1}
     .gtile.sel{box-shadow:0 20px 60px rgba(57,210,255,0.4);transform:translateY(-10px) scale(1.05);border-color:var(--accent-a)}
@@ -647,7 +644,7 @@
       transform: translateX(-50%) translateY(0);
     }
 
-    /* Music Player Styles - IMPROVED */
+    /* Music Player Styles */
     .music-player {
       position: fixed;
       bottom: 20px;
@@ -659,19 +656,17 @@
       padding: 15px;
       border: 1px solid rgba(255,255,255,0.1);
       box-shadow: 0 10px 30px rgba(0,0,0,0.3);
-      min-width: 200px;
     }
 
     .music-controls {
       display: flex;
       align-items: center;
-      gap: 8px;
-      flex-wrap: wrap;
+      gap: 10px;
     }
 
     .music-btn {
-      width: 35px;
-      height: 35px;
+      width: 40px;
+      height: 40px;
       border-radius: 50%;
       border: none;
       background: linear-gradient(45deg, var(--accent-a), var(--accent-b));
@@ -680,18 +675,11 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 12px;
+      font-size: 16px;
       transition: all 0.3s ease;
-      flex-shrink: 0;
     }
 
-    .music-btn:disabled {
-      opacity: 0.5;
-      cursor: not-allowed;
-      transform: none !important;
-    }
-
-    .music-btn:not(:disabled):hover {
+    .music-btn:hover {
       transform: scale(1.1);
       box-shadow: 0 5px 15px rgba(57,210,255,0.4);
     }
@@ -700,36 +688,17 @@
       background: rgba(255,255,255,0.05);
       border: 1px solid rgba(255,255,255,0.1);
       border-radius: 8px;
-      padding: 6px 10px;
+      padding: 8px 12px;
       color: var(--muted);
-      font-size: 11px;
+      font-size: 12px;
       min-width: 120px;
-      flex: 1;
     }
 
     .music-info {
-      font-size: 10px;
+      font-size: 11px;
       color: var(--muted);
       margin-top: 8px;
       text-align: center;
-      word-break: break-word;
-    }
-
-    /* Loading state untuk music player */
-    .music-loading {
-      opacity: 0.7;
-      pointer-events: none;
-    }
-
-    .music-loading::after {
-      content: '...';
-      animation: loadingDots 1.5s infinite;
-    }
-
-    @keyframes loadingDots {
-      0%, 20% { content: '.'; }
-      40% { content: '..'; }
-      60%, 100% { content: '...'; }
     }
 
     /* Fireworks Animation */
@@ -769,11 +738,11 @@
     /* small screens */
     @media (max-width:1100px){
       .hero-spot{display:none}
-      .panel{width:240px;height:520px}
+      .panel{height:520px}
       .gacha-board{gap:18px; padding:16px 20px}
       .summon-portal {
-        width: 500px;
-        height: 350px;
+        width: 100%;
+        height: auto;
       }
       .portal-grid {
         height: 250px;
@@ -782,34 +751,48 @@
         bottom: 80px;
         right: 10px;
       }
+      .carousel {
+        grid-template-columns: repeat(2, 1fr);
+        grid-template-rows: repeat(3, 1fr);
+      }
     }
     @media (max-width:900px){
       .gacha-board{flex-direction:column; gap:16px; width:90%}
       .gtiles{order:2}
       .summon-portal {
-        width: 400px;
-        height: 300px;
+        width: 100%;
+        height: auto;
       }
       .portal-grid {
         height: 200px;
         gap: 10px;
       }
+      .carousel {
+        grid-template-columns: repeat(2, 1fr);
+        grid-template-rows: repeat(3, 1fr);
+      }
     }
     @media (max-width:720px){
       aside.left{display:none}
-      .panel{width:200px;height:420px}
+      .panel{height:420px}
       .showcase-wrap{padding:20px 16px}
       .gacha-board{left:5%;transform:translateX(0);bottom:16px; width:90%}
       .main{padding:10px}
       .shine-effect{animation:shine 12s infinite}
-      .carousel{gap:20px}
+      .carousel{
+        grid-template-columns: 1fr;
+        grid-template-rows: repeat(6, 1fr);
+        gap: 20px;
+      }
       .summon-portal {
-        width: 320px;
-        height: 240px;
+        width: 100%;
+        height: auto;
       }
       .portal-grid {
         height: 160px;
         gap: 8px;
+        grid-template-columns: repeat(2, 1fr);
+        grid-template-rows: repeat(3, 1fr);
       }
       .music-player {
         position: relative;
@@ -994,8 +977,8 @@
           <div class="hero-image-container">
             <img id="heroImage" src="" alt="Character Preview" onerror="handleImageError(this)">
             <div class="hero-content">
-              <h3 id="heroName">Select a Character</h3>
-              <p id="heroDesc" class="muted">Click on any character to preview</p>
+              <h3 id="heroName">Sasuke</h3>
+              <p id="heroDesc" class="muted">Mythic • Abyss Walker</p>
             </div>
           </div>
         </div>
@@ -1023,6 +1006,9 @@
             <button id="summonBtnBottom" class="spin-btn" disabled>SUMMON</button>
             <button id="singleSummonBottom" class="btn small" disabled>Single</button>
           </div>
+          <div class="gtiles">
+            <!-- Gacha tiles akan diisi oleh JavaScript -->
+          </div>
         </div>
       </section>
     </main>
@@ -1035,11 +1021,11 @@
       <button class="music-btn" id="playPause">▶️</button>
       <button class="music-btn" id="nextMusic">⏭</button>
       <select class="music-select" id="musicSelect">
-        <option value="0">Background Music 1</option>
-        <option value="1">Background Music 2</option>
-        <option value="2">Background Music 3</option>
-        <option value="3">Background Music 4</option>
-        <option value="4">Background Music 5</option>
+        <option value="music.mp3">Background Music 1</option>
+        <option value="music1.mp3">Background Music 2</option>
+        <option value="music2.mp3">Background Music 3</option>
+        <option value="music3.mp3">Background Music 4</option>
+        <option value="music4.mp3">Background Music 5</option>
       </select>
     </div>
     <div class="music-info" id="musicInfo">Now Playing: Background Music 1</div>
@@ -1114,81 +1100,79 @@
 
   <script>
 /************************************************************************
- * ENHANCED GACHA SYSTEM WITH ALL FIXES
- * - FIXED: Music Player dengan robust error handling
- * - FIXED: Memory management dan cleanup
- * - FIXED: Path assets untuk Vercel deployment
- * - REMOVED: Slider navigation buttons
- * - ADDED: Border aesthetic ke showcase panels
- * - ADDED: Voice preview on hover
- * - ADDED: Hero image display on hover
+ * ENHANCED GACHA SYSTEM WITH ALL FIXES FOR VOICE SYSTEM
+ * - Fixed voice playback for all characters in showcase
+ * - Multiple background music with player
+ * - Enhanced result with character images & fireworks
+ * - Animated starfield background
+ * - Added scrollbars and grid layout
  ************************************************************************/
 
 /* ---------------------- CHARACTER DATA DENGAN VOICE - DIPERBAIKI ---------------------- */
 const CHARACTERS = [
   {
     id: 'Sasuke',
-    name: 'Sasuke Uchiha',
+    name: 'Sasuke Uchiha', // SESUAIKAN DENGAN data-name DI HTML
     rarity: 'Mythic',
-    image: '/assets/panels/panel1.png',
+    image: 'assets/panels/panel1.png',
     description: 'Abyss Walker',
     file: 'Sasuke',
     auraColor: '#ffd700',
-    voice: '/assets/voices/sasuke_voice.mp3'
+    voice: 'assets/voices/sasuke_voice.mp3'
   },
   {
     id: 'Obito',
-    name: 'Obito Uchiha',
+    name: 'Obito Uchiha', // SESUAIKAN DENGAN data-name DI HTML
     rarity: 'Legendary',
-    image: '/assets/panels/panel2.png',
+    image: 'assets/panels/panel2.png',
     description: 'Dragon Knight',
     file: 'Obito',
     auraColor: '#9b7bff',
-    voice: '/assets/voices/obito_voice.mp3'
+    voice: 'assets/voices/obito_voice.mp3'
   },
   {
     id: 'Madara',
-    name: 'Madara Uchiha',
+    name: 'Madara Uchiha', // SESUAIKAN DENGAN data-name DI HTML
     rarity: 'Elite',
-    image: '/assets/panels/panel3.png',
+    image: 'assets/panels/panel3.png',
     description: 'Oracle Seer',
     file: 'Madara',
     auraColor: '#39d2ff',
-    voice: '/assets/voices/madara_voice.mp3'
+    voice: 'assets/voices/madara_voice.mp3'
   },
   {
     id: 'Naruto',
-    name: 'Naruto',
+    name: 'Naruto', // SESUAIKAN DENGAN data-name DI HTML
     rarity: 'Common',
-    image: '/assets/panels/panel4.png',
+    image: 'assets/panels/panel4.png',
     description: 'Forest Guardian',
     file: 'Naruto',
     auraColor: '#94a6bf',
-    voice: '/assets/voices/naruto_voice.mp3'
+    voice: 'assets/voices/naruto_voice.mp3'
   },
   {
     id: 'SasukeHebi',
-    name: 'SasukeHebi',
+    name: 'SasukeHebi', // SESUAIKAN DENGAN data-name DI HTML
     rarity: 'Elite',
-    image: '/assets/panels/panel5.png',
+    image: 'assets/panels/panel5.png',
     description: 'Cyber Ninja',
     file: 'SasukeHebi',
     auraColor: '#39d2ff',
-    voice: '/assets/voices/sasukehebi_voice.mp3'
+    voice: 'assets/voices/sasukehebi_voice.mp3'
   },
   {
     id: 'BorutoUzumaki',
-    name: 'BorutoUzumaki',
+    name: 'BorutoUzumaki', // SESUAIKAN DENGAN data-name DI HTML
     rarity: 'Legendary',
-    image: '/assets/panels/panel6.png',
+    image: 'assets/panels/panel6.png',
     description: 'Phoenix Mage',
     file: 'BorutoUzumaki',
     auraColor: '#9b7bff',
-    voice: '/assets/voices/boruto_voice.mp3'
+    voice: 'assets/voices/boruto_voice.mp3'
   }
 ];
 
-/* ---------------------- MUSIC PLAYER SYSTEM - FULLY FIXED ---------------------- */
+/* ---------------------- MUSIC PLAYER SYSTEM ---------------------- */
 class MusicPlayerSystem {
   constructor() {
     this.audio = null;
@@ -1558,9 +1542,7 @@ class FireworksSystem {
         if (opacity > 0) {
           requestAnimationFrame(animate);
         } else {
-          if (firework.parentNode) {
-            firework.remove();
-          }
+          firework.remove();
         }
       };
       
@@ -1587,13 +1569,6 @@ class FireworksSystem {
     };
     
     createFireworkBatch();
-  }
-
-  cleanup() {
-    // Remove all fireworks
-    document.querySelectorAll('.firework').forEach(firework => {
-      firework.remove();
-    });
   }
 }
 
@@ -1630,15 +1605,6 @@ class StarfieldSystem {
       this.container.appendChild(star);
       this.stars.push(star);
     }
-  }
-
-  cleanup() {
-    this.stars.forEach(star => {
-      if (star.parentNode) {
-        star.remove();
-      }
-    });
-    this.stars = [];
   }
 }
 
@@ -1716,7 +1682,7 @@ class SummonPortalSystem {
   // Highlight sequence untuk summon animation
   async highlightSequence(finalCharacterId, duration = 2000) {
     const characters = document.querySelectorAll('.portal-character');
-    const totalHighlights = 20;
+    const totalHighlights = 20; // Jumlah highlight selama animasi
     
     for (let i = 0; i < totalHighlights; i++) {
       const randomIndex = Math.floor(Math.random() * characters.length);
@@ -1724,16 +1690,14 @@ class SummonPortalSystem {
       
       await sleep(duration / totalHighlights);
       
+      // Jangan remove highlight untuk yang terakhir
       if (i < totalHighlights - 1) {
         characters[randomIndex].classList.remove('active');
       }
     }
     
+    // Pastikan final character yang aktif
     this.highlightCharacter(finalCharacterId);
-  }
-
-  cleanup() {
-    this.deactivateAll();
   }
 }
 
@@ -1750,7 +1714,6 @@ class SummonLimitSystem {
     
     this.currentSummons = 0;
     this.resetTime = null;
-    this.cooldownInterval = null;
     this.init();
   }
 
@@ -1850,8 +1813,6 @@ class SummonLimitSystem {
     const summonBtnBottom = document.getElementById('summonBtnBottom');
     const singleSummonBottom = document.getElementById('singleSummonBottom');
 
-    if (!limitCounter) return;
-
     // Update counter dots
     limitCounter.innerHTML = '';
     for (let i = 0; i < this.MAX_SUMMONS; i++) {
@@ -1862,39 +1823,31 @@ class SummonLimitSystem {
 
     // Update summons left text
     const remaining = this.getRemainingSummons();
-    if (summonsLeft) {
-      summonsLeft.textContent = remaining;
-    }
+    summonsLeft.textContent = remaining;
     
     // Update button states
     const canSummon = this.canSummon() && window.securitySystem?.isVerified;
-    
-    [summonBtn, singleSummon, summonBtnBottom, singleSummonBottom].forEach(btn => {
-      if (btn) {
-        btn.disabled = !canSummon;
-      }
-    });
+    summonBtn.disabled = !canSummon;
+    singleSummon.disabled = !canSummon;
+    summonBtnBottom.disabled = !canSummon;
+    singleSummonBottom.disabled = !canSummon;
 
     // Show cooldown timer jika limit habis
-    if (cooldownTimer) {
-      if (!this.canSummon()) {
-        cooldownTimer.classList.add('show');
-      } else {
-        cooldownTimer.classList.remove('show');
-      }
+    if (!this.canSummon()) {
+      cooldownTimer.classList.add('show');
+    } else {
+      cooldownTimer.classList.remove('show');
     }
   }
 
   startCooldownTimer() {
-    this.cooldownInterval = setInterval(() => {
+    setInterval(() => {
       this.updateCooldownText();
     }, 1000);
   }
 
   updateCooldownText() {
     const cooldownText = document.getElementById('cooldownText');
-    if (!cooldownText) return;
-    
     const timeUntilReset = this.getTimeUntilReset();
     
     const formatTime = (time) => time.toString().padStart(2, '0');
@@ -1932,27 +1885,20 @@ class SummonLimitSystem {
 
   showRefreshNotification() {
     const refreshNotification = document.getElementById('refreshNotification');
-    if (refreshNotification) {
-      refreshNotification.classList.add('show');
-      
-      setTimeout(() => {
-        refreshNotification.classList.remove('show');
-      }, 5000);
-    }
-  }
-
-  cleanup() {
-    if (this.cooldownInterval) {
-      clearInterval(this.cooldownInterval);
-    }
+    refreshNotification.classList.add('show');
+    
+    setTimeout(() => {
+      refreshNotification.classList.remove('show');
+    }, 5000);
   }
 }
 
-/* ---------------------- GACHA SYSTEM DENGAN PERBAIKAN ---------------------- */
+/* ---------------------- GACHA SYSTEM DENGAN VOICE FIXES ---------------------- */
 class GachaSystem {
   constructor() {
     this.panels = Array.from(document.querySelectorAll('.panel'));
-    this.currentActivePanel = null;
+    this.currentSlide = 0;
+    this.totalSlides = this.panels.length;
     this.summonLimitSystem = new SummonLimitSystem();
     this.summonPortal = new SummonPortalSystem();
     this.voiceSystem = new VoiceSystem();
@@ -1962,10 +1908,12 @@ class GachaSystem {
   }
 
   init() {
-    this.setupShowcase();
+    this.setupCarousel();
     this.setupGacha();
     this.setupBackground();
     this.preloadHeroImages();
+    this.updateSlider();
+    this.debugVoiceSystem(); // DEBUG VOICE SYSTEM
   }
 
   setupGacha() {
@@ -1976,11 +1924,6 @@ class GachaSystem {
     const claimBtn = document.getElementById('claimBtn');
     const closeResult = document.getElementById('closeResult');
     const modeBtn = document.getElementById('modeBtn');
-
-    if (!summonBtn || !modeBtn) {
-      console.error('Required elements not found');
-      return;
-    }
 
     // Summon dari portal besar
     summonBtn.addEventListener('click', (e) => {
@@ -2027,83 +1970,6 @@ class GachaSystem {
     });
   }
 
-  /* ---------------------- SETUP SHOWCASE DENGAN HOVER EFFECTS ---------------------- */
-  setupShowcase() {
-    this.panels.forEach((panel, index) => {
-      const characterName = panel.dataset.name;
-      const character = CHARACTERS.find(char => char.name === characterName);
-      
-      if (!character) return;
-      
-      // Click event untuk select panel
-      panel.addEventListener('click', () => {
-        this.selectPanel(panel, character);
-      });
-      
-      // Hover event untuk voice preview dan hero image
-      panel.addEventListener('mouseenter', () => {
-        this.handlePanelHover(panel, character);
-      });
-      
-      panel.addEventListener('mouseleave', () => {
-        this.handlePanelHoverEnd();
-      });
-    });
-  }
-
-  selectPanel(panel, character) {
-    // Remove active class dari semua panels
-    this.panels.forEach(p => p.classList.remove('active'));
-    
-    // Add active class ke panel yang diklik
-    panel.classList.add('active');
-    this.currentActivePanel = panel;
-    
-    // Update hero spot
-    this.updateHeroSpot(character);
-    
-    // Play full voice
-    this.voiceSystem.playVoice(character.voice);
-    
-    showNotification(`🎭 Selected: ${character.name} - ${character.rarity}`, 2000);
-  }
-
-  handlePanelHover(panel, character) {
-    // Show hero image preview
-    this.updateHeroSpot(character);
-    
-    // Play voice preview
-    this.voiceSystem.playHoverPreview(character.voice);
-  }
-
-  handlePanelHoverEnd() {
-    // Kembali ke active panel jika ada
-    if (this.currentActivePanel) {
-      const characterName = this.currentActivePanel.dataset.name;
-      const character = CHARACTERS.find(char => char.name === characterName);
-      if (character) {
-        this.updateHeroSpot(character);
-      }
-    }
-  }
-
-  updateHeroSpot(character) {
-    const heroSpot = document.getElementById('heroSpot');
-    const heroImage = document.getElementById('heroImage');
-    const heroName = document.getElementById('heroName');
-    const heroDesc = document.getElementById('heroDesc');
-    
-    if (character && character.image) {
-      heroImage.src = character.image;
-      heroImage.alt = `${character.name} - ${character.rarity}`;
-      heroName.textContent = character.name;
-      heroDesc.textContent = `${character.rarity} • ${character.description}`;
-      heroSpot.classList.add('active');
-    } else {
-      heroSpot.classList.remove('active');
-    }
-  }
-
   checkSummonConditions() {
     if (!window.securitySystem?.isVerified) {
       window.securitySystem.showVerificationModal();
@@ -2140,7 +2006,7 @@ class GachaSystem {
     singleSummonBottom.disabled = true;
 
     try {
-      // Pilih rarity dan character
+      // Pilih rarity dan character yang benar-benar akan didapat
       const chosenRarity = this.chooseRarity();
       const winnerCharacter = this.pickCharacterByRarity(chosenRarity);
       
@@ -2180,7 +2046,7 @@ class GachaSystem {
       showNotification('🔄 Generating secure download link...');
       await sleep(1000);
       
-      const downloadUrl = `/mods/${filename}.zip`;
+      const downloadUrl = `mods/${filename}.zip`;
       const link = document.createElement('a');
       link.href = downloadUrl;
       link.download = `${filename}.zip`;
@@ -2197,13 +2063,86 @@ class GachaSystem {
     }
   }
 
+  setupCarousel() {
+    // Remove previous/next buttons functionality since we're using grid now
+    const prevBtn = document.getElementById('prevBtn');
+    const nextBtn = document.getElementById('nextBtn');
+    
+    if (prevBtn && nextBtn) {
+      prevBtn.style.display = 'none';
+      nextBtn.style.display = 'none';
+    }
+
+    document.getElementById('slideCounter').textContent = 'Grid View';
+
+    this.panels.forEach((panel, index) => {
+      panel.addEventListener('click', () => {
+        this.goToSlide(index);
+        // Play character voice ketika panel diklik - DIPERBAIKI
+        this.playPanelVoice(panel);
+      });
+    });
+  }
+
+  /* ---------------------- METHOD BARU UNTUK VOICE PANEL - DIPERBAIKI ---------------------- */
+  playPanelVoice(panel) {
+    const characterName = panel.dataset.name;
+    console.log('🔍 Looking for character:', characterName);
+    
+    // Cari character berdasarkan name yang match persis
+    const character = CHARACTERS.find(char => char.name === characterName);
+    
+    if (character && character.voice) {
+      console.log('✅ Found character voice:', character.name, character.voice);
+      this.voiceSystem.playVoice(character.voice);
+    } else {
+      console.warn('❌ Character not found or no voice:', characterName);
+      console.log('Available characters:', CHARACTERS.map(c => c.name));
+      
+      // Fallback: coba cari dengan partial match
+      const fallbackCharacter = CHARACTERS.find(char => 
+        characterName.includes(char.name) || char.name.includes(characterName)
+      );
+      
+      if (fallbackCharacter && fallbackCharacter.voice) {
+        console.log('🔄 Using fallback voice:', fallbackCharacter.name);
+        this.voiceSystem.playVoice(fallbackCharacter.voice);
+      } else {
+        console.error('❌ No fallback character found for:', characterName);
+      }
+    }
+  }
+
+  /* ---------------------- DEBUG VOICE SYSTEM ---------------------- */
+  debugVoiceSystem() {
+    console.log('=== VOICE SYSTEM DEBUG ===');
+    
+    // Check semua panels
+    this.panels.forEach((panel, index) => {
+      const name = panel.dataset.name;
+      const character = CHARACTERS.find(char => char.name === name);
+      console.log(`Panel ${index + 1}:`, {
+        'data-name': name,
+        'found': !!character,
+        'characterName': character?.name,
+        'voice': character?.voice || 'MISSING'
+      });
+    });
+    
+    // Check semua characters
+    console.log('=== CHARACTERS DATA ===');
+    CHARACTERS.forEach(char => {
+      console.log(char.name, '- Voice:', char.voice);
+    });
+  }
+
   setupBackground() {
     const bgContainer = document.getElementById('bgContainer');
     const SLIDES = [
-      '/assets/backgrounds/bg1.jpg',
-      '/assets/backgrounds/bg2.jpg',
-      '/assets/backgrounds/bg3.jpg',
-      '/assets/backgrounds/bg4.jpg'
+      'assets/backgrounds/bg1.jpg',
+      'assets/backgrounds/bg2.jpg',
+      'assets/backgrounds/bg3.jpg',
+      'assets/backgrounds/bg4.jpg'
     ];
 
     if (SLIDES.length === 0) return;
@@ -2236,6 +2175,65 @@ class GachaSystem {
     });
   }
 
+  updateSlider() {
+    // Since we're using grid, we don't need to update transform
+    document.getElementById('slideCounter').textContent = 'Grid View';
+    
+    this.updateActivePanel();
+  }
+
+  updateActivePanel() {
+    this.panels.forEach((panel, index) => {
+      if (index === this.currentSlide) {
+        panel.classList.add('active');
+        const name = panel.dataset.name || 'Unknown';
+        const rarity = panel.dataset.rarity || '';
+        const description = panel.dataset.description || '';
+        const imageSrc = panel.querySelector('img')?.src || '';
+        
+        // Update hero spot dengan gambar
+        document.getElementById('heroName').textContent = name;
+        document.getElementById('heroDesc').textContent = `${rarity} • ${description}`;
+        
+        // Update hero image
+        const heroImage = document.getElementById('heroImage');
+        if (heroImage && imageSrc) {
+          heroImage.src = imageSrc;
+          heroImage.alt = `${name} - ${rarity} rarity`;
+        }
+        
+        const rarityGlow = {
+          Mythic: 'rgba(243, 212, 143, 0.4)',
+          Legendary: 'rgba(155, 123, 255, 0.4)',
+          Elite: 'rgba(57, 210, 255, 0.4)',
+          Common: 'rgba(148, 166, 191, 0.4)'
+        };
+        panel.style.setProperty('--aura-glow', rarityGlow[rarity] || 'rgba(57,210,255,0.3)');
+      } else {
+        panel.classList.remove('active');
+      }
+    });
+  }
+
+  goToSlide(index) {
+    this.currentSlide = clamp(index, 0, this.totalSlides - 1);
+    this.updateSlider();
+  }
+
+  nextSlide() {
+    if (this.currentSlide < this.totalSlides - 1) {
+      this.currentSlide++;
+      this.updateSlider();
+    }
+  }
+
+  prevSlide() {
+    if (this.currentSlide > 0) {
+      this.currentSlide--;
+      this.updateSlider();
+    }
+  }
+
   chooseRarity() {
     const rarityRates = {
       Mythic: 0.02,
@@ -2262,6 +2260,7 @@ class GachaSystem {
       return matches[Math.floor(Math.random() * matches.length)];
     }
     
+    // Fallback ke random character jika tidak ada match
     return CHARACTERS[Math.floor(Math.random() * CHARACTERS.length)];
   }
 
@@ -2289,7 +2288,8 @@ class GachaSystem {
     const resultCard = document.querySelector('.result-card');
     resultCard.style.setProperty('--result-glow', rarityGlow[character.rarity] || 'rgba(57,210,255,0.2)');
     
-    // Play character voice
+    // Play character voice - DIPERBAIKI
+    console.log('🎵 Playing summon voice for:', character.name, character.voice);
     this.voiceSystem.playVoice(character.voice);
     
     // Show fireworks
@@ -2324,14 +2324,6 @@ class GachaSystem {
       heroSpot.style.display = 'none';
       summonPortal.classList.remove('hide');
     }
-  }
-
-  cleanup() {
-    this.summonLimitSystem.cleanup();
-    this.voiceSystem.cleanup();
-    this.fireworksSystem.cleanup();
-    this.starfieldSystem.cleanup();
-    this.summonPortal.cleanup();
   }
 }
 
@@ -2397,23 +2389,23 @@ class SubscriptionSecurity {
     const enableBtn = document.getElementById('enableBtn');
 
     if (this.isVerified) {
-      if (subBadge) subBadge.style.display = 'inline-flex';
-      if (statusDot) statusDot.className = 'status-dot verified';
-      if (statusText) statusText.textContent = 'Verified ✓';
-      if (enableBtn) enableBtn.style.display = 'none';
+      subBadge.style.display = 'inline-flex';
+      statusDot.className = 'status-dot verified';
+      statusText.textContent = 'Verified ✓';
+      enableBtn.style.display = 'none';
       
       // Enable summon buttons jika limit masih ada
       if (window.gachaSystem?.summonLimitSystem.canSummon()) {
-        ['summonBtn', 'singleSummon', 'summonBtnBottom', 'singleSummonBottom'].forEach(id => {
-          const btn = document.getElementById(id);
-          if (btn) btn.disabled = false;
-        });
+        document.getElementById('summonBtn').disabled = false;
+        document.getElementById('singleSummon').disabled = false;
+        document.getElementById('summonBtnBottom').disabled = false;
+        document.getElementById('singleSummonBottom').disabled = false;
       }
     } else {
-      if (subBadge) subBadge.style.display = 'none';
-      if (statusDot) statusDot.className = 'status-dot';
-      if (statusText) statusText.textContent = 'Verification Required';
-      if (enableBtn) enableBtn.style.display = 'block';
+      subBadge.style.display = 'none';
+      statusDot.className = 'status-dot';
+      statusText.textContent = 'Verification Required';
+      enableBtn.style.display = 'block';
     }
   }
 
@@ -2424,35 +2416,25 @@ class SubscriptionSecurity {
     const confirmSubscriptionBtn = document.getElementById('confirmSubscription');
     const closeVerificationBtn = document.getElementById('closeVerification');
 
-    if (openChannelBtn) {
-      openChannelBtn.addEventListener('click', () => {
-        this.showVerificationModal();
-      });
-    }
+    openChannelBtn?.addEventListener('click', () => {
+      this.showVerificationModal();
+    });
 
-    if (enableBtn) {
-      enableBtn.addEventListener('click', () => {
-        this.showVerificationModal();
-      });
-    }
+    enableBtn?.addEventListener('click', () => {
+      this.showVerificationModal();
+    });
 
-    if (openYoutubeBtn) {
-      openYoutubeBtn.addEventListener('click', () => {
-        this.openYouTubeChannel();
-      });
-    }
+    openYoutubeBtn?.addEventListener('click', () => {
+      this.openYouTubeChannel();
+    });
 
-    if (confirmSubscriptionBtn) {
-      confirmSubscriptionBtn.addEventListener('click', () => {
-        this.verifySubscription();
-      });
-    }
+    confirmSubscriptionBtn?.addEventListener('click', () => {
+      this.verifySubscription();
+    });
 
-    if (closeVerificationBtn) {
-      closeVerificationBtn.addEventListener('click', () => {
-        this.hideVerificationModal();
-      });
-    }
+    closeVerificationBtn?.addEventListener('click', () => {
+      this.hideVerificationModal();
+    });
   }
 
   showVerificationModal() {
@@ -2491,53 +2473,27 @@ class SubscriptionSecurity {
     
     // Show access granted animation
     const accessGranted = document.getElementById('accessGranted');
-    if (accessGranted) {
-      accessGranted.classList.add('show');
-      setTimeout(() => {
-        accessGranted.classList.remove('show');
-      }, 3000);
-    }
-  }
-}
-
-/* ---------------------- GLOBAL CLEANUP ---------------------- */
-function cleanupAllSystems() {
-  if (window.musicPlayer) {
-    window.musicPlayer.cleanup();
-  }
-  if (window.gachaSystem) {
-    window.gachaSystem.cleanup();
-  }
-  if (window.voiceSystem) {
-    window.voiceSystem.cleanup();
+    accessGranted.classList.add('show');
+    setTimeout(() => {
+      accessGranted.classList.remove('show');
+    }, 3000);
   }
 }
 
 /* ---------------------- INITIALIZATION ---------------------- */
 document.addEventListener('DOMContentLoaded', function() {
-  try {
-    // Initialize semua systems
-    window.voiceSystem = new VoiceSystem();
-    window.musicPlayer = new MusicPlayerSystem();
-    window.securitySystem = new SubscriptionSecurity();
-    window.gachaSystem = new GachaSystem();
-    
-    // Add error handlers ke images
-    document.querySelectorAll('img').forEach(img => {
-      img.addEventListener('error', () => handleImageError(img));
-    });
+  // Initialize semua systems
+  window.voiceSystem = new VoiceSystem();
+  window.musicPlayer = new MusicPlayerSystem();
+  window.securitySystem = new SubscriptionSecurity();
+  window.gachaSystem = new GachaSystem();
+  
+  // Add error handlers ke images
+  document.querySelectorAll('img').forEach(img => {
+    img.addEventListener('error', () => handleImageError(img));
+  });
 
-    // Setup cleanup on page unload
-    window.addEventListener('beforeunload', cleanupAllSystems);
-    window.addEventListener('pagehide', cleanupAllSystems);
-
-    console.log('🎮 Enhanced Gacha System with All Fixes Initialized');
-
-  } catch (error) {
-    console.error('Initialization error:', error);
-    showNotification('❌ System initialization failed. Please refresh.');
-  }
+  console.log('🎮 Enhanced Gacha System with Voice Fixes and Scrollbars Initialized');
 });
 </script>
-</body>
 </html>
