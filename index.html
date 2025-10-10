@@ -1274,6 +1274,98 @@ function showNotification(message, duration = 3000) {
   }, duration);
 }
 
+// ==================== BACKGROUND SYSTEM ====================
+function setupBackground() {
+  const bgContainer = document.getElementById('bgContainer');
+  if (!bgContainer) return;
+  
+  console.log('🎨 Setting up background slideshow...');
+  
+  const SLIDES = [
+    './assets/backgrounds/bg1.jpg',
+    './assets/backgrounds/bg2.jpg', 
+    './assets/backgrounds/bg3.jpg',
+    './assets/backgrounds/bg4.jpg'
+  ];
+
+  // Create background slides
+  SLIDES.forEach((src, i) => {
+    const slide = document.createElement('div');
+    slide.className = 'bg-slide';
+    slide.style.backgroundImage = `url(${src})`;
+    if (i === 0) slide.classList.add('active');
+    bgContainer.appendChild(slide);
+  });
+
+  // Background slideshow animation
+  let currentBgIndex = 0;
+  const bgSlides = bgContainer.querySelectorAll('.bg-slide');
+  
+  setInterval(() => {
+    if (bgSlides.length > 0) {
+      bgSlides[currentBgIndex].classList.remove('active');
+      currentBgIndex = (currentBgIndex + 1) % bgSlides.length;
+      bgSlides[currentBgIndex].classList.add('active');
+    }
+  }, 6000);
+  
+  console.log('✅ Background setup completed');
+}
+
+// ==================== SHOWCASE SYSTEM ====================
+function setupShowcaseSystem() {
+  console.log('🎭 Setting up showcase system...');
+  
+  const panels = document.querySelectorAll('.panel');
+  const heroImage = document.getElementById('heroImage');
+  const heroName = document.getElementById('heroName');
+  const heroDesc = document.getElementById('heroDesc');
+  
+  // Set default hero image
+  if (heroImage && panels.length > 0) {
+    const firstPanelImg = panels[0].querySelector('img');
+    if (firstPanelImg) {
+      heroImage.src = firstPanelImg.src;
+    }
+  }
+  
+  // Add click events to panels
+  panels.forEach((panel, index) => {
+    panel.addEventListener('click', function() {
+      // Update active panel
+      panels.forEach(p => p.classList.remove('active'));
+      this.classList.add('active');
+      
+      // Update hero spot
+      const img = this.querySelector('img');
+      const name = this.dataset.name;
+      const rarity = this.dataset.rarity;
+      const description = this.dataset.description;
+      
+      if (heroImage && img) heroImage.src = img.src;
+      if (heroName) heroName.textContent = name;
+      if (heroDesc) heroDesc.textContent = `${rarity} • ${description}`;
+      
+      // Play character voice
+      const character = CHARACTERS.find(char => char.name === name);
+      if (character && character.voice && window.voiceSystem) {
+        window.voiceSystem.playVoice(character.voice);
+      }
+    });
+    
+    // Add hover voice preview
+    panel.addEventListener('mouseenter', function() {
+      const name = this.dataset.name;
+      const character = CHARACTERS.find(char => char.name === name);
+      if (character && character.voice && window.voiceSystem) {
+        window.voiceSystem.playVoice(character.voice);
+      }
+    });
+  });
+  
+  console.log('✅ Showcase system setup completed');
+}
+
 // ==================== SIMPLE MODE MANAGER ====================
 function setupModeManager() {
   const modeBtn = document.getElementById('modeBtn');
