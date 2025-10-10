@@ -14,6 +14,7 @@
       --muted:#94a6bf; --gold:#f3d48f;
       --mythic-glow:#ffd700; --legend-glow:#9b7bff;
       --elite-glow:#39d2ff; --common-glow:#94a6bf;
+      --success:#00C851; --error:#ff4444;
     }
 
     /* ---------- RESET & BASE ---------- */
@@ -291,7 +292,7 @@
     .gtile.sel{box-shadow:0 20px 60px rgba(57,210,255,0.4);transform:translateY(-10px) scale(1.05);border-color:var(--accent-a)}
     
     .spin-btn{padding:14px 32px;border-radius:12px;background:linear-gradient(90deg,var(--accent-a),var(--accent-b));border:none;font-weight:900;cursor:pointer;box-shadow:0 18px 60px rgba(57,210,255,0.2);transition:all 0.3s ease;position:relative;overflow:hidden;font-size:14px;letter-spacing:0.5px}
-    .spin-btn:disabled{opacity:0.6;cursor:not-allowed;transform:none !important}
+    .spin-btn:disabled{opacity:0.6;cursor:not-allowed;transform:none !important;background:linear-gradient(90deg, #94a6bf, #64748b);color:var(--bg-1)}
     .spin-btn:not(:disabled):hover{transform:translateY(-3px);box-shadow:0 25px 80px rgba(57,210,255,0.3)}
     .spin-btn::before{content:'';position:absolute;top:0;left:-100%;width:100%;height:100%;background:linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);transition:left 0.6s ease}
     .spin-btn:hover::before{left:100%}
@@ -358,12 +359,12 @@
       width: 8px;
       height: 8px;
       border-radius: 50%;
-      background: #00C851;
+      background: var(--success);
       transition: all 0.3s ease;
     }
     
     .limit-dot.used {
-      background: #ff4444;
+      background: var(--error);
     }
     
     .limit-text {
@@ -372,7 +373,7 @@
     }
     
     .cooldown-timer {
-      background: linear-gradient(45deg, #ff4444, #cc0000);
+      background: linear-gradient(45deg, var(--error), #cc0000);
       color: white;
       padding: 4px 8px;
       border-radius: 6px;
@@ -385,6 +386,72 @@
     
     .cooldown-timer.show {
       display: flex;
+    }
+
+    /* NEW: Daily Reset Countdown */
+    .reset-countdown {
+      background: rgba(255,255,255,0.02);
+      border-radius: 8px;
+      padding: 8px 12px;
+      margin: 10px 0;
+      border: 1px solid rgba(255,255,255,0.05);
+      position: relative;
+      z-index: 1;
+    }
+    
+    .countdown-text {
+      color: var(--muted);
+      font-size: 11px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    
+    .countdown-time {
+      color: var(--accent-a);
+      font-weight: 700;
+    }
+
+    /* NEW: Achievement Badges */
+    .achievement-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: linear-gradient(45deg, var(--accent-a), var(--accent-b));
+      color: #021226;
+      padding: 4px 10px;
+      border-radius: 12px;
+      font-size: 11px;
+      font-weight: 700;
+      margin: 2px;
+    }
+
+    /* NEW: Pull Counter */
+    .pull-counter {
+      background: rgba(255,255,255,0.02);
+      border-radius: 8px;
+      padding: 8px 12px;
+      margin: 10px 0;
+      border: 1px solid rgba(255,255,255,0.05);
+    }
+    
+    .pull-stats {
+      display: flex;
+      justify-content: space-between;
+      font-size: 11px;
+      color: var(--muted);
+    }
+    
+    .pull-stat {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    
+    .pull-number {
+      color: var(--accent-a);
+      font-weight: 700;
+      font-size: 14px;
     }
 
     /* Subscription Verification Modal */
@@ -545,7 +612,7 @@
     }
     
     .verification-success {
-      background: linear-gradient(45deg, #00C851, #007E33);
+      background: linear-gradient(45deg, var(--success), #007E33);
       color: white;
       padding: 12px 20px;
       border-radius: 10px;
@@ -567,7 +634,7 @@
       top: 50%;
       left: 50%;
       transform: translate(-50%, -50%) scale(0);
-      background: linear-gradient(45deg, #00C851, #007E33);
+      background: linear-gradient(45deg, var(--success), #007E33);
       color: white;
       padding: 20px 40px;
       border-radius: 15px;
@@ -602,12 +669,12 @@
       width: 8px;
       height: 8px;
       border-radius: 50%;
-      background: #ff4444;
+      background: var(--error);
       animation: pulse 2s infinite;
     }
     
     .status-dot.verified {
-      background: #00C851;
+      background: var(--success);
     }
     
     .status-text {
@@ -736,6 +803,32 @@
     @keyframes twinkle {
       0%, 100% { opacity: var(--opacity); }
       50% { opacity: calc(var(--opacity) * 0.3); }
+    }
+
+    /* NEW: Rarity Effects */
+    .rarity-mythic { --glow-color: var(--mythic-glow); }
+    .rarity-legendary { --glow-color: var(--legend-glow); }
+    .rarity-elite { --glow-color: var(--elite-glow); }
+    .rarity-common { --glow-color: var(--common-glow); }
+
+    .rarity-glow {
+      position: absolute;
+      top: -10px;
+      left: -10px;
+      right: -10px;
+      bottom: -10px;
+      border-radius: 20px;
+      background: radial-gradient(circle, var(--glow-color) 0%, transparent 70%);
+      opacity: 0;
+      transition: opacity 0.3s ease;
+      z-index: -1;
+    }
+
+    .panel.rarity-mythic .rarity-glow,
+    .panel.rarity-legendary .rarity-glow,
+    .panel.rarity-elite .rarity-glow,
+    .panel.rarity-common .rarity-glow {
+      opacity: 0.3;
     }
 
     /* MOBILE RESPONSIVE - IMPROVED */
@@ -927,9 +1020,11 @@
             </div>
             <div class="limit-text">5 summons per day</div>
           </div>
-          <div class="cooldown-timer" id="cooldownTimer">
-            <span>⏰</span>
-            <span id="cooldownText">Resets in: 24:00:00</span>
+          <div class="reset-countdown">
+            <div class="countdown-text">
+              <span>🕐</span>
+              Resets in: <span class="countdown-time" id="countdownTime">24:00:00</span>
+            </div>
           </div>
           <p class="muted">Daily limit: 5 summons • Resets every 24 hours</p>
         </div>
@@ -937,6 +1032,27 @@
         <div class="card">
           <h4>Rarity Rates</h4>
           <p class="muted" id="ratesSummary">Mythic: 2% • Legendary: 8% • Elite: 20% • Common: 70%</p>
+        </div>
+
+        <!-- NEW: Pull Statistics -->
+        <div class="card">
+          <h4>Your Statistics</h4>
+          <div class="pull-counter">
+            <div class="pull-stats">
+              <div class="pull-stat">
+                <div class="pull-number" id="totalPulls">0</div>
+                <div>Total Pulls</div>
+              </div>
+              <div class="pull-stat">
+                <div class="pull-number" id="mythicPulls">0</div>
+                <div>Mythic</div>
+              </div>
+              <div class="pull-stat">
+                <div class="pull-number" id="legendaryPulls">0</div>
+                <div>Legendary</div>
+              </div>
+            </div>
+          </div>
         </div>
       </aside>
 
@@ -961,7 +1077,8 @@
           <div class="showcase-view" id="showcaseView">
             <div id="carousel" class="carousel">
               <!-- 6 panels dengan layout grid 3x2 -->
-              <div class="panel" data-name="Sasuke Uchiha" data-rarity="Mythic" data-file="SasukeRinnegan" data-description="Uchiha" data-aura-color="#ffd700">
+              <div class="panel rarity-mythic" data-name="Sasuke Uchiha" data-rarity="Mythic" data-file="SasukeRinnegan" data-description="Uchiha" data-aura-color="#ffd700">
+                <div class="rarity-glow"></div>
                 <div class="aura-container">
                   <div class="aura" style="--aura-color: #ffd700"></div>
                   <div class="aura aura-2" style="--aura-color: #ffd700"></div>
@@ -975,7 +1092,8 @@
                 </div>
               </div>
 
-              <div class="panel" data-name="Obito Uchiha" data-rarity="Legendary" data-file="ObitoUnmasked" data-description="Uchiha" data-aura-color="#9b7bff">
+              <div class="panel rarity-legendary" data-name="Obito Uchiha" data-rarity="Legendary" data-file="ObitoUnmasked" data-description="Uchiha" data-aura-color="#9b7bff">
+                <div class="rarity-glow"></div>
                 <div class="aura-container">
                   <div class="aura" style="--aura-color: #9b7bff"></div>
                   <div class="aura aura-2" style="--aura-color: #9b7bff"></div>
@@ -989,13 +1107,14 @@
                 </div>
               </div>
 
-              <div class="panel" data-name="Madara Uchiha" data-rarity="Supreme" data-file="Madara" data-description="Uchiha" data-aura-color="#39d2ff">
+              <div class="panel rarity-elite" data-name="Madara Uchiha" data-rarity="Elite" data-file="Madara" data-description="Uchiha" data-aura-color="#39d2ff">
+                <div class="rarity-glow"></div>
                 <div class="aura-container">
                   <div class="aura" style="--aura-color: #39d2ff"></div>
                   <div class="aura aura-2" style="--aura-color: #39d2ff"></div>
                 </div>
                 <div class="panel-inner">
-                  <img src="./assets/panels/panel3.png" alt="Madara Uchiha - Supreme" onerror="handleImageError(this)">
+                  <img src="./assets/panels/panel3.png" alt="Madara Uchiha - Elite" onerror="handleImageError(this)">
                   <div class="meta">
                     <div class="pname">Madara</div>
                     <div class="prarity">Elite</div>
@@ -1003,13 +1122,14 @@
                 </div>
               </div>
 
-              <div class="panel" data-name="Naruto" data-rarity="Common" data-file="Naruto" data-description="Uzumaki" data-aura-color="#94a6bf">
+              <div class="panel rarity-common" data-name="Naruto" data-rarity="Common" data-file="Naruto" data-description="Uzumaki" data-aura-color="#94a6bf">
+                <div class="rarity-glow"></div>
                 <div class="aura-container">
                   <div class="aura" style="--aura-color: #94a6bf"></div>
                   <div class="aura aura-2" style="--aura-color: #94a6bf"></div>
                 </div>
                 <div class="panel-inner">
-                  <img src="./assets/panels/panel4.png" alt="Naruto - Elite rarity" onerror="handleImageError(this)">
+                  <img src="./assets/panels/panel4.png" alt="Naruto - Common rarity" onerror="handleImageError(this)">
                   <div class="meta">
                     <div class="pname">Naruto</div>
                     <div class="prarity">Common</div>
@@ -1017,7 +1137,8 @@
                 </div>
               </div>
 
-              <div class="panel" data-name="SasukeHebi" data-rarity="Elite" data-file="SasukeHebi" data-description="Uchiha" data-aura-color="#39d2ff">
+              <div class="panel rarity-elite" data-name="SasukeHebi" data-rarity="Elite" data-file="SasukeHebi" data-description="Uchiha" data-aura-color="#39d2ff">
+                <div class="rarity-glow"></div>
                 <div class="aura-container">
                   <div class="aura" style="--aura-color: #39d2ff"></div>
                   <div class="aura aura-2" style="--aura-color: #39d2ff"></div>
@@ -1031,7 +1152,8 @@
                 </div>
               </div>
 
-              <div class="panel" data-name="BorutoUzumaki" data-rarity="Legendary" data-file="BorutoUzumaki" data-description="Uzumaki" data-aura-color="#9b7bff">
+              <div class="panel rarity-legendary" data-name="BorutoUzumaki" data-rarity="Legendary" data-file="BorutoUzumaki" data-description="Uzumaki" data-aura-color="#9b7bff">
+                <div class="rarity-glow"></div>
                 <div class="aura-container">
                   <div class="aura" style="--aura-color: #9b7bff"></div>
                   <div class="aura aura-2" style="--aura-color: #9b7bff"></div>
@@ -1177,11 +1299,11 @@
   <script>
 // ==================== MUSIC FILES ====================
 const MUSIC_FILES = [
-  './music.mp3',
-  './music1.mp3', 
-  './music2.mp3',
+  './music1.mp3',
+  './music2.mp3', 
   './music3.mp3',
-  './music4.mp3'
+  './music4.mp3',
+  './music5.mp3'
 ];
 
 // ==================== BACKGROUND IMAGES ====================
@@ -1366,6 +1488,141 @@ function setupHeroSpotSystem() {
       }
     });
   });
+}
+
+// ==================== SUMMON LIMIT MANAGEMENT ====================
+function getRemainingSummons() {
+  const today = new Date().toDateString();
+  const storedDate = localStorage.getItem('gacha_last_summon_date');
+  const storedCount = localStorage.getItem('gacha_summon_count');
+  
+  // Reset jika hari baru
+  if (storedDate !== today) {
+    localStorage.setItem('gacha_last_summon_date', today);
+    localStorage.setItem('gacha_summon_count', '0');
+    return 5; // Reset ke 5 summons
+  }
+  
+  return 5 - parseInt(storedCount || '0');
+}
+
+function useSummon() {
+  const today = new Date().toDateString();
+  const storedDate = localStorage.getItem('gacha_last_summon_date');
+  const storedCount = parseInt(localStorage.getItem('gacha_summon_count') || '0');
+  
+  if (storedDate !== today) {
+    // Hari baru, reset count
+    localStorage.setItem('gacha_last_summon_date', today);
+    localStorage.setItem('gacha_summon_count', '1');
+  } else {
+    // Tambah count
+    localStorage.setItem('gacha_summon_count', (storedCount + 1).toString());
+  }
+  
+  updateSummonUI();
+}
+
+function updateSummonUI() {
+  const remaining = getRemainingSummons();
+  const summonsLeft = document.getElementById('summonsLeft');
+  const limitCounter = document.getElementById('limitCounter');
+  
+  // Update text
+  if (summonsLeft) {
+    summonsLeft.textContent = remaining;
+  }
+  
+  // Update dots
+  if (limitCounter) {
+    limitCounter.innerHTML = '';
+    for (let i = 0; i < 5; i++) {
+      const dot = document.createElement('div');
+      dot.className = `limit-dot ${i < remaining ? '' : 'used'}`;
+      limitCounter.appendChild(dot);
+    }
+  }
+  
+  // Enable/disable buttons berdasarkan remaining summons
+  const summonBtn = document.getElementById('summonBtn');
+  const singleSummon = document.getElementById('singleSummon');
+  const summonBtnBottom = document.getElementById('summonBtnBottom');
+  const singleSummonBottom = document.getElementById('singleSummonBottom');
+  
+  const buttons = [summonBtn, singleSummon, summonBtnBottom, singleSummonBottom];
+  buttons.forEach(btn => {
+    if (btn) {
+      btn.disabled = remaining <= 0;
+      if (remaining <= 0) {
+        btn.innerHTML = 'DAILY LIMIT REACHED';
+      } else {
+        if (btn.id.includes('summonBtn')) {
+          btn.innerHTML = 'SUMMON';
+        } else {
+          btn.innerHTML = 'Single';
+        }
+      }
+    }
+  });
+}
+
+// ==================== COUNTDOWN TIMER ====================
+function setupCountdownTimer() {
+  function updateCountdown() {
+    const now = new Date();
+    const tomorrow = new Date(now);
+    tomorrow.setDate(tomorrow.getDate() + 1);
+    tomorrow.setHours(0, 0, 0, 0);
+    
+    const diff = tomorrow - now;
+    const hours = Math.floor(diff / (1000 * 60 * 60));
+    const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+    const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+    
+    const countdownTime = document.getElementById('countdownTime');
+    if (countdownTime) {
+      countdownTime.textContent = `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+    }
+  }
+  
+  // Update immediately dan setiap detik
+  updateCountdown();
+  setInterval(updateCountdown, 1000);
+}
+
+// ==================== PULL STATISTICS ====================
+function updatePullStatistics(character) {
+  // Total pulls
+  const totalPulls = parseInt(localStorage.getItem('gacha_total_pulls') || '0') + 1;
+  localStorage.setItem('gacha_total_pulls', totalPulls.toString());
+  
+  // Rarity specific pulls
+  if (character.rarity === 'Mythic') {
+    const mythicPulls = parseInt(localStorage.getItem('gacha_mythic_pulls') || '0') + 1;
+    localStorage.setItem('gacha_mythic_pulls', mythicPulls.toString());
+  } else if (character.rarity === 'Legendary') {
+    const legendaryPulls = parseInt(localStorage.getItem('gacha_legendary_pulls') || '0') + 1;
+    localStorage.setItem('gacha_legendary_pulls', legendaryPulls.toString());
+  }
+  
+  // Update UI
+  const totalPullsElement = document.getElementById('totalPulls');
+  const mythicPullsElement = document.getElementById('mythicPulls');
+  const legendaryPullsElement = document.getElementById('legendaryPulls');
+  
+  if (totalPullsElement) totalPullsElement.textContent = totalPulls;
+  if (mythicPullsElement) mythicPullsElement.textContent = localStorage.getItem('gacha_mythic_pulls') || '0';
+  if (legendaryPullsElement) legendaryPullsElement.textContent = localStorage.getItem('gacha_legendary_pulls') || '0';
+}
+
+function loadPullStatistics() {
+  const totalPullsElement = document.getElementById('totalPulls');
+  const mythicPullsElement = document.getElementById('mythicPulls');
+  const legendaryPullsElement = document.getElementById('legendaryPulls');
+  
+  if (totalPullsElement) totalPullsElement.textContent = localStorage.getItem('gacha_total_pulls') || '0';
+  if (mythicPullsElement) mythicPullsElement.textContent = localStorage.getItem('gacha_mythic_pulls') || '0';
+  if (legendaryPullsElement) legendaryPullsElement.textContent = localStorage.getItem('gacha_legendary_pulls') || '0';
 }
 
 // ==================== SIMPLE MODE MANAGER ====================
@@ -1607,14 +1864,26 @@ function setupGachaSystem() {
   
   // Summon function
   async function performSummon(full = true) {
+    // Check remaining summons
+    const remaining = getRemainingSummons();
+    if (remaining <= 0) {
+      showNotification('❌ Daily summon limit reached! Come back tomorrow.');
+      return;
+    }
+    
     if (!canSummon()) {
       showNotification('🔒 Please verify subscription first');
       return;
     }
     
     // Disable buttons
+    const summonBtn = document.getElementById('summonBtn');
+    const singleSummon = document.getElementById('singleSummon');
+    const summonBtnBottom = document.getElementById('summonBtnBottom');
+    const singleSummonBottom = document.getElementById('singleSummonBottom');
+    
     if (summonBtn) {
-      summonBtn.innerHTML = '<div class="spinner"></div> Loading...';
+      summonBtn.innerHTML = '<div class="spinner"></div> Summoning...';
       summonBtn.disabled = true;
     }
     if (singleSummon) singleSummon.disabled = true;
@@ -1631,6 +1900,12 @@ function setupGachaSystem() {
       // Simulate summon animation
       await sleep(1500);
       
+      // Use one summon
+      useSummon();
+      
+      // Update statistics
+      updatePullStatistics(winnerCharacter);
+      
       // Reveal result
       await revealCharacter(winnerCharacter);
       
@@ -1638,14 +1913,8 @@ function setupGachaSystem() {
       console.error('Summon error:', error);
       showNotification('❌ Summon failed. Please try again.');
     } finally {
-      // Reset buttons
-      if (summonBtn) {
-        summonBtn.innerHTML = 'SUMMON';
-        summonBtn.disabled = false;
-      }
-      if (singleSummon) singleSummon.disabled = false;
-      if (summonBtnBottom) summonBtnBottom.disabled = false;
-      if (singleSummonBottom) singleSummonBottom.disabled = false;
+      // Reset buttons (tapi tetap disable jika limit reached)
+      updateSummonUI();
     }
   }
   
@@ -1969,6 +2238,8 @@ document.addEventListener('DOMContentLoaded', function() {
   setupVerificationSystem();
   setupPortalSystem();
   setupGachaSystem();
+  setupCountdownTimer();
+  loadPullStatistics();
   
   // Initialize complex systems
   window.voiceSystem = new VoiceSystem();
@@ -1979,7 +2250,13 @@ document.addEventListener('DOMContentLoaded', function() {
     img.addEventListener('error', () => handleImageError(img));
   });
 
+  // ✅ INITIALIZE SUMMON LIMIT SYSTEM
+  updateSummonUI();
+
   console.log('🎮 Gacha System Initialized Successfully!');
+  console.log('✅ Summon limit system: Active (5/day)');
+  console.log('✅ Countdown timer: Running');
+  console.log('✅ Pull statistics: Loaded');
   console.log('✅ Background system: Working');
   console.log('✅ Hero spot system: Working');
   console.log('✅ Mode switching: Working');
